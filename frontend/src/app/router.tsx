@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { HomeRedirect, RoleGate } from '@/app/RoleGate';
+import { RoleGate } from '@/app/RoleGate';
 import { ProtectedRoute } from '@/app/ProtectedRoute';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { PortalLayout } from '@/layouts/PortalLayout';
@@ -23,6 +23,7 @@ const Forbidden = lazy(async () => ({
   default: (await import('@/routes/errors/Forbidden')).Forbidden,
 }));
 const NotFound = lazy(async () => ({ default: (await import('@/routes/errors/NotFound')).NotFound }));
+const Landing = lazy(async () => ({ default: (await import('@/routes/landing/Landing')).Landing }));
 
 const Dashboard = lazy(async () => ({
   default: (await import('@/routes/dashboard/Dashboard')).Dashboard,
@@ -250,14 +251,7 @@ export function AppRoutes() {
         <Route path="/portal/profile" element={<PortalProfile />} />
       </Route>
 
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <HomeRedirect />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/" element={<Landing />} />
       <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>
   );

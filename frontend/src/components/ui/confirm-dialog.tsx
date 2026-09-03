@@ -41,7 +41,10 @@ export function ConfirmDialog({
   }
 
   const needsTyping = typeof typedConfirmation === 'string' && typedConfirmation.length > 0;
-  const canConfirm = !needsTyping || typed === typedConfirmation;
+  const canConfirm =
+    !needsTyping ||
+    typed === typedConfirmation ||
+    typed.trim().toLowerCase() === typedConfirmation.toLowerCase();
 
   return (
     <Dialog
@@ -77,7 +80,11 @@ export function ConfirmDialog({
           <FormField
             label={typedHint ?? `Type ${typedConfirmation} to confirm`}
             required
-            helper="This has to match exactly, including capitals."
+            helper={
+              typedConfirmation.toLowerCase() === 'confirm'
+                ? 'Type "confirm" to unlock deletion.'
+                : 'This has to match to confirm.'
+            }
           >
             {({ inputId, describedBy }) => (
               <Input
@@ -85,6 +92,7 @@ export function ConfirmDialog({
                 aria-describedby={describedBy}
                 value={typed}
                 autoComplete="off"
+                placeholder={typedConfirmation}
                 onChange={(event) => {
                   setTyped(event.target.value);
                 }}

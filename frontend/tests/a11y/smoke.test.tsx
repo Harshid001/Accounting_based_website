@@ -120,7 +120,7 @@ const expectNoViolations = async (container: HTMLElement): Promise<void> => {
 };
 
 describe('accessibility smoke across the top-level routes', () => {
-  const publicRoutes = ['/sign-in', '/sign-up', '/forgot-password', '/403', '/404'];
+  const publicRoutes = ['/', '/sign-in', '/sign-up', '/forgot-password', '/403', '/404'];
   for (const route of publicRoutes) {
     it(`reports no violations on ${route}`, async () => {
       await expectNoViolations(await renderRoute(route, null));

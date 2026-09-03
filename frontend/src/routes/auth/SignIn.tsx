@@ -91,7 +91,7 @@ export function SignIn() {
         onClick={() => {
           setActivePortal('admin');
           setFormError(null);
-          navigate('?portal=admin', { replace: true });
+          void navigate('?portal=admin', { replace: true });
         }}
         className={`flex items-center justify-center gap-1.5 sm:gap-2 rounded-md py-2 sm:py-2.5 px-2 sm:px-3 text-2xs sm:text-xs font-semibold transition-all ${
           activePortal === 'admin'
@@ -109,7 +109,7 @@ export function SignIn() {
         onClick={() => {
           setActivePortal('client');
           setFormError(null);
-          navigate('?portal=client', { replace: true });
+          void navigate('?portal=client', { replace: true });
         }}
         className={`flex items-center justify-center gap-1.5 sm:gap-2 rounded-md py-2 sm:py-2.5 px-2 sm:px-3 text-2xs sm:text-xs font-semibold transition-all ${
           activePortal === 'client'
@@ -162,7 +162,7 @@ export function SignIn() {
             onClick={() => {
               setActivePortal('client');
               setFormError(null);
-              navigate('?portal=client', { replace: true });
+              void navigate('?portal=client', { replace: true });
             }}
             className="font-medium text-[var(--fd-accent)] underline underline-offset-4"
           >
@@ -188,7 +188,7 @@ export function SignIn() {
             onClick={() => {
               setActivePortal('admin');
               setFormError(null);
-              navigate('?portal=admin', { replace: true });
+              void navigate('?portal=admin', { replace: true });
             }}
             className="text-[var(--fd-accent)] underline underline-offset-4"
           >

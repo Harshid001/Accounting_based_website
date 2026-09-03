@@ -158,4 +158,37 @@ describe('ConfirmDialog', () => {
     expect(onConfirm).not.toHaveBeenCalled();
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
+
+  it('requires typing confirm to enable permanent deletion', async () => {
+    const onConfirm = vi.fn();
+    render(
+      <ConfirmDialog
+        open
+        onOpenChange={vi.fn()}
+        title="Permanently delete Apex Technologies?"
+        body="This cannot be undone."
+        confirmLabel="Delete Permanently"
+        destructive
+        typedConfirmation="confirm"
+        typedHint='Type "confirm" to permanently delete this client'
+        onConfirm={onConfirm}
+      />,
+    );
+
+    const button = screen.getByRole('button', { name: 'Delete Permanently' });
+    expect(button).toBeDisabled();
+
+    const input = screen.getByPlaceholderText('confirm');
+    await userEvent.type(input, 'something else');
+    expect(button).toBeDisabled();
+
+    await userEvent.clear(input);
+    await userEvent.type(input, 'confirm');
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+    });
+
+    await userEvent.click(button);
+    expect(onConfirm).toHaveBeenCalledTimes(1);
+  });
 });

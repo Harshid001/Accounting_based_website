@@ -178,6 +178,8 @@ export function ClientRecord() {
                     body: `This permanently deletes ${client.displayName} and all associated filings, tasks, documents, and messages. This cannot be undone.`,
                     confirmLabel: 'Delete Permanently',
                     destructive: true,
+                    typedConfirmation: 'confirm',
+                    typedHint: 'Type "confirm" to permanently delete this client',
                     onConfirm: async () => {
                       await removeClient.mutateAsync().catch(() => undefined);
                     },
@@ -238,6 +240,12 @@ export function ClientRecord() {
           destructive={confirm.request.destructive ?? false}
           pending={confirm.pending}
           onConfirm={confirm.confirm}
+          {...(confirm.request.typedConfirmation === undefined
+            ? {}
+            : { typedConfirmation: confirm.request.typedConfirmation })}
+          {...(confirm.request.typedHint === undefined
+            ? {}
+            : { typedHint: confirm.request.typedHint })}
         />
       )}
     </ClientRecordContext.Provider>

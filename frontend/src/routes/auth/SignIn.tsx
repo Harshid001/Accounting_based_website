@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Building2, ShieldCheck } from 'lucide-react';
 
 import { signInWithEmail, signInWithGoogle } from '@/api/authClient';
 import { AuthCard, GoogleMark } from '@/routes/auth/components/AuthCard';
@@ -24,11 +25,17 @@ const safeRedirect = (value: unknown): string | null => {
 };
 
 export function SignIn() {
-  usePageTitle('Sign in');
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const { status, user, refresh } = useSession();
+
+  const requestedPortal = searchParams.get('portal')?.toLowerCase();
+  const initialPortal: 'admin' | 'client' = requestedPortal === 'client' ? 'client' : 'admin';
+  const [activePortal, setActivePortal] = useState<'admin' | 'client'>(initialPortal);
+
+  usePageTitle(activePortal === 'admin' ? 'Staff & Admin Sign In' : 'Client Portal Sign In');
+
   const [formError, setFormError] = useState<string | null>(null);
   const [googleBusy, setGoogleBusy] = useState(false);
 
@@ -76,18 +83,128 @@ export function SignIn() {
       });
   };
 
+  const portalSwitcher = (
+    <div className="mb-5 grid grid-cols-2 gap-1.5 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-2)] p-1">
+      <button
+        type="button"
+        id="portal-tab-admin"
+        onClick={() => {
+          setActivePortal('admin');
+          setFormError(null);
+          navigate('?portal=admin', { replace: true });
+        }}
+        className={`flex items-center justify-center gap-2 rounded-md py-2.5 px-3 text-xs font-semibold transition-all ${
+          activePortal === 'admin'
+            ? 'bg-[var(--fd-surface-1)] text-[var(--fd-text-primary)] shadow-sm ring-1 ring-[var(--fd-border)]'
+            : 'text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
+        }`}
+      >
+        <ShieldCheck size={16} className={activePortal === 'admin' ? 'text-[var(--fd-accent)]' : ''} />
+        <span>Staff & Admin</span>
+      </button>
+
+      <button
+        type="button"
+        id="portal-tab-client"
+        onClick={() => {
+          setActivePortal('client');
+          setFormError(null);
+          navigate('?portal=client', { replace: true });
+        }}
+        className={`flex items-center justify-center gap-2 rounded-md py-2.5 px-3 text-xs font-semibold transition-all ${
+          activePortal === 'client'
+            ? 'bg-[var(--fd-surface-1)] text-[var(--fd-text-primary)] shadow-sm ring-1 ring-[var(--fd-border)]'
+            : 'text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
+        }`}
+      >
+        <Building2 size={16} className={activePortal === 'client' ? 'text-[var(--fd-accent)]' : ''} />
+        <span>Client Portal</span>
+      </button>
+    </div>
+  );
+
+  const portalBadge =
+    activePortal === 'admin' ? (
+      <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--fd-accent)]/30 bg-[var(--fd-accent)]/10 px-2.5 py-0.5 text-2xs font-medium text-[var(--fd-accent)]">
+        <ShieldCheck size={12} />
+        <span>Firm Operations & Management</span>
+      </div>
+    ) : (
+      <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--fd-status-done)]/30 bg-[var(--fd-status-done-bg)] px-2.5 py-0.5 text-2xs font-medium text-[var(--fd-status-done)]">
+        <Building2 size={12} />
+        <span>Accounting Client Portal</span>
+      </div>
+    );
+
+  const portalTitle = activePortal === 'admin' ? 'Staff & Admin Sign In' : 'Client Portal Sign In';
+  const portalDescription =
+    activePortal === 'admin'
+      ? 'Sign in to access your firm management console, client tax filings, and practice tasks.'
+      : 'Sign in to view your GST & ITR returns, compliance status, documents, and messages.';
+
+  const emailLabel = activePortal === 'admin' ? 'Practice Email Address' : 'Client Email Address';
+  const emailPlaceholder =
+    activePortal === 'admin' ? 'e.g. harshidsoni01@gmail.com' : 'e.g. name@company.com';
+
+  const submitLabel = activePortal === 'admin' ? 'Sign In to Admin Console' : 'Sign In to Client Portal';
+  const googleLabel =
+    activePortal === 'admin'
+      ? 'Continue with Google as Admin / Staff'
+      : 'Continue with Google as Client';
+
+  const portalFooter =
+    activePortal === 'admin' ? (
+      <div className="space-y-2 text-xs text-[var(--fd-text-secondary)]">
+        <p>
+          Client looking for your tax records?{' '}
+          <button
+            type="button"
+            onClick={() => {
+              setActivePortal('client');
+              setFormError(null);
+              navigate('?portal=client', { replace: true });
+            }}
+            className="font-medium text-[var(--fd-accent)] underline underline-offset-4"
+          >
+            Switch to Client Portal
+          </button>
+        </p>
+        <p className="text-2xs text-[var(--fd-text-tertiary)]">
+          Internal access is restricted to authorized practice personnel.
+        </p>
+      </div>
+    ) : (
+      <div className="space-y-2 text-xs text-[var(--fd-text-secondary)]">
+        <p>
+          New client?{' '}
+          <Link to="/sign-up" className="font-medium text-[var(--fd-accent)] underline underline-offset-4">
+            Start onboarding & register account
+          </Link>
+        </p>
+        <p>
+          Practice staff or partner?{' '}
+          <button
+            type="button"
+            onClick={() => {
+              setActivePortal('admin');
+              setFormError(null);
+              navigate('?portal=admin', { replace: true });
+            }}
+            className="text-[var(--fd-accent)] underline underline-offset-4"
+          >
+            Switch to Staff & Admin Portal
+          </button>
+        </p>
+      </div>
+    );
+
   return (
     <AuthCard
-      title="Sign in"
-      description="Use the email address your firm holds for you."
-      footer={
-        <>
-          New here?{' '}
-          <Link to="/sign-up" className="text-[var(--fd-accent)] underline underline-offset-4">
-            Create an account
-          </Link>
-        </>
-      }
+      headerExtra={portalSwitcher}
+      badge={portalBadge}
+      title={portalTitle}
+      description={portalDescription}
+      footer={portalFooter}
     >
       <form
         onSubmit={(event) => {
@@ -98,11 +215,12 @@ export function SignIn() {
       >
         {displayError === null ? null : <InlineError message={displayError} />}
 
-        <FormField label="Email address" required error={form.formState.errors.email?.message}>
+        <FormField label={emailLabel} required error={form.formState.errors.email?.message}>
           {({ inputId, describedBy, invalid }) => (
             <Input
               id={inputId}
               type="email"
+              placeholder={emailPlaceholder}
               autoComplete="email"
               invalid={invalid}
               aria-describedby={describedBy}
@@ -116,6 +234,7 @@ export function SignIn() {
             <Input
               id={inputId}
               type="password"
+              placeholder="••••••••••••"
               autoComplete="current-password"
               invalid={invalid}
               aria-describedby={describedBy}
@@ -150,9 +269,9 @@ export function SignIn() {
           size="lg"
           className="w-full"
           loading={form.formState.isSubmitting}
-          loadingLabel="Signing you in"
+          loadingLabel="Signing you in..."
         >
-          Sign in
+          {submitLabel}
         </Button>
       </form>
 
@@ -167,11 +286,11 @@ export function SignIn() {
         size="lg"
         className="w-full"
         loading={googleBusy}
-        loadingLabel="Opening Google"
+        loadingLabel="Opening Google..."
         iconLeft={<GoogleMark />}
         onClick={google}
       >
-        Continue with Google
+        {googleLabel}
       </Button>
     </AuthCard>
   );

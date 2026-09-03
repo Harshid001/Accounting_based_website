@@ -3,13 +3,17 @@ import type { ReactNode } from 'react';
 export interface AuthCardProps {
   title: string;
   description?: string;
+  badge?: ReactNode;
+  headerExtra?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
 }
 
-export function AuthCard({ title, description, children, footer }: AuthCardProps) {
+export function AuthCard({ title, description, badge, headerExtra, children, footer }: AuthCardProps) {
   return (
-    <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-6">
+    <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-6 shadow-sm">
+      {headerExtra}
+      {badge && <div className="mb-2">{badge}</div>}
       <h1
         id="page-title"
         tabIndex={-1}
@@ -18,7 +22,7 @@ export function AuthCard({ title, description, children, footer }: AuthCardProps
         {title}
       </h1>
       {description === undefined ? null : (
-        <p className="mt-1 mb-5 text-base text-[var(--fd-text-secondary)]">{description}</p>
+        <p className="mt-1 mb-5 text-sm text-[var(--fd-text-secondary)]">{description}</p>
       )}
       <div className={description === undefined ? 'mt-5' : ''}>{children}</div>
       {footer === undefined ? null : (

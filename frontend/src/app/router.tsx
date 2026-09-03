@@ -154,6 +154,10 @@ export function AppRoutes() {
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/portal/sign-in" element={<Navigate to="/sign-in?portal=client" replace />} />
+        <Route path="/admin/sign-in" element={<Navigate to="/sign-in?portal=admin" replace />} />
+        <Route path="/client/sign-in" element={<Navigate to="/sign-in?portal=client" replace />} />
+        <Route path="/staff/sign-in" element={<Navigate to="/sign-in?portal=admin" replace />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />

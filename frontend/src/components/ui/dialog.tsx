@@ -38,13 +38,13 @@ export function Dialog({
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
-        <RadixDialog.Overlay className="fixed inset-0 z-40 bg-[var(--fd-overlay)]" />
+        <RadixDialog.Overlay className="fixed inset-0 z-40 bg-[var(--fd-overlay)] backdrop-blur-xs transition-opacity" />
         <RadixDialog.Content
           onCloseAutoFocus={onCloseAutoFocus}
           className={cn(
-            'fixed top-1/2 left-1/2 z-50 max-h-[85dvh] w-[calc(100vw-2rem)] -translate-x-1/2',
+            'fixed top-1/2 left-1/2 z-50 max-h-[90dvh] w-[calc(100vw-1.5rem)] -translate-x-1/2',
             '-translate-y-1/2 overflow-y-auto rounded-xl border border-[var(--fd-border)]',
-            'bg-[var(--fd-surface-1)] p-5 shadow-[var(--fd-shadow-overlay)]',
+            'bg-[var(--fd-surface-1)] p-4 sm:p-6 shadow-[var(--fd-shadow-overlay)] outline-none touch-momentum safe-bottom',
             SIZES[size],
           )}
         >

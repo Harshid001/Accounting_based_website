@@ -205,7 +205,7 @@ export function Unlinked() {
 
   return (
     <div className="fd-wide-auth w-full space-y-6">
-      <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] p-6 shadow-sm">
+      <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] p-4 sm:p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--fd-accent)]/30 bg-[var(--fd-accent)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--fd-accent)]">
@@ -787,7 +787,7 @@ export function Unlinked() {
             </div>
           )}
 
-          <div className="mt-8 flex items-center justify-between border-t border-[var(--fd-border-subtle)] pt-5">
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--fd-border-subtle)] pt-5">
             {currentStep > 1 ? (
               <Button
                 type="button"

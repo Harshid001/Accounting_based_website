@@ -65,7 +65,7 @@ export function FilterBar({
     <div data-slot="filter-bar" data-print="hide" className={cn('mb-4 space-y-3', className)}>
       <div className="flex flex-wrap items-center gap-2">
         {showSearch ? (
-          <div className="min-w-56 flex-1">
+          <div className="w-full min-w-0 flex-1 sm:w-auto sm:min-w-56">
             <Input
               type="search"
               value={draft}
@@ -82,7 +82,7 @@ export function FilterBar({
         {filters.map((filter) => (
           <Select
             key={filter.key}
-            className="w-44"
+            className="w-full sm:w-44"
             size="md"
             ariaLabel={filter.label}
             value={values[filter.key] ?? ALL}

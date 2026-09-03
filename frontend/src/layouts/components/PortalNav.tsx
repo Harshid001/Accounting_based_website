@@ -58,8 +58,8 @@ export function PortalNav({ onOpenDrawer }: { onOpenDrawer: () => void }) {
       data-print="hide"
       className="border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)]"
     >
-      <div className="mx-auto flex h-14 max-w-[1080px] items-center justify-between gap-3 px-4">
-        <div className="flex min-w-0 items-center gap-3">
+      <div className="mx-auto flex h-14 max-w-[1080px] items-center justify-between gap-2 px-3 sm:gap-3 sm:px-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <span className="md:hidden">
             <IconButton
               label="Open the navigation menu"
@@ -79,15 +79,15 @@ export function PortalNav({ onOpenDrawer }: { onOpenDrawer: () => void }) {
           <PortalLinks />
         </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 sm:gap-1">
           <ThemeToggle />
           <NotificationBell enabled to="/portal/messages" />
           <AccountMenu profilePath="/portal/profile" />
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1080px] px-4 pb-3 md:hidden">
-        <EntitySwitcher />
+      <div className="mx-auto max-w-[1080px] px-3 pb-2.5 sm:px-4 sm:pb-3 md:hidden">
+        <EntitySwitcher className="w-full" selectClassName="flex-1 w-full" />
       </div>
     </header>
   );

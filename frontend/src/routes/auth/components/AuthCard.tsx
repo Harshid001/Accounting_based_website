@@ -11,7 +11,7 @@ export interface AuthCardProps {
 
 export function AuthCard({ title, description, badge, headerExtra, children, footer }: AuthCardProps) {
   return (
-    <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-6 shadow-sm">
+    <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4 sm:p-6 shadow-sm">
       {headerExtra}
       {badge && <div className="mb-2">{badge}</div>}
       <h1

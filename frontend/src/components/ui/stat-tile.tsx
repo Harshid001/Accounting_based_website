@@ -43,7 +43,7 @@ export function StatTile({
       {loading ? (
         <Skeleton className="mt-2 h-9 w-16" />
       ) : (
-        <p className={cn('numeric mt-1 text-4xl leading-tight font-semibold', TONES[tone])}>
+        <p className={cn('numeric mt-1 text-2xl sm:text-3xl lg:text-4xl leading-tight font-semibold', TONES[tone])}>
           {typeof value === 'number' ? formatNumber(value) : (value ?? '—')}
         </p>
       )}
@@ -54,7 +54,7 @@ export function StatTile({
   );
 
   const shell = cn(
-    'block rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4',
+    'block rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-3 sm:p-4',
     to === undefined
       ? ''
       : 'transition-colors hover:border-[var(--fd-border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fd-focus-ring)]',

@@ -93,14 +93,14 @@ export function SignIn() {
           setFormError(null);
           navigate('?portal=admin', { replace: true });
         }}
-        className={`flex items-center justify-center gap-2 rounded-md py-2.5 px-3 text-xs font-semibold transition-all ${
+        className={`flex items-center justify-center gap-1.5 sm:gap-2 rounded-md py-2 sm:py-2.5 px-2 sm:px-3 text-2xs sm:text-xs font-semibold transition-all ${
           activePortal === 'admin'
             ? 'bg-[var(--fd-surface-1)] text-[var(--fd-text-primary)] shadow-sm ring-1 ring-[var(--fd-border)]'
             : 'text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
         }`}
       >
-        <ShieldCheck size={16} className={activePortal === 'admin' ? 'text-[var(--fd-accent)]' : ''} />
-        <span>Staff & Admin</span>
+        <ShieldCheck size={15} className={`shrink-0 ${activePortal === 'admin' ? 'text-[var(--fd-accent)]' : ''}`} />
+        <span className="truncate">Staff & Admin</span>
       </button>
 
       <button
@@ -111,14 +111,14 @@ export function SignIn() {
           setFormError(null);
           navigate('?portal=client', { replace: true });
         }}
-        className={`flex items-center justify-center gap-2 rounded-md py-2.5 px-3 text-xs font-semibold transition-all ${
+        className={`flex items-center justify-center gap-1.5 sm:gap-2 rounded-md py-2 sm:py-2.5 px-2 sm:px-3 text-2xs sm:text-xs font-semibold transition-all ${
           activePortal === 'client'
             ? 'bg-[var(--fd-surface-1)] text-[var(--fd-text-primary)] shadow-sm ring-1 ring-[var(--fd-border)]'
             : 'text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
         }`}
       >
-        <Building2 size={16} className={activePortal === 'client' ? 'text-[var(--fd-accent)]' : ''} />
-        <span>Client Portal</span>
+        <Building2 size={15} className={`shrink-0 ${activePortal === 'client' ? 'text-[var(--fd-accent)]' : ''}`} />
+        <span className="truncate">Client Portal</span>
       </button>
     </div>
   );

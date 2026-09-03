@@ -15,9 +15,9 @@ export function Topbar({ onOpenDrawer, onOpenPalette }: TopbarProps) {
     <header
       data-slot="topbar"
       data-print="hide"
-      className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] px-3"
+      className="flex h-14 shrink-0 items-center justify-between gap-2 sm:gap-3 border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] px-2.5 sm:px-4"
     >
-      <div className="flex min-w-0 items-center gap-2">
+      <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
         <span className="lg:hidden">
           <IconButton
             label="Open the navigation menu"
@@ -29,7 +29,7 @@ export function Topbar({ onOpenDrawer, onOpenPalette }: TopbarProps) {
         <button
           type="button"
           onClick={onOpenPalette}
-          className="flex h-9 min-w-0 items-center gap-2 rounded-md border border-[var(--fd-border)] bg-[var(--fd-surface-2)] px-3 text-left text-[var(--fd-text-tertiary)] transition-colors hover:border-[var(--fd-border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fd-focus-ring)] sm:w-72"
+          className="flex h-9 w-9 sm:w-72 min-w-0 items-center justify-center sm:justify-start gap-2 rounded-md border border-[var(--fd-border)] bg-[var(--fd-surface-2)] px-2 sm:px-3 text-left text-[var(--fd-text-tertiary)] transition-colors hover:border-[var(--fd-border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fd-focus-ring)]"
         >
           <Search size={14} aria-hidden="true" />
           <span className="hidden truncate text-base sm:block">Search FirmDesk</span>
@@ -39,7 +39,7 @@ export function Topbar({ onOpenDrawer, onOpenPalette }: TopbarProps) {
         </button>
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5 sm:gap-1">
         <ThemeToggle />
         <NotificationBell enabled />
         <AccountMenu profilePath="/profile" />

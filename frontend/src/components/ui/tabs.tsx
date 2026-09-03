@@ -22,7 +22,7 @@ export function RoutedTabs({ tabs, ariaLabel, className }: RoutedTabsProps) {
       data-print="hide"
       className={cn('border-b border-[var(--fd-border-subtle)]', className)}
     >
-      <ul className="-mb-px flex gap-1 overflow-x-auto">
+      <ul className="-mb-px flex gap-1 overflow-x-auto no-scrollbar touch-momentum scroll-smooth">
         {tabs.map((tab) => (
           <li key={tab.to}>
             <NavLink

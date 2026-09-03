@@ -180,6 +180,26 @@
   }
 }
 
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility touch-momentum {
+  -webkit-overflow-scrolling: touch;
+}
+
+@utility safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@utility safe-top {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
 @keyframes fd-pulse {
   0%,
   100% {

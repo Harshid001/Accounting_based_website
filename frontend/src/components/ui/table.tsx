@@ -62,7 +62,7 @@ export function DataTable<Row>({
 
   return (
     <div className={cn('w-full', className)}>
-      <div className="hidden overflow-x-auto rounded-lg border border-[var(--fd-border-subtle)] md:block">
+      <div className="hidden overflow-x-auto rounded-lg border border-[var(--fd-border-subtle)] md:block touch-momentum">
         <table className="w-full border-collapse text-left" aria-busy={loading || undefined}>
           <caption className="sr-only">{caption}</caption>
           <thead className="sticky top-0 z-10 bg-[var(--fd-surface-2)]">
@@ -217,16 +217,16 @@ export function DataTable<Row>({
               key={rowKey(row)}
               className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-3"
             >
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0 space-y-1">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1 space-y-1.5">
                   {columns
                     .filter((column) => column.cardLabel !== false)
                     .map((column) => (
-                      <div key={column.id} className="flex flex-wrap items-baseline gap-2">
-                        <span className="text-2xs w-24 shrink-0 text-[var(--fd-text-tertiary)]">
+                      <div key={column.id} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                        <span className="text-2xs w-24 shrink-0 font-medium text-[var(--fd-text-tertiary)]">
                           {column.header}
                         </span>
-                        <span className="min-w-0 text-base text-[var(--fd-text-primary)]">
+                        <span className="min-w-0 flex-1 break-words text-base text-[var(--fd-text-primary)]">
                           {column.cell(row)}
                         </span>
                       </div>

@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Archive, ArchiveRestore, Pencil } from 'lucide-react';
+import { Archive, ArchiveRestore, Pencil, Trash2 } from 'lucide-react';
 import { createContext, useContext } from 'react';
-import { Link, Outlet, useParams } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 
 import {
   archiveClient,
+  deleteClient,
   getClient,
   listClients,
   restoreClient,
@@ -40,6 +41,7 @@ export function useClientRecord(): ClientRecordContextValue {
 
 export function ClientRecord() {
   const { clientId = '' } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { allows } = useSession();
   const { success, errorToast } = useToast();
@@ -75,6 +77,18 @@ export function ClientRecord() {
     },
     onError: (error: unknown) => {
       errorToast(error, 'That change did not save');
+    },
+  });
+
+  const removeClient = useMutation({
+    mutationFn: () => deleteClient(clientId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.clients.all });
+      success('Client deleted', `${detail.data?.displayName ?? 'Client'} and all associated records were permanently deleted.`);
+      void navigate('/clients', { replace: true });
+    },
+    onError: (error: unknown) => {
+      errorToast(error, 'Could not delete client');
     },
   });
 
@@ -151,6 +165,26 @@ export function ClientRecord() {
                 }}
               >
                 {client.archived ? 'Restore' : 'Archive'}
+              </Button>
+            ) : null}
+            {allows('client:delete') ? (
+              <Button
+                variant="danger"
+                size="sm"
+                iconLeft={<Trash2 size={14} aria-hidden="true" />}
+                onClick={() => {
+                  confirm.ask({
+                    title: `Permanently delete ${client.displayName}?`,
+                    body: `This permanently deletes ${client.displayName} and all associated filings, tasks, documents, and messages. This cannot be undone.`,
+                    confirmLabel: 'Delete Permanently',
+                    destructive: true,
+                    onConfirm: async () => {
+                      await removeClient.mutateAsync().catch(() => undefined);
+                    },
+                  });
+                }}
+              >
+                Delete Permanently
               </Button>
             ) : null}
           </>

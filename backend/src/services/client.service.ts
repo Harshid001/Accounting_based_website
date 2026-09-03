@@ -10,10 +10,14 @@ import type { PageRequest } from '../lib/pagination.js';
 import { parseSort, withTiebreak } from '../lib/pagination.js';
 import type { ClientAttributes, ClientDocument } from '../models/client.model.js';
 import { Client } from '../models/client.model.js';
+import { ClientService } from '../models/clientService.model.js';
 import { ComplianceItem } from '../models/complianceItem.model.js';
+import { DocumentModel } from '../models/document.model.js';
 import { DocumentRequest } from '../models/documentRequest.model.js';
 import { Message } from '../models/message.model.js';
 import { Notification } from '../models/notification.model.js';
+import { Task } from '../models/task.model.js';
+import { TaskComment } from '../models/taskComment.model.js';
 import { User } from '../models/user.model.js';
 import type { UserAttributes } from '../models/user.model.js';
 import type { AuthenticatedUser, RequestActor } from '../types/context.js';
@@ -359,6 +363,41 @@ export const setArchived = async (
     summary: `${archived ? 'Archived' : 'Restored'} client ${doc.displayName}`,
   });
   return getClientDetail(clientId);
+};
+
+export const permanentlyDeleteClient = async (
+  clientId: Types.ObjectId,
+  actor: RequestActor,
+): Promise<void> => {
+  const doc = await getClientOrThrow(clientId);
+  const clientName = doc.displayName;
+
+  const taskDocs = await Task.find({ client: clientId }).select('_id').lean().exec();
+  const taskIds = taskDocs.map((t) => t._id);
+
+  await Promise.all([
+    ClientService.deleteMany({ client: clientId }).exec(),
+    ComplianceItem.deleteMany({ client: clientId }).exec(),
+    Task.deleteMany({ client: clientId }).exec(),
+    taskIds.length > 0 ? TaskComment.deleteMany({ task: { $in: taskIds } }).exec() : Promise.resolve(),
+    DocumentModel.deleteMany({ client: clientId }).exec(),
+    DocumentRequest.deleteMany({ client: clientId }).exec(),
+    Message.deleteMany({ client: clientId }).exec(),
+    Notification.deleteMany({ client: clientId }).exec(),
+    User.updateMany({ linkedClients: clientId }, { $pull: { linkedClients: clientId } }).exec(),
+    User.updateMany({ pinnedClients: clientId }, { $pull: { pinnedClients: clientId } }).exec(),
+  ]);
+
+  await Client.deleteOne({ _id: clientId }).exec();
+
+  await recordAudit({
+    actor,
+    action: 'hard_delete',
+    entityKind: 'client',
+    entityId: clientId,
+    client: clientId,
+    summary: `Permanently deleted client ${clientName} and all associated records`,
+  });
 };
 
 export const setAssignments = async (

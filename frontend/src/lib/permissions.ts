@@ -7,6 +7,7 @@ export const CAPABILITY_KEYS = [
   'client:update',
   'client:update_privileged',
   'client:archive',
+  'client:delete',
   'client:assign_staff',
   'client:reveal_aadhaar',
   'client:export',

@@ -33,6 +33,9 @@ export const archiveClient = (id: string): Promise<ClientDetail> =>
 export const restoreClient = (id: string): Promise<ClientDetail> =>
   apiPost<ClientDetail>(`/clients/${id}/restore`);
 
+export const deleteClient = (id: string): Promise<void> =>
+  apiDelete<void>(`/clients/${id}`);
+
 export const setClientAssignments = (id: string, staffIds: string[]): Promise<AssignmentResult> =>
   apiPut<AssignmentResult>(`/clients/${id}/assignments`, { staffIds });
 

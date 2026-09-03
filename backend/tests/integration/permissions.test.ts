@@ -315,11 +315,16 @@ describe('routes that must not exist at all', () => {
     }
   });
 
-  it('offers no hard delete for a client record', async () => {
-    const response = await request(app())
+  it('permits hard delete for admin and forbids it for staff', async () => {
+    const staffResponse = await request(app())
+      .delete(`/api/v1/clients/${clientId.toString()}`)
+      .set(auth(staff));
+    expect(staffResponse.status).toBe(403);
+
+    const adminResponse = await request(app())
       .delete(`/api/v1/clients/${clientId.toString()}`)
       .set(auth(admin));
-    expect(response.status).toBe(404);
+    expect(adminResponse.status).toBe(204);
   });
 
   it('offers no edit or delete route for a posted message', async () => {

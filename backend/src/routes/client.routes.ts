@@ -103,6 +103,14 @@ clientRouter.post(
   handle({ params: idParam }, controller.restore),
 );
 
+clientRouter.delete(
+  '/:id',
+  mutationLimiter,
+  requireCapability('client:delete'),
+  requireClientScope('param:id'),
+  handle({ params: idParam }, controller.remove),
+);
+
 clientRouter.put(
   '/:id/assignments',
   mutationLimiter,

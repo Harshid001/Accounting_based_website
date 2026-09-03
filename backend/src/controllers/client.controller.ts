@@ -18,6 +18,7 @@ import {
   createClient,
   getClientDetail,
   listClients,
+  permanentlyDeleteClient,
   revealAadhaar,
   setArchived,
   setAssignments,
@@ -104,6 +105,11 @@ export const archive = async (_input: unknown, ctx: RouteContext): Promise<void>
 export const restore = async (_input: unknown, ctx: RouteContext): Promise<void> => {
   const record = await setArchived(ctx.clientId(), false, ctx.actor);
   sendData(ctx.res, serialiseClientForStaff(record));
+};
+
+export const remove = async (_input: unknown, ctx: RouteContext): Promise<void> => {
+  await permanentlyDeleteClient(ctx.clientId(), ctx.actor);
+  sendNoContent(ctx.res);
 };
 
 export const assign = async (

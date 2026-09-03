@@ -14,6 +14,7 @@ const ROLE_CAPABILITIES: Record<Role, readonly Capability[]> = {
         'client:create',
         'client:update_privileged',
         'client:archive',
+        'client:delete',
         'client:assign_staff',
         'client:reveal_aadhaar',
         'catalogue:write',

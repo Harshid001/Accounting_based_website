@@ -8,6 +8,7 @@ export const CAPABILITIES = {
   'client:update': ['admin', 'staff'],
   'client:update_privileged': ['admin'],
   'client:archive': ['admin'],
+  'client:delete': ['admin'],
   'client:assign_staff': ['admin'],
   'client:reveal_aadhaar': ['admin'],
   'client:export': ['admin', 'staff'],

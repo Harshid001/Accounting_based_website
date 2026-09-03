@@ -8,7 +8,7 @@ describe('capability list', () => {
     expect(new Set(CAPABILITY_KEYS).size).toBe(CAPABILITY_KEYS.length);
     expect(CAPABILITY_KEYS).toContain('client:reveal_aadhaar');
     expect(CAPABILITY_KEYS).toContain('portal:write');
-    expect(CAPABILITY_KEYS).toHaveLength(55);
+    expect(CAPABILITY_KEYS).toHaveLength(56);
   });
 
   it('recognises a real capability and rejects an invented one', () => {

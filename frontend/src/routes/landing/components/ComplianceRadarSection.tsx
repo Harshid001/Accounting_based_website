@@ -1,13 +1,9 @@
 import { useState } from 'react';
 import {
-  AlertCircle,
   Calendar,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
-  FileCheck2,
-  HelpCircle,
-  Scale,
   ShieldAlert,
 } from 'lucide-react';
 
@@ -104,7 +100,7 @@ export function ComplianceRadarSection() {
             How We Protect Your Business From Costly Penalties
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
-            Indian corporate and tax compliance moves fast. Our practice continuously tracks 40+ statutory filing schedules,
+            Indian corporate and tax compliance moves fast. Our practice continuously tracks statutory filing schedules,
             calculates statutory due dates under the Income Tax Act, GST Law, and Companies Act, and audits your numbers well
             before government penalty windows.
           </p>

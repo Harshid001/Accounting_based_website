@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { RouteAnnouncer, SkipLink } from '@/components/domain/SkipLink';
 import { ThemeToggle } from '@/components/domain/ThemeToggle';
 import { Spinner } from '@/components/ui/skeleton';
+import { JVLogo } from '@/components/brand/JVLogo';
 
 export function AuthLayout() {
   return (
@@ -11,7 +12,10 @@ export function AuthLayout() {
       <SkipLink />
 
       <header className="flex h-14 shrink-0 items-center justify-between px-4">
-        <span className="text-lg font-semibold text-[var(--fd-text-primary)]">FirmDesk</span>
+        <span className="flex items-center gap-2.5">
+          <JVLogo size="sm" />
+          <span className="text-base font-semibold text-[var(--fd-text-primary)] tracking-tight">JV Tax Consultancy</span>
+        </span>
         <ThemeToggle />
       </header>
 
@@ -34,7 +38,7 @@ export function AuthLayout() {
       </main>
 
       <footer className="px-4 pb-6 text-center text-xs text-[var(--fd-text-tertiary)]">
-        FirmDesk is the internal operations system for one accounting practice.
+        JV Tax Consultancy — Chartered Accountants practice management portal.
       </footer>
 
       <RouteAnnouncer />

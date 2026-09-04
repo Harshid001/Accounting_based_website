@@ -18,7 +18,9 @@ import {
 } from '@/routes/clients/components/ContactFields';
 import type { ContactErrors } from '@/routes/clients/components/ContactFields';
 import { OwnAadhaar } from '@/routes/portal/components/OwnAadhaar';
+import { LanguagePreferencePanel } from '@/routes/profile/components/LanguagePreferencePanel';
 import { useActiveClient } from '@/context/ActiveClientContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/context/ToastContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { CLIENT_TYPE_LABELS, ENTITY_TYPE_LABELS } from '@/lib/constants';
@@ -43,7 +45,8 @@ const EMPTY: PortalProfileValues = {
 };
 
 export function PortalProfile() {
-  usePageTitle('Your details');
+  const { t } = useLanguage();
+  usePageTitle(t('profile.title'));
   const { activeClientId } = useActiveClient();
   const clientId = activeClientId ?? '';
   const queryClient = useQueryClient();
@@ -129,11 +132,14 @@ export function PortalProfile() {
   return (
     <>
       <PageHeader
-        title="Your details"
+        title={t('profile.title')}
         description="Keep your contact details current. Statutory identifiers are managed by your firm."
       />
 
       <div className="space-y-4">
+        {/* Language & Regional Preferences (Hindi, Gujarati, English, Marathi) */}
+        <LanguagePreferencePanel />
+
         <Card>
           <CardHeader
             title="On record with your firm"

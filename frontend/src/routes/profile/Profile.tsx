@@ -11,9 +11,11 @@ import { Card, CardHeader } from '@/components/ui/card';
 import { FieldRow, FormField } from '@/components/ui/form-field';
 import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
+import { LanguagePreferencePanel } from '@/routes/profile/components/LanguagePreferencePanel';
 import { PreferencesPanel } from '@/routes/profile/components/PreferencesPanel';
 import { SessionsPanel } from '@/routes/profile/components/SessionsPanel';
 import { useCurrentUser } from '@/context/SessionContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/context/ToastContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { ROLE_LABELS } from '@/lib/constants';
@@ -22,7 +24,8 @@ import { profileSchema } from '@/schemas/profile.schema';
 import type { ProfileValues } from '@/schemas/profile.schema';
 
 export function Profile() {
-  usePageTitle('Your profile');
+  const { t } = useLanguage();
+  usePageTitle(t('profile.title'));
   const user = useCurrentUser();
   const queryClient = useQueryClient();
   const { success } = useToast();
@@ -57,8 +60,8 @@ export function Profile() {
   return (
     <>
       <PageHeader
-        title="Your profile"
-        description="Your details, your email preferences and the devices you are signed in on."
+        title={t('profile.title')}
+        description={t('profile.description')}
       />
 
       <div className="max-w-[880px] space-y-4">
@@ -75,10 +78,13 @@ export function Profile() {
           </div>
         </Card>
 
+        {/* Language & Regional Preferences (Hindi, Gujarati, English, Marathi) */}
+        <LanguagePreferencePanel />
+
         <Card>
           <CardHeader
-            title="Your details"
-            description="Your email address is fixed to the account and cannot be changed here."
+            title={t('profile.detailsTitle')}
+            description={t('profile.detailsDesc')}
           />
           <form
             onSubmit={(event) => {
@@ -88,7 +94,7 @@ export function Profile() {
             noValidate
           >
             <FieldRow>
-              <FormField label="Full name" required error={form.formState.errors.name?.message}>
+              <FormField label={t('profile.fullName')} required error={form.formState.errors.name?.message}>
                 {({ inputId, describedBy, invalid }) => (
                   <Input
                     id={inputId}
@@ -100,7 +106,7 @@ export function Profile() {
                 )}
               </FormField>
 
-              <FormField label="Mobile" error={form.formState.errors.phone?.message}>
+              <FormField label={t('profile.mobile')} error={form.formState.errors.phone?.message}>
                 {({ inputId, describedBy, invalid }) => (
                   <Input
                     id={inputId}
@@ -120,9 +126,9 @@ export function Profile() {
                 type="submit"
                 variant="primary"
                 loading={mutation.isPending}
-                loadingLabel="Saving your profile"
+                loadingLabel={t('profile.saving')}
               >
-                Save changes
+                {t('profile.saveChanges')}
               </Button>
             </div>
           </form>

@@ -4,6 +4,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { LanguageProvider } from '@/context/LanguageContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { ToastProvider } from '@/context/ToastContext';
 
@@ -29,15 +30,17 @@ export function renderWithProviders(ui: ReactElement, options: RenderOptions = {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <ToastProvider>
-          <TooltipProvider>
-            <MemoryRouter initialEntries={[route]}>
-              <Routes>
-                <Route path={path} element={children} />
-              </Routes>
-            </MemoryRouter>
-          </TooltipProvider>
-        </ToastProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <TooltipProvider>
+              <MemoryRouter initialEntries={[route]}>
+                <Routes>
+                  <Route path={path} element={children} />
+                </Routes>
+              </MemoryRouter>
+            </TooltipProvider>
+          </ToastProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

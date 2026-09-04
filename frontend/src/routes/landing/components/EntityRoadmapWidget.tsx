@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import {
-  Building2,
   Calendar,
   CheckCircle2,
   Clock,
   FileCheck,
-  Handshake,
   Scale,
-  Sparkles,
-  Users,
 } from 'lucide-react';
 
 interface EntityRoadmap {
@@ -22,24 +18,24 @@ interface EntityRoadmap {
   riskSaved: string;
 }
 
-type EntityKey = 'jv_consortium' | 'pvt_ltd' | 'llp' | 'partnership' | 'proprietorship';
+type EntityKey = 'pvt_ltd' | 'llp' | 'corporate_group' | 'partnership' | 'proprietorship';
 
 const ENTITY_ROADMAPS: Record<EntityKey, EntityRoadmap> = {
-  jv_consortium: {
-    title: 'Joint Venture & Consortium SPV',
-    badge: 'Consortium Agreement + Tax Treaties + GST',
+  corporate_group: {
+    title: 'Corporate Group & Multi-Entity Structure',
+    badge: 'Companies Act 2013 + Intercompany + Transfer Pricing',
     description:
-      'High-stakes consortium structures requiring independent financial controllership, cost sharing, inter-company reconciliation, and audited profit waterfall distributions.',
-    monthly: ['GSTR-1 Consortium Invoicing (11th)', 'GSTR-3B Tax Netting & Input Credit (20th)', 'Sub-contractor TDS Deductions (Sec 194C)'],
-    quarterly: ['Joint Venture Profit & Loss Apportionment Audit', 'Advance Tax Estimation on JV Share', 'Form 26Q Non-salary Vendor TDS'],
-    annual: ['Consortium Statutory Audit & CARO Reporting', 'ITR-6 / ITR-5 Joint Venture Tax Filing', 'Inter-Company Transfer Pricing Certification'],
+      'Multi-entity holding and operating structures requiring consolidated financial reporting, inter-company transfer pricing, related-party transaction disclosures, and group tax optimization.',
+    monthly: ['Consolidated GSTR-1 Invoicing (11th)', 'GSTR-3B Tax Netting & Input Credit (20th)', 'Intercompany Billing & TDS Deductions (Sec 194C/J)'],
+    quarterly: ['Group Profit & Loss Consolidation Review', 'Advance Tax Estimation on Group Profits', 'Form 26Q Vendor TDS across Entities'],
+    annual: ['Consolidated Statutory Financial Statements', 'ITR-6 Corporate Income Tax Filings', 'Inter-Company Transfer Pricing Form 3CEB Certification'],
     entitySpecific: [
-      'Waterfall Profit-Sharing Settlement Audit',
-      'Consortium Capital Account & Working Capital True-up',
-      'Dispute-free Independent Joint Accounting Certificate',
-      'Sub-contractor GST Withholding & Reversals',
+      'Inter-company balances & transaction matching',
+      'Consolidated group MIS & board reporting pack',
+      'Related-party disclosures under AS-18 / Ind AS 24',
+      'Sub-contractor & vendor GST withholding verification',
     ],
-    riskSaved: 'Prevents multi-crore partner disputes, tax leakage on cost recharges, and contract penalty defaults.',
+    riskSaved: 'Protects against transfer pricing penalties, inter-company tax leakages, and non-compliance across group entities.',
   },
   pvt_ltd: {
     title: 'Private Limited Company (Pvt Ltd)',
@@ -55,7 +51,7 @@ const ENTITY_ROADMAPS: Record<EntityKey, EntityRoadmap> = {
       'DIR-3 KYC for all active Company Directors (30 Sep)',
       'Form MSME-1 & DPT-3 Annual Disclosures',
     ],
-    riskSaved: 'Over ₹2,50,000 in statutory late fees, penalty interest, and director disqualifications eliminated.',
+    riskSaved: 'Protects against cumulative statutory late fees, penal interest, and director disqualifications under the Companies Act.',
   },
   llp: {
     title: 'Limited Liability Partnership (LLP)',
@@ -71,7 +67,7 @@ const ENTITY_ROADMAPS: Record<EntityKey, EntityRoadmap> = {
       'Designated Partner KYC Verification',
       'Partner Capital Ledger Reconciliation',
     ],
-    riskSaved: 'Zero late fees under the LLP Act (which accumulate at ₹100/day per form indefinitely).',
+    riskSaved: 'Mitigates compounding statutory late fees under the LLP Act (which accumulate on a daily basis indefinitely).',
   },
   partnership: {
     title: 'Partnership Firm (Registered / Unregistered)',
@@ -101,12 +97,12 @@ const ENTITY_ROADMAPS: Record<EntityKey, EntityRoadmap> = {
       'Presumptive 6%/8%/50% profit computation under Sec 44AD/44ADA',
       'MSME Udyam Registration compliance & benefits',
     ],
-    riskSaved: 'Guarantees on-time ITR filing to carry forward business losses and avoid late fees u/s 234F.',
+    riskSaved: 'Facilitates timely ITR filing to enable carry-forward of business losses and avoid late fees u/s 234F.',
   },
 };
 
 export function EntityRoadmapWidget() {
-  const [selectedEntity, setSelectedEntity] = useState<EntityKey>('jv_consortium');
+  const [selectedEntity, setSelectedEntity] = useState<EntityKey>('pvt_ltd');
   const data = ENTITY_ROADMAPS[selectedEntity];
 
   return (
@@ -128,9 +124,9 @@ export function EntityRoadmapWidget() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
             {(
               [
-                { id: 'jv_consortium', label: 'Joint Venture & SPV' },
                 { id: 'pvt_ltd', label: 'Private Limited Company' },
                 { id: 'llp', label: 'Limited Liability Partnership' },
+                { id: 'corporate_group', label: 'Corporate Group / Holding' },
                 { id: 'partnership', label: 'Partnership Firm' },
                 { id: 'proprietorship', label: 'Sole Proprietor / MSME' },
               ] as const

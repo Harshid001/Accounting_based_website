@@ -19,6 +19,7 @@ import { cn } from '@/lib/cn';
 import type { Capability } from '@/lib/permissions';
 import { IconButton } from '@/components/ui/icon-button';
 import { useSession } from '@/context/SessionContext';
+import { JVLogo } from '@/components/brand/JVLogo';
 
 export interface NavEntry {
   to: string;
@@ -114,8 +115,9 @@ export function Sidebar({ collapsed, onToggle, onNavigate, variant = 'fixed' }: 
         )}
       >
         {narrow ? null : (
-          <span className="truncate text-lg font-semibold text-[var(--fd-text-primary)]">
-            FirmDesk
+          <span className="flex items-center gap-2.5">
+            <JVLogo size="sm" />
+            <span className="truncate text-sm font-semibold text-[var(--fd-text-primary)] tracking-tight">JV Tax Consultancy</span>
           </span>
         )}
         {isDrawer ? null : (

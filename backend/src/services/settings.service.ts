@@ -20,7 +20,16 @@ export const getFirmSettings = async (): Promise<FirmSettingsAttributes> => {
   if (existing) return existing;
   const created = await FirmSettings.create({
     _id: FIRM_SETTINGS_ID,
-    firmName: 'Your accounting practice',
+    firmName: 'JV Tax Consultancy',
+    contactEmail: 'jigar.taxadvocate@gmail.com',
+    contactPhone: '+919737046913',
+    address: {
+      line1: 'F-19 Krushnam Plaza opposite the District Court',
+      line2: 'near Siddharpur Char Rasta, Sardar Ganj',
+      city: 'Patan',
+      state: 'Gujarat',
+      pincode: '384265',
+    },
     complianceHorizonDays: env.COMPLIANCE_HORIZON_DAYS,
   });
   return created.toObject();

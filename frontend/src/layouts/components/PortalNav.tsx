@@ -7,6 +7,8 @@ import { EntitySwitcher } from '@/components/domain/EntitySwitcher';
 import { IconButton } from '@/components/ui/icon-button';
 import { NotificationBell } from '@/components/domain/NotificationBell';
 import { ThemeToggle } from '@/components/domain/ThemeToggle';
+import { LanguageSwitcher } from '@/components/domain/LanguageSwitcher';
+import { JVLogo } from '@/components/brand/JVLogo';
 
 export interface PortalNavEntry {
   to: string;
@@ -67,8 +69,9 @@ export function PortalNav({ onOpenDrawer }: { onOpenDrawer: () => void }) {
               onClick={onOpenDrawer}
             />
           </span>
-          <span className="truncate text-lg font-semibold text-[var(--fd-text-primary)]">
-            FirmDesk
+          <span className="flex items-center gap-2 shrink-0">
+            <JVLogo size="sm" />
+            <span className="hidden sm:block truncate text-sm font-semibold text-[var(--fd-text-primary)] tracking-tight">JV Tax Consultancy</span>
           </span>
           <span className="hidden md:block">
             <EntitySwitcher />
@@ -79,7 +82,8 @@ export function PortalNav({ onOpenDrawer }: { onOpenDrawer: () => void }) {
           <PortalLinks />
         </nav>
 
-        <div className="flex items-center gap-0.5 sm:gap-1">
+        <div className="flex items-center gap-1 sm:gap-1.5">
+          <LanguageSwitcher compact />
           <ThemeToggle />
           <NotificationBell enabled to="/portal/messages" />
           <AccountMenu profilePath="/portal/profile" />

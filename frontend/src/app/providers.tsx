@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { queryKeys } from '@/api/queryKeys';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ActiveClientProvider } from '@/context/ActiveClientContext';
+import { LanguageProvider } from '@/context/LanguageContext';
 import { SessionProvider } from '@/context/SessionContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { ToastProvider, useToast } from '@/context/ToastContext';
@@ -120,15 +121,17 @@ function QueryProvider({ children }: { children: ReactNode }) {
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
-      <ToastProvider>
-        <TooltipProvider>
-          <QueryProvider>
-            <SessionProvider>
-              <ActiveClientProvider>{children}</ActiveClientProvider>
-            </SessionProvider>
-          </QueryProvider>
-        </TooltipProvider>
-      </ToastProvider>
+      <LanguageProvider>
+        <ToastProvider>
+          <TooltipProvider>
+            <QueryProvider>
+              <SessionProvider>
+                <ActiveClientProvider>{children}</ActiveClientProvider>
+              </SessionProvider>
+            </QueryProvider>
+          </TooltipProvider>
+        </ToastProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

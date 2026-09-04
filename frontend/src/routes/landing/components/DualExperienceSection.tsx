@@ -1,10 +1,9 @@
 import {
   CheckCircle2,
-  Landmark,
   ShieldAlert,
-  ShieldCheck,
   XCircle,
 } from 'lucide-react';
+import { JVLogoMark } from '@/components/brand/JVLogo';
 
 export function DualExperienceSection() {
   return (
@@ -15,7 +14,7 @@ export function DualExperienceSection() {
             The Clear Choice
           </div>
           <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--fd-text-primary)] sm:text-4xl">
-            Traditional Accounting Firms vs. Partnering With Accounting JV
+            Traditional Accounting Firms vs. Partnering With JV Tax Consultancy
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
             See how our modern, institutional approach transforms financial governance from a stressful chore
@@ -80,25 +79,23 @@ export function DualExperienceSection() {
             </div>
           </div>
 
-          {/* Column 2: Partnering With Accounting JV */}
+          {/* Column 2: Partnering With JV Tax Consultancy */}
           <div className="rounded-2xl border border-[var(--fd-accent)]/50 bg-gradient-to-b from-[var(--fd-surface-1)] to-[var(--fd-surface-2)] p-6 sm:p-8 flex flex-col justify-between shadow-lg relative overflow-hidden">
             <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-[var(--fd-accent)]/15 blur-2xl" />
 
             <div>
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] shadow-xs">
-                  <Landmark className="h-6 w-6" aria-hidden="true" />
-                </div>
+                <JVLogoMark size={42} />
                 <div>
                   <span className="text-xs font-semibold uppercase tracking-wider text-[var(--fd-accent)]">
                     The Modern Standard
                   </span>
-                  <h3 className="text-xl font-bold text-[var(--fd-text-primary)]">Partnering With Accounting JV</h3>
+                  <h3 className="text-xl font-bold text-[var(--fd-text-primary)]">Partnering With JV Tax Consultancy</h3>
                 </div>
               </div>
 
               <p className="mt-4 text-xs sm:text-sm text-[var(--fd-text-secondary)] leading-relaxed">
-                Institutional precision, digital clarity, and senior advisory that gives founders and CFOs 100% peace of mind.
+                Institutional precision, digital clarity, and senior advisory that gives founders and leadership teams genuine peace of mind.
               </p>
 
               <ul className="mt-6 space-y-4 text-xs sm:text-sm text-[var(--fd-text-secondary)]">
@@ -106,7 +103,7 @@ export function DualExperienceSection() {
                   <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
                   <span>
                     <strong className="text-[var(--fd-text-primary)]">24/7 Digital Client Portal:</strong> All filings, tax
-                    challans, and stamped receipts centralized in your private, bank-grade encrypted dashboard.
+                    challans, and stamped receipts centralized in your private, securely encrypted dashboard.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -134,7 +131,7 @@ export function DualExperienceSection() {
             </div>
 
             <div className="mt-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 text-xs text-emerald-400 font-medium flex items-center justify-between">
-              <span>Guaranteed 100% on-time statutory compliance</span>
+              <span>Dedicated to timely statutory compliance & professional diligence</span>
               <a href="#consultation" className="font-bold underline hover:text-emerald-300">
                 Partner with us →
               </a>

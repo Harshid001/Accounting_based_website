@@ -1,109 +1,164 @@
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
+  Award,
   CalendarCheck,
-  CheckCircle2,
   ChevronRight,
-  FileCheck2,
   Lock,
-  Sparkles,
+  ShieldCheck,
   UserCheck,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { JVLogoMark } from '@/components/brand/JVLogo';
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24">
-      {/* Background Subtle Gradient Glows */}
+    <section className="relative isolate overflow-hidden pt-10 pb-12 md:pt-16 md:pb-20">
+      {/* 1. Atmospheric Accounting & Advisory Workspace Background */}
+      <div className="pointer-events-none absolute inset-0 -z-30 overflow-hidden select-none">
+        <img
+          src="/images/Gemini_Generated_Image_uj90t7uj90t7uj90.png"
+          alt="JV Tax Consultancy executive financial intelligence workspace"
+          className="h-full w-full object-cover object-[center_35%] md:object-[center_28%] filter contrast-[1.08] saturate-[1.1] brightness-[0.92] dark:brightness-[0.55] dark:contrast-[1.12]"
+        />
+        {/* Light mode overlay: soft vignette preserving the monitor, desk, and office ambiance */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-[var(--fd-bg)] dark:hidden block" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.82)_0%,rgba(255,255,255,0.40)_60%,rgba(255,255,255,0.85)_100%)] dark:hidden block" />
+
+        {/* Dark mode overlay: cinematic deep tone allowing screen charts and warm wood to shine through */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f17]/75 via-[#0b0f17]/45 to-[#0b0f17] hidden dark:block" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(11,15,23,0.72)_0%,rgba(11,15,23,0.30)_60%,rgba(11,15,23,0.85)_100%)] hidden dark:block" />
+      </div>
+
+      {/* 2. Oversized Subtle JV Brand Monogram Watermark */}
       <div
-        className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-[var(--fd-accent)]/20 via-indigo-500/10 to-sky-500/10 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-1/2 -z-20 -translate-x-1/2 -translate-y-1/2 opacity-[0.035] scale-150 select-none blur-[0.5px]"
+        aria-hidden="true"
+      >
+        <JVLogoMark size={640} />
+      </div>
+
+      {/* 3. Subtle Brand Radial Glow */}
+      <div
+        className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-indigo-500/15 via-sky-500/10 to-amber-500/10 blur-3xl"
         aria-hidden="true"
       />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          {/* Tagline Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--fd-border)] bg-[var(--fd-surface-2)]/80 px-3.5 py-1 text-xs font-medium text-[var(--fd-text-primary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--fd-accent)]">
-            <Sparkles className="h-3.5 w-3.5 text-[var(--fd-accent)]" aria-hidden="true" />
-            <span>Chartered Accountants & Joint Venture Advisory</span>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl text-center">
+          {/* Prominent JV Tax Consultancy Official Brand Badge */}
+          <div className="inline-flex items-center gap-2 sm:gap-2.5 rounded-full border border-amber-500/30 bg-[var(--fd-surface-1)]/90 px-3.5 py-1.5 shadow-md backdrop-blur-md transition-all hover:border-amber-400/50">
+            <JVLogoMark size={22} badge />
+            <span className="text-[11px] sm:text-xs font-bold tracking-wider text-amber-600 dark:text-amber-300 uppercase">
+              JV Tax Consultancy
+            </span>
+            <span className="h-3 w-px bg-[var(--fd-border)]" />
+            <span className="text-[11px] sm:text-xs font-medium text-[var(--fd-text-secondary)]">
+              Chartered Advisory & Audit Practice
+            </span>
+            <span className="hidden md:inline-flex items-center gap-1 rounded-full bg-[var(--fd-surface-2)] px-2 py-0.5 text-[10px] font-mono text-[var(--fd-text-tertiary)] border border-[var(--fd-border-subtle)]">
+              ICAI Governed
+            </span>
             <ChevronRight className="h-3 w-3 text-[var(--fd-text-tertiary)]" aria-hidden="true" />
           </div>
 
-          {/* Main Hero Heading */}
-          <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-[var(--fd-text-primary)] sm:text-5xl lg:text-6xl sm:leading-[1.15]">
-            Strategic Accounting & Tax.{' '}
-            <span className="bg-gradient-to-r from-[var(--fd-accent)] via-indigo-400 to-sky-400 bg-clip-text text-transparent">
-              Engineered for Enterprise & Joint Ventures.
+          {/* Main Hero Heading — Perfectly Balanced 2-Line Architecture */}
+          <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[var(--fd-text-primary)] leading-[1.15] sm:leading-[1.12]">
+            <span>Strategic Accounting & Corporate Tax</span>
+            <span className="block mt-1 sm:mt-2 bg-gradient-to-r from-indigo-600 via-[var(--fd-accent)] to-amber-600 dark:from-slate-100 dark:via-slate-200 dark:to-indigo-200 bg-clip-text text-transparent">
+              Engineered for High-Growth Enterprises
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-5 text-base sm:text-lg leading-relaxed text-[var(--fd-text-secondary)]">
-            From daily cloud bookkeeping and GST/TDS returns to complex statutory audits, joint venture
-            structuring, and Virtual CFO advisory. We protect your margins, eliminate penalty risk, and give
-            your executive team 24/7 statutory transparency through our dedicated Client Portal.
+          <p className="mt-5 mx-auto max-w-3xl text-sm sm:text-base lg:text-lg leading-relaxed text-[var(--fd-text-secondary)]">
+            From daily cloud bookkeeping and GST/TDS returns to statutory audits, strategic corporate tax planning,
+            and Virtual CFO advisory. We eliminate statutory penalty risk, protect corporate margins, and furnish 24/7 digital transparency
+            through our dedicated Client Portal.
           </p>
 
           {/* Call to Actions */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-            <Button asChild variant="primary" size="lg" className="w-full sm:w-auto shadow-md">
+            <Button
+              asChild
+              variant="primary"
+              size="lg"
+              className="w-full sm:w-auto shadow-lg shadow-indigo-950/20 dark:shadow-indigo-950/40 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 border border-indigo-400/30 transition-all hover:scale-[1.01]"
+            >
               <a href="#consultation" className="flex items-center justify-center gap-2">
-                <CalendarCheck className="h-4 w-4" aria-hidden="true" />
+                <CalendarCheck className="h-4 w-4 text-indigo-200" aria-hidden="true" />
                 <span>Schedule Free Advisory Call</span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
             </Button>
 
-            <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
+            <Button
+              asChild
+              variant="secondary"
+              size="lg"
+              className="w-full sm:w-auto bg-[var(--fd-surface-1)] hover:bg-[var(--fd-surface-2)] text-[var(--fd-text-primary)] border border-[var(--fd-border)] shadow-xs backdrop-blur-md px-6 transition-all hover:scale-[1.01]"
+            >
               <Link to="/sign-in?portal=client" className="flex items-center justify-center gap-2">
-                <UserCheck className="h-4 w-4 text-[var(--fd-accent)]" aria-hidden="true" />
+                <UserCheck className="h-4 w-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
                 <span>Client Portal Sign In</span>
               </Link>
             </Button>
           </div>
 
-          {/* Reassurances */}
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[var(--fd-text-tertiary)]">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-              100% On-Time Statutory Compliance
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-              Senior CA Partner Supervised
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-              Bank-Grade AES-256 Data Vaults
-            </span>
+          {/* Institutional Reassurance Badges */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xs">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 backdrop-blur-sm px-3.5 py-1.5 text-[var(--fd-text-secondary)] shadow-xs">
+              <ShieldCheck className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />
+              <span className="font-medium">ICAI Code of Ethics Governed</span>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 backdrop-blur-sm px-3.5 py-1.5 text-[var(--fd-text-secondary)] shadow-xs">
+              <Award className="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" aria-hidden="true" />
+              <span className="font-medium">Senior CA Supervised Advisory</span>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 backdrop-blur-sm px-3.5 py-1.5 text-[var(--fd-text-secondary)] shadow-xs">
+              <Lock className="h-3.5 w-3.5 text-sky-500 dark:text-sky-400 shrink-0" aria-hidden="true" />
+              <span className="font-medium">AES-256 Cloud Vault & NDA Protected</span>
+            </div>
           </div>
         </div>
 
-        {/* Highlight Metrics Cards */}
+        {/* Highlight Capability Cards — Institutional & Cohesive */}
         <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
-          <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4 text-center sm:p-5 shadow-xs transition-transform duration-200 hover:-translate-y-0.5">
-            <div className="text-2xl font-bold tracking-tight text-[var(--fd-accent)] sm:text-3xl">100%</div>
-            <div className="mt-1 text-xs font-semibold text-[var(--fd-text-primary)]">Filing Precision</div>
-            <div className="mt-0.5 text-[11px] text-[var(--fd-text-tertiary)]">Zero penalty late-filing track record</div>
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">Dual-Tier</span>
+              <span className="h-2 w-2 rounded-full bg-amber-400" aria-hidden="true" />
+            </div>
+            <div className="mt-1.5 text-xs font-semibold text-[var(--fd-text-secondary)]">Audit Scrutiny</div>
+            <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)] leading-normal">Senior CA verification prior to statutory filing</div>
           </div>
 
-          <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4 text-center sm:p-5 shadow-xs transition-transform duration-200 hover:-translate-y-0.5">
-            <div className="text-2xl font-bold tracking-tight text-sky-400 sm:text-3xl">₹500Cr+</div>
-            <div className="mt-1 text-xs font-semibold text-[var(--fd-text-primary)]">Turnover Advised</div>
-            <div className="mt-0.5 text-[11px] text-[var(--fd-text-tertiary)]">Across tech, infra, JV & retail</div>
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">100%</span>
+              <span className="h-2 w-2 rounded-full bg-indigo-400" aria-hidden="true" />
+            </div>
+            <div className="mt-1.5 text-xs font-semibold text-[var(--fd-text-secondary)]">Statutory Accuracy</div>
+            <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)] leading-normal">Zero-penalty track record across GST & Direct Tax</div>
           </div>
 
-          <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4 text-center sm:p-5 shadow-xs transition-transform duration-200 hover:-translate-y-0.5">
-            <div className="text-2xl font-bold tracking-tight text-emerald-400 sm:text-3xl">24/7</div>
-            <div className="mt-1 text-xs font-semibold text-[var(--fd-text-primary)]">Digital Transparency</div>
-            <div className="mt-0.5 text-[11px] text-[var(--fd-text-tertiary)]">Live portal status & filed receipts</div>
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">24/7</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+            </div>
+            <div className="mt-1.5 text-xs font-semibold text-[var(--fd-text-secondary)]">Digital Transparency</div>
+            <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)] leading-normal">Live statutory radar, ledger feeds & filed receipts</div>
           </div>
 
-          <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4 text-center sm:p-5 shadow-xs transition-transform duration-200 hover:-translate-y-0.5">
-            <div className="text-2xl font-bold tracking-tight text-amber-400 sm:text-3xl">Dual Shield</div>
-            <div className="mt-1 text-xs font-semibold text-[var(--fd-text-primary)]">Audit & Compliance</div>
-            <div className="mt-0.5 text-[11px] text-[var(--fd-text-tertiary)]">Dual-level verification on every filing</div>
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">Strategic</span>
+              <span className="h-2 w-2 rounded-full bg-sky-400" aria-hidden="true" />
+            </div>
+            <div className="mt-1.5 text-xs font-semibold text-[var(--fd-text-secondary)]">Virtual CFO & Advisory</div>
+            <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)] leading-normal">Corporate planning, financial models & MIS reporting</div>
           </div>
         </div>
       </div>

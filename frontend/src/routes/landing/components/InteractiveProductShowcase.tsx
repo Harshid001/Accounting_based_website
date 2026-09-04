@@ -1,31 +1,28 @@
 import { useState } from 'react';
 import {
-  AlertCircle,
   Building2,
   CheckCircle2,
   Clock,
   Download,
   FileCheck,
-  FileText,
   Handshake,
   Layers,
   Lock,
   ShieldCheck,
-  Sparkles,
   UploadCloud,
   User,
 } from 'lucide-react';
 
 export function InteractiveProductShowcase() {
   const [activeTab, setActiveTab] = useState<'portal' | 'workflow' | 'entities'>('portal');
-  const [selectedEntity, setSelectedEntity] = useState<'apex_corp' | 'apex_jv' | 'director'>('apex_corp');
+  const [selectedEntity, setSelectedEntity] = useState<'sample_corp' | 'sample_jv' | 'director'>('sample_corp');
   const [uploadedDemoFile, setUploadedDemoFile] = useState<string | null>(null);
 
   const clientFilings = [
     {
       id: 'f-1',
       returnName: 'GSTR-3B Monthly Return',
-      entity: 'Apex Technologies Pvt Ltd',
+      entity: 'Enterprise Client Model (Sample)',
       period: 'August 2026',
       dueDate: '20 Sep 2026',
       status: 'review',
@@ -36,7 +33,7 @@ export function InteractiveProductShowcase() {
     {
       id: 'f-2',
       returnName: 'Tax Audit Report u/s 44AB',
-      entity: 'Apex Technologies Pvt Ltd',
+      entity: 'Enterprise Client Model (Sample)',
       period: 'FY 2025–26 (AY 2026–27)',
       dueDate: '30 Sep 2026',
       status: 'pending_docs',
@@ -47,7 +44,7 @@ export function InteractiveProductShowcase() {
     {
       id: 'f-3',
       returnName: 'TDS Return Form 26Q',
-      entity: 'Apex Technologies Pvt Ltd',
+      entity: 'Enterprise Client Model (Sample)',
       period: 'Q2 (Jul - Sep 2026)',
       dueDate: '31 Oct 2026',
       status: 'scheduled',
@@ -58,7 +55,7 @@ export function InteractiveProductShowcase() {
     {
       id: 'f-4',
       returnName: 'GSTR-1 Outward Return',
-      entity: 'Apex Technologies Pvt Ltd',
+      entity: 'Enterprise Client Model (Sample)',
       period: 'August 2026',
       dueDate: '11 Sep 2026',
       status: 'filed',
@@ -79,7 +76,7 @@ export function InteractiveProductShowcase() {
             Total Transparency Through Your 24/7 Client Portal
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
-            When you partner with Accounting JV, you never have to wonder whether your GST return was filed on time or if
+            When you partner with JV Tax Consultancy, you never have to wonder whether your GST return was filed on time or if
             your tax challan was paid. Experience the digital clarity we provide to every client.
           </p>
 
@@ -145,7 +142,7 @@ export function InteractiveProductShowcase() {
                 <span className="hidden sm:inline">256-Bit Encrypted Session</span>
               </span>
               <span className="rounded bg-[var(--fd-accent-subtle-bg)] px-2 py-0.5 font-semibold text-[var(--fd-accent)]">
-                Client View
+                Client View (Interactive Demo)
               </span>
             </div>
           </div>
@@ -158,14 +155,14 @@ export function InteractiveProductShowcase() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-bold text-[var(--fd-text-primary)]">
-                      Apex Technologies Pvt Ltd
+                      Sample Enterprise Pvt Ltd
                     </h3>
                     <span className="rounded bg-emerald-500/15 text-emerald-400 px-2 py-0.5 text-xs font-semibold">
                       GST Regular · Active
                     </span>
                   </div>
                   <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
-                    Managed by <strong className="text-[var(--fd-text-primary)]">Senior CA Priya Sharma</strong> · Compliance Health Score: 100%
+                    Managed by <strong className="text-[var(--fd-text-primary)]">JV Tax Consultancy Advisory Team</strong> · Live Compliance Radar
                   </p>
                 </div>
 
@@ -189,7 +186,7 @@ export function InteractiveProductShowcase() {
                 <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-bg)] p-4">
                   <div className="text-xs font-medium text-[var(--fd-text-secondary)]">Overdue Tasks</div>
                   <div className="mt-1 text-2xl font-bold text-emerald-400">0</div>
-                  <div className="text-[11px] text-emerald-400 mt-0.5">Zero penalty liability</div>
+                  <div className="text-[11px] text-emerald-400 mt-0.5">All filings up-to-date</div>
                 </div>
                 <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-bg)] p-4">
                   <div className="text-xs font-medium text-[var(--fd-text-secondary)]">Pending Action</div>
@@ -199,7 +196,7 @@ export function InteractiveProductShowcase() {
                 <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-bg)] p-4">
                   <div className="text-xs font-medium text-[var(--fd-text-secondary)]">Filed FY 2026–27</div>
                   <div className="mt-1 text-2xl font-bold text-sky-400">18 Returns</div>
-                  <div className="text-[11px] text-[var(--fd-text-tertiary)] mt-0.5">100% on-time receipts</div>
+                  <div className="text-[11px] text-[var(--fd-text-tertiary)] mt-0.5">Portal acknowledgements archived</div>
                 </div>
               </div>
 
@@ -260,7 +257,7 @@ export function InteractiveProductShowcase() {
                         ) : f.status === 'pending_docs' ? (
                           <button
                             type="button"
-                            onClick={() => setUploadedDemoFile('Form_3CD_Annexures_Apex.pdf')}
+                            onClick={() => setUploadedDemoFile('Form_3CD_Annexures_Sample.pdf')}
                             className="inline-flex items-center gap-1.5 rounded-md bg-amber-500 text-slate-950 px-2.5 py-1.5 text-xs font-semibold hover:bg-amber-400 transition-colors shadow-xs"
                           >
                             <UploadCloud className="h-3.5 w-3.5" />
@@ -303,7 +300,7 @@ export function InteractiveProductShowcase() {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => setUploadedDemoFile('Form_3CD_Annexures_Apex.pdf')}
+                    onClick={() => setUploadedDemoFile('Form_3CD_Annexures_Sample.pdf')}
                     className="mt-4 inline-flex items-center gap-2 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-2)] px-4 py-2 text-xs font-semibold text-[var(--fd-text-primary)] hover:border-[var(--fd-accent)] transition-all"
                   >
                     <UploadCloud className="h-3.5 w-3.5 text-[var(--fd-accent)]" />
@@ -346,7 +343,7 @@ export function InteractiveProductShowcase() {
                   <p className="mt-1.5 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
                     We reconcile sales ledgers with GSTR-2B, audit vendor TDS deductions, and resolve mismatches.
                   </p>
-                  <div className="mt-3 text-[11px] text-sky-400 font-mono">Zero ITC Leakage</div>
+                  <div className="mt-3 text-[11px] text-sky-400 font-mono">ITC 2B Matched</div>
                 </div>
 
                 <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
@@ -374,7 +371,7 @@ export function InteractiveProductShowcase() {
             </div>
           )}
 
-          {/* TAB 3: Multi-Entity & Joint Venture View */}
+          {/* TAB 3: Multi-Entity & Corporate Structure View */}
           {activeTab === 'entities' && (
             <div className="p-6 sm:p-8 space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--fd-border-subtle)] pb-5">
@@ -383,32 +380,32 @@ export function InteractiveProductShowcase() {
                     Consolidated Multi-Entity Switching
                   </h3>
                   <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
-                    Running an operating company, a joint venture partnership, and individual director filings? Switch with 1 click.
+                    Running an operating company, a manufacturing LLP, and individual director filings? Switch with 1 click.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setSelectedEntity('apex_corp')}
+                    onClick={() => setSelectedEntity('sample_corp')}
                     className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                      selectedEntity === 'apex_corp'
+                      selectedEntity === 'sample_corp'
                         ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]'
                         : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)]'
                     }`}
                   >
-                    Apex Tech Pvt Ltd
+                    Enterprise Pvt Ltd (Model)
                   </button>
                   <button
                     type="button"
-                    onClick={() => setSelectedEntity('apex_jv')}
+                    onClick={() => setSelectedEntity('sample_jv')}
                     className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                      selectedEntity === 'apex_jv'
+                      selectedEntity === 'sample_jv'
                         ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]'
                         : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)]'
                     }`}
                   >
-                    Apex-L&T JV Consortium
+                    Subsidiary LLP (Model)
                   </button>
                   <button
                     type="button"
@@ -419,47 +416,47 @@ export function InteractiveProductShowcase() {
                         : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)]'
                     }`}
                   >
-                    Anil Kumar (Director ITR)
+                    Director (Individual ITR)
                   </button>
                 </div>
               </div>
 
-              {selectedEntity === 'apex_jv' && (
+              {selectedEntity === 'sample_jv' && (
                 <div className="rounded-xl border border-sky-500/30 bg-sky-500/10 p-5">
                   <div className="flex items-center gap-2 text-sky-400 text-sm font-bold">
                     <Handshake className="h-4 w-4" />
-                    <span>Joint Venture Consortium: Apex-L&T Infrastructure JV</span>
+                    <span>Group Entity: Gujarat Logistics & Industrial Park (LLP)</span>
                   </div>
                   <p className="mt-2 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
-                    This SPV operates under a 60:40 equity waterfall. Accounting JV independently manages consortium book closing,
-                    TDS deduction on sub-contracts (Section 194C), GSTR-3B filings, and quarterly audited profit-distribution statements.
+                    This illustrative entity operates as an affiliated subsidiary LLP. JV Tax Consultancy independently manages monthly book closing,
+                    TDS deductions (Section 194C/194J), GSTR-3B filings, and quarterly partner capital reporting.
                   </p>
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                     <div className="rounded-lg bg-[var(--fd-bg)] p-3">
-                      <div className="text-[var(--fd-text-tertiary)]">Consortium Turnover</div>
-                      <div className="text-sm font-bold text-[var(--fd-text-primary)] mt-0.5">₹42.80 Crores</div>
+                      <div className="text-[var(--fd-text-tertiary)]">Entity Structure</div>
+                      <div className="text-sm font-bold text-[var(--fd-text-primary)] mt-0.5">Limited Liability Partnership</div>
                     </div>
                     <div className="rounded-lg bg-[var(--fd-bg)] p-3">
-                      <div className="text-[var(--fd-text-tertiary)]">Profit Split Ratio</div>
-                      <div className="text-sm font-bold text-sky-400 mt-0.5">60% Apex / 40% L&T</div>
+                      <div className="text-[var(--fd-text-tertiary)]">Partner Profit Share</div>
+                      <div className="text-sm font-bold text-sky-400 mt-0.5">Fixed Ratio (Sec 40(b) Compliant)</div>
                     </div>
                     <div className="rounded-lg bg-[var(--fd-bg)] p-3">
                       <div className="text-[var(--fd-text-tertiary)]">Statutory Status</div>
-                      <div className="text-sm font-bold text-emerald-400 mt-0.5">100% Tax Compliant</div>
+                      <div className="text-sm font-bold text-emerald-400 mt-0.5">Reconciled & Monitored</div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {selectedEntity === 'apex_corp' && (
+              {selectedEntity === 'sample_corp' && (
                 <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
                   <div className="flex items-center gap-2 text-[var(--fd-accent)] text-sm font-bold">
                     <Building2 className="h-4 w-4" />
-                    <span>Operating Entity: Apex Technologies Private Limited</span>
+                    <span>Operating Entity: Corporate Enterprise (Sample Model)</span>
                   </div>
                   <p className="mt-2 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
-                    Fast-growing enterprise software provider. Accounting JV handles monthly bookkeeping, statutory audit under Companies Act 2013,
-                    GSTR-1 & 3B, advance tax estimation, and Virtual CFO reporting for seed investors.
+                    Representative corporate entity. JV Tax Consultancy handles monthly bookkeeping, statutory audit under Companies Act 2013,
+                    GSTR-1 & 3B, advance tax estimation, and executive reporting.
                   </p>
                 </div>
               )}
@@ -468,11 +465,11 @@ export function InteractiveProductShowcase() {
                 <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-5">
                   <div className="flex items-center gap-2 text-purple-400 text-sm font-bold">
                     <User className="h-4 w-4" />
-                    <span>Personal Tax & Director Compliance: Anil Kumar (Managing Director)</span>
+                    <span>Personal Tax & Director Compliance (Sample Profile)</span>
                   </div>
                   <p className="mt-2 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
-                    DIR-3 KYC completed on 14 Aug 2026. Annual ITR-2 filed with comprehensive capital gains calculation, dividend income
-                    reconciliation against AIS / Form 26AS, and advance tax tracking.
+                    DIR-3 KYC completed annually. Comprehensive capital gains calculation, dividend income
+                    reconciliation against AIS / Form 26AS, advance tax tracking, and personal ITR filing.
                   </p>
                 </div>
               )}

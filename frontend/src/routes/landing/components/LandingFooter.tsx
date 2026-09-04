@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Landmark, Lock, ShieldCheck, UserCheck } from 'lucide-react';
+import { Lock, ShieldCheck, UserCheck } from 'lucide-react';
+import { JVLogo } from '@/components/brand/JVLogo';
 
 export function LandingFooter() {
   return (
@@ -8,23 +9,21 @@ export function LandingFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]">
-                <Landmark className="h-4 w-4" aria-hidden="true" />
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-base font-bold text-[var(--fd-text-primary)]">
-                  Accounting JV
+            <Link to="/" className="inline-flex items-center gap-2.5" aria-label="JV Tax Consultancy Home">
+              <JVLogo size="md" />
+              <div className="flex flex-col">
+                <span className="font-bold tracking-tight text-sm text-[var(--fd-text-primary)]">
+                  JV Tax Consultancy
                 </span>
-                <span className="rounded bg-[var(--fd-accent-subtle-bg)] px-1.5 py-0.5 text-[9px] font-semibold text-[var(--fd-accent)] uppercase">
-                  Chartered Accountants
+                <span className="text-[10px] font-medium text-[var(--fd-text-tertiary)] tracking-wider uppercase">
+                  Chartered Advisory & Audit Practice
                 </span>
               </div>
             </Link>
 
             <p className="max-w-sm text-xs leading-relaxed text-[var(--fd-text-secondary)]">
-              Strategic accounting, tax compliance, statutory audit assurance, and specialized Joint Venture financial
-              advisory for growing enterprises, LLPs, and consortiums across India.
+              Strategic accounting, corporate tax compliance, statutory audit assurance, and Virtual CFO
+              advisory for growing enterprises, LLPs, and corporations across India.
             </p>
 
             <div className="flex items-center gap-4 text-xs text-[var(--fd-text-tertiary)] pt-2">
@@ -52,7 +51,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <a href="#services" className="hover:text-[var(--fd-text-primary)] transition-colors">
-                  Joint Venture & SPV Advisory
+                  Corporate Advisory & CFO
                 </a>
               </li>
               <li>
@@ -91,51 +90,70 @@ export function LandingFooter() {
                 </Link>
               </li>
               <li>
-                <a href="#compliance-radar" className="hover:text-[var(--fd-text-primary)] transition-colors">
+                <Link to="/team" className="hover:text-[var(--fd-text-primary)] transition-colors font-medium text-[var(--fd-accent)]">
+                  Leadership & CA Partners →
+                </Link>
+              </li>
+              <li>
+                <a href="/#compliance-radar" className="hover:text-[var(--fd-text-primary)] transition-colors">
                   Statutory Filing Radar
                 </a>
               </li>
               <li>
-                <a href="#entity-roadmap" className="hover:text-[var(--fd-text-primary)] transition-colors">
+                <a href="/#entity-roadmap" className="hover:text-[var(--fd-text-primary)] transition-colors">
                   Entity Compliance Roadmaps
                 </a>
               </li>
               <li>
-                <a href="#portal-preview" className="hover:text-[var(--fd-text-primary)] transition-colors">
+                <a href="/#portal-preview" className="hover:text-[var(--fd-text-primary)] transition-colors">
                   Digital Portal Walkthrough
                 </a>
               </li>
               <li>
-                <a href="#consultation" className="hover:text-[var(--fd-text-primary)] transition-colors">
+                <a href="/#consultation" className="hover:text-[var(--fd-text-primary)] transition-colors">
                   Schedule Free Advisory
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-[var(--fd-text-primary)] transition-colors">
+                <a href="/#faq" className="hover:text-[var(--fd-text-primary)] transition-colors">
                   Client FAQs
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Practice Offices & Team */}
+          {/* Col 3: Practice Office & Contact */}
           <div>
             <h3 className="text-xs font-bold text-[var(--fd-text-primary)] uppercase tracking-wider mb-3">
-              Offices & Access
+              Office & Contact
             </h3>
-            <ul className="space-y-2 text-[var(--fd-text-secondary)]">
+            <ul className="space-y-2.5 text-[var(--fd-text-secondary)]">
               <li>
-                <strong className="text-[var(--fd-text-primary)]">Mumbai Office:</strong>
-                <div className="text-[11px] text-[var(--fd-text-tertiary)]">Nariman Point, Mumbai 400021</div>
+                <strong className="text-[var(--fd-text-primary)] block">Practice Office:</strong>
+                <address className="not-italic text-[11px] text-[var(--fd-text-tertiary)] leading-relaxed">
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Krushnam+Plaza,+Opposite+District+Court,+Siddhpur+Char+Rasta,+Patan,+Gujarat+384265"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-[var(--fd-accent)] transition-colors inline-block"
+                  >
+                    F-19 Krushnam Plaza opposite the District Court, near Siddhpur Char Rasta, Sardar Ganj, Patan, Gujarat 384265
+                  </a>
+                </address>
               </li>
               <li>
-                <strong className="text-[var(--fd-text-primary)]">Bengaluru Office:</strong>
-                <div className="text-[11px] text-[var(--fd-text-tertiary)]">Indiranagar, Bengaluru 560038</div>
+                <strong className="text-[var(--fd-text-primary)] block">Direct Helpline:</strong>
+                <a
+                  href="tel:+919737046913"
+                  className="text-[11px] font-semibold text-[var(--fd-accent)] hover:underline"
+                >
+                  +91 97370 46913
+                </a>
               </li>
-              <li className="pt-2">
+              <li className="pt-1">
                 <Link
                   to="/sign-in?portal=admin"
-                  className="inline-flex items-center gap-1 text-[var(--fd-accent)] hover:underline"
+                  className="inline-flex items-center gap-1 text-[var(--fd-accent)] hover:underline text-xs"
                 >
                   <ShieldCheck className="h-3.5 w-3.5" />
                   <span>Practice Team Workspace</span>
@@ -148,13 +166,13 @@ export function LandingFooter() {
         {/* Bottom Disclaimer */}
         <div className="mt-12 border-t border-[var(--fd-border-subtle)] pt-6 text-[11px] text-[var(--fd-text-tertiary)] leading-relaxed space-y-3">
           <p>
-            <strong>Regulatory & Professional Disclaimer:</strong> Accounting JV is a professional accounting, tax,
-            and joint venture financial advisory practice. Information provided on this website is for general informational
+            <strong>Regulatory & Professional Disclaimer:</strong> JV Tax Consultancy is a professional accounting, tax,
+            and corporate financial advisory practice. Information provided on this website is for general informational
             purposes and should not be construed as unilateral legal or tax advice. All client engagements are conducted
             in accordance with the Code of Ethics and guidelines prescribed by the Institute of Chartered Accountants of India (ICAI).
           </p>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 text-[10px]">
-            <div>© {new Date().getFullYear()} Accounting JV. All rights reserved.</div>
+            <div>© {new Date().getFullYear()} JV Tax Consultancy. All rights reserved.</div>
             <div className="flex items-center gap-4">
               <span>Non-Disclosure Protected</span>
               <span>AES-256 Vault Architecture</span>

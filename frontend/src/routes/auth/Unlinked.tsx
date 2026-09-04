@@ -244,7 +244,7 @@ export function Unlinked() {
           <div className="mt-4 rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] p-4 text-xs text-[var(--fd-text-secondary)]">
             <p className="font-semibold text-[var(--fd-text-primary)]">Need assistance filling your details?</p>
             <p className="mt-1">
-              You can contact your assigned practice admin directly at <strong className="text-[var(--fd-text-primary)]">support@firmdesk.in</strong>. Once you submit this form, your client dashboard, document upload center, and direct messaging channel with your accountant will activate automatically.
+              You can contact your assigned practice admin directly at <strong className="text-[var(--fd-text-primary)]">jigar.taxadvocate@gmail.com</strong>. Once you submit this form, your client dashboard, document upload center, and direct messaging channel with your accountant will activate automatically.
             </p>
           </div>
         )}
@@ -352,7 +352,7 @@ export function Unlinked() {
                   {({ inputId, invalid }) => (
                     <Input
                       id={inputId}
-                      placeholder={clientType === 'business' ? 'e.g. Apex Logistics' : 'e.g. Rahul Sharma'}
+                      placeholder={clientType === 'business' ? 'e.g. Acme Logistics' : 'e.g. Rahul Sharma'}
                       invalid={invalid}
                       {...form.register('displayName')}
                     />
@@ -367,7 +367,7 @@ export function Unlinked() {
                   {({ inputId, invalid }) => (
                     <Input
                       id={inputId}
-                      placeholder={clientType === 'business' ? 'e.g. Apex Logistics Private Limited' : 'As on PAN Card'}
+                      placeholder={clientType === 'business' ? 'e.g. Acme Logistics Private Limited' : 'As on PAN Card'}
                       invalid={invalid}
                       {...form.register('legalName')}
                     />

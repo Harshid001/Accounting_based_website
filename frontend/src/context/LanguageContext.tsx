@@ -1,0 +1,296 @@
+import type { ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
+export type Language = 'en' | 'hi' | 'gu' | 'mr';
+
+export const LANGUAGE_STORAGE_KEY = 'jv_language_preference';
+
+export interface LanguageMeta {
+  code: Language;
+  name: string;
+  englishName: string;
+  script: string;
+  badge: string;
+  region: string;
+  sampleGreeting: string;
+  sampleNotice: string;
+}
+
+export const SUPPORTED_LANGUAGES: LanguageMeta[] = [
+  {
+    code: 'en',
+    name: 'English',
+    englishName: 'English',
+    script: 'Latin Alphabet',
+    badge: 'Standard',
+    region: 'Corporate & Global Advisory',
+    sampleGreeting: 'Welcome back',
+    sampleNotice: 'GST & TDS Filings On Schedule',
+  },
+  {
+    code: 'hi',
+    name: 'हिन्दी',
+    englishName: 'Hindi',
+    script: 'देवनागरी (Devanagari)',
+    badge: 'राजभाषा',
+    region: 'राष्ट्रीय एवं कॉर्पोरेट कर अनुपालन',
+    sampleGreeting: 'स्वागत है',
+    sampleNotice: 'जीएसटी और टीडीएस फाइलिंग समय पर पूर्ण',
+  },
+  {
+    code: 'gu',
+    name: 'ગુજરાતી',
+    englishName: 'Gujarati',
+    script: 'ગુજરાતી લિપિ (Gujarati)',
+    badge: 'પ્રાદેશિક',
+    region: 'વેપાર, વાણિજ્ય અને જીએસટી કર પરામર્શ',
+    sampleGreeting: 'આપનું સ્વાગત છે',
+    sampleNotice: 'જીએસટી અને ટીડીએસ ફાઇલિંગ સમયસર પૂર્ણ',
+  },
+  {
+    code: 'mr',
+    name: 'मराठी',
+    englishName: 'Marathi',
+    script: 'देवनागरी (Devanagari)',
+    badge: 'प्रादेशिक',
+    region: 'उद्योग, कंपनी कायदा आणि कर सल्लागार (महाराष्ट्र)',
+    sampleGreeting: 'आपले स्वागत आहे',
+    sampleNotice: 'जीएसटी आणि टीडीएस विवरणपत्रे वेळेवर पूर्ण',
+  },
+];
+
+export const TRANSLATIONS: Record<Language, Record<string, string>> = {
+  en: {
+    'profile.title': 'Your profile',
+    'profile.description': 'Your personal details, preferred language, notification settings, and active device sessions.',
+    'profile.detailsTitle': 'Personal Details',
+    'profile.detailsDesc': 'Your registered email is tied to account credentials and cannot be edited here.',
+    'profile.fullName': 'Full Name',
+    'profile.mobile': 'Mobile Phone',
+    'profile.saveChanges': 'Save changes',
+    'profile.saving': 'Saving your profile...',
+    'profile.savedSuccess': 'Profile details saved successfully',
+
+    'language.title': 'Language & Regional Preferences',
+    'language.description': 'Select your preferred language for JV Tax Consultancy. This configures portal interfaces, statutory filing summaries, and advisory notices.',
+    'language.active': 'Active Working Language',
+    'language.instantApply': 'Changes apply immediately across all portal screens and navigation.',
+    'language.previewTitle': 'Live Language Preview',
+    'language.previewStatus': 'Statutory Compliance Status',
+    'language.switchedToast': 'Language updated to',
+
+    'nav.services': 'Services',
+    'nav.whyUs': 'Why Us',
+    'nav.clientPortal': 'Client Portal',
+    'nav.statutoryRadar': 'Statutory Radar',
+    'nav.entityRoadmaps': 'Entity Roadmaps',
+    'nav.security': 'Security & Trust',
+    'nav.faq': 'FAQ',
+    'nav.bookConsultation': 'Book Consultation',
+    'nav.teamLogin': 'Team Login',
+
+    'common.save': 'Save',
+    'common.cancel': 'Cancel',
+    'common.close': 'Close',
+    'common.search': 'Search',
+    'common.download': 'Download',
+    'common.verified': 'Verified',
+  },
+  hi: {
+    'profile.title': 'आपकी प्रोफाइल',
+    'profile.description': 'आपका व्यक्तिगत विवरण, पसंदीदा भाषा, अधिसूचना सेटिंग्स और सक्रिय उपकरण सत्र।',
+    'profile.detailsTitle': 'व्यक्तिगत विवरण',
+    'profile.detailsDesc': 'आपका पंजीकृत ईमेल खाते से जुड़ा है और इसे यहां नहीं बदला जा सकता।',
+    'profile.fullName': 'पूरा नाम',
+    'profile.mobile': 'मोबाइल नंबर',
+    'profile.saveChanges': 'बदलाव सहेजें',
+    'profile.saving': 'प्रोफाइल सहेजा जा रहा है...',
+    'profile.savedSuccess': 'प्रोफाइल विवरण सफलतापूर्वक सहेजा गया',
+
+    'language.title': 'भाषा एवं क्षेत्रीय प्राथमिकताएं',
+    'language.description': 'JV Tax Consultancy के लिए अपनी पसंदीदा भाषा चुनें। यह पोर्टल इंटरफेस, वैधानिक फाइलिंग सारांश और परामर्श सूचनाओं को अनुकूलित करता है।',
+    'language.active': 'सक्रिय कार्य भाषा',
+    'language.instantApply': 'बदलाव तुरंत सभी पोर्टल स्क्रीन और नेविगेशन पर लागू होते हैं।',
+    'language.previewTitle': 'सक्रिय भाषा पूर्वावलोकन',
+    'language.previewStatus': 'वैधानिक अनुपालन स्थिति',
+    'language.switchedToast': 'भाषा सफलतापूर्वक बदली गई:',
+
+    'nav.services': 'सेवाएं',
+    'nav.whyUs': 'हमारी विशेषताएं',
+    'nav.clientPortal': 'क्लाइंट पोर्टल',
+    'nav.statutoryRadar': 'वैधानिक रडार',
+    'nav.entityRoadmaps': 'संस्था रोडमैप',
+    'nav.security': 'सुरक्षा एवं विश्वास',
+    'nav.faq': 'सामान्य प्रश्न',
+    'nav.bookConsultation': 'परामर्श बुक करें',
+    'nav.teamLogin': 'सीए टीम लॉगिन',
+
+    'common.save': 'सहेजें',
+    'common.cancel': 'रद्द करें',
+    'common.close': 'बंद करें',
+    'common.search': 'खोजें',
+    'common.download': 'डाउनलोड करें',
+    'common.verified': 'सत्यापित',
+  },
+  gu: {
+    'profile.title': 'તમારી પ્રોફાઇલ',
+    'profile.description': 'તમારી વ્યક્તિગત વિગતો, પસંદગીની ભાષા, સૂચના સેટિંગ્સ અને સક્રિય ઉપકરણ સત્રો.',
+    'profile.detailsTitle': 'વ્યક્તિગત વિગતો',
+    'profile.detailsDesc': 'તમારું નોંધાયેલ ઇમેઇલ એકાઉન્ટ સાથે જોડાયેલું છે અને અહીં બદલી શકાતું નથી.',
+    'profile.fullName': 'પૂરું નામ',
+    'profile.mobile': 'મોબાઇલ નંબર',
+    'profile.saveChanges': 'ફેરફારો સાચવો',
+    'profile.saving': 'પ્રોફાઇલ સાચવવામાં આવી રહી છે...',
+    'profile.savedSuccess': 'પ્રોફાઇલ વિગતો સફળતાપૂર્વક સાચવવામાં આવી',
+
+    'language.title': 'ભાષા અને પ્રાદેશિક પસંદગીઓ',
+    'language.description': 'JV Tax Consultancy માટે તમારી પસંદગીની ભાષા પસંદ કરો. આ પોર્ટલ ઇન્ટરફેસ, કાનૂની ફાઇલિંગ સારાંશ અને કર સલાહકાર સૂચનાઓને ગોઠવે છે.',
+    'language.active': 'સક્રિય કાર્યકારી ભાષા',
+    'language.instantApply': 'ફેરફારો તમામ પોર્ટલ સ્ક્રીન અને નેવિગેશન પર તરત જ લાગુ પડે છે.',
+    'language.previewTitle': 'જીવંત ભાષા પૂર્વાવલોકન',
+    'language.previewStatus': 'કાનૂની કર પાલન સ્થિતિ',
+    'language.switchedToast': 'ભાષા સફળતાપૂર્વક અપડેટ થઈ:',
+
+    'nav.services': 'સેવાઓ',
+    'nav.whyUs': 'અમારી વિશેષતા',
+    'nav.clientPortal': 'ક્લાયન્ટ પોર્ટલ',
+    'nav.statutoryRadar': 'કાનૂની રડાર',
+    'nav.entityRoadmaps': 'સંસ્થા રોડમેપ',
+    'nav.security': 'સુરક્ષા અને વિશ્વાસ',
+    'nav.faq': 'વારંવાર પૂછાતા પ્રશ્નો',
+    'nav.bookConsultation': 'સલાહ બુક કરો',
+    'nav.teamLogin': 'ટીમ લૉગિન',
+
+    'common.save': 'સાચવો',
+    'common.cancel': 'રદ કરો',
+    'common.close': 'બંધ કરો',
+    'common.search': 'શોધો',
+    'common.download': 'ડાઉનલોડ કરો',
+    'common.verified': 'ચકાસાયેલ',
+  },
+  mr: {
+    'profile.title': 'आपली प्रोफाइल',
+    'profile.description': 'आपले वैयक्तिक तपशील, पसंतीची भाषा, सूचना प्राधान्ये आणि सक्रिय डिव्हाइस सत्रे.',
+    'profile.detailsTitle': 'वैयक्तिक तपशील',
+    'profile.detailsDesc': 'आपला नोंदणीकृत ईमेल खात्याशी जोडलेला आहे आणि येथे बदलता येत नाही.',
+    'profile.fullName': 'पूर्ण नाव',
+    'profile.mobile': 'मोबाइल क्रमांक',
+    'profile.saveChanges': 'बदल जतन करा',
+    'profile.saving': 'प्रोफाइल जतन केली जात आहे...',
+    'profile.savedSuccess': 'प्रोफाइल तपशील यशस्वीरीत्या जतन केले',
+
+    'language.title': 'भाषा आणि प्रादेशिक प्राधान्ये',
+    'language.description': 'JV Tax Consultancy साठी आपली पसंतीची भाषा निवडा. हे पोर्टल इंटरफेस, वैधानिक कर विवरणपत्र सारांश आणि सल्लागार सूचना संयोजित करते.',
+    'language.active': 'सक्रिय कार्य भाषा',
+    'language.instantApply': 'बदल त्वरित सर्व पोर्टल पडद्यावर आणि नेव्हिगेशनवर लागू होतात.',
+    'language.previewTitle': 'थेट भाषा पूर्वावलोकन',
+    'language.previewStatus': 'वैधानिक कर अनुपालन स्थिती',
+    'language.switchedToast': 'भाषा यशस्वीरीत्या अद्ययावत केली:',
+
+    'nav.services': 'सेवा',
+    'nav.whyUs': 'आमची वैशिष्ट्ये',
+    'nav.clientPortal': 'क्लायंट पोर्टल',
+    'nav.statutoryRadar': 'वैधानिक रडार',
+    'nav.entityRoadmaps': 'संस्था रोडमॅप',
+    'nav.security': 'सुरक्षा आणि विश्वास',
+    'nav.faq': 'नेहमी विचारले जाणारे प्रश्न',
+    'nav.bookConsultation': 'सल्लामसलत बुक करा',
+    'nav.teamLogin': 'सीए टीम लॉगिन',
+
+    'common.save': 'जतन करा',
+    'common.cancel': 'रद्द करा',
+    'common.close': 'बंद करा',
+    'common.search': 'शोधा',
+    'common.download': 'डाउनलोड करा',
+    'common.verified': 'सत्यापित',
+  },
+};
+
+export interface LanguageContextValue {
+  language: Language;
+  currentMeta: LanguageMeta;
+  setLanguage: (lang: Language) => void;
+  t: (key: string, fallback?: string) => string;
+  languages: LanguageMeta[];
+}
+
+const defaultMeta = SUPPORTED_LANGUAGES[0]!;
+
+const defaultContextValue: LanguageContextValue = {
+  language: 'en',
+  currentMeta: defaultMeta,
+  setLanguage: () => undefined,
+  t: (key: string, fallback?: string) => TRANSLATIONS.en[key] ?? fallback ?? key,
+  languages: SUPPORTED_LANGUAGES,
+};
+
+const LanguageContext = createContext<LanguageContextValue>(defaultContextValue);
+
+const readStoredLanguage = (): Language => {
+  try {
+    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
+    if (stored && (['en', 'hi', 'gu', 'mr'] as const).includes(stored)) {
+      return stored;
+    }
+  } catch {
+    // ignore
+  }
+  return 'en';
+};
+
+const applyLanguage = (lang: Language): void => {
+  try {
+    document.documentElement.lang = lang;
+  } catch {
+    // ignore in environments without DOM
+  }
+};
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<Language>(readStoredLanguage);
+
+  useEffect(() => {
+    applyLanguage(language);
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    } catch {
+      // ignore
+    }
+  }, [language]);
+
+  const setLanguage = useCallback((next: Language) => {
+    setLanguageState(next);
+  }, []);
+
+  const currentMeta = useMemo<LanguageMeta>(() => {
+    return SUPPORTED_LANGUAGES.find((l) => l.code === language) ?? defaultMeta;
+  }, [language]);
+
+  const t = useCallback(
+    (key: string, fallback?: string): string => {
+      const activeDict = TRANSLATIONS[language];
+      if (activeDict && key in activeDict) {
+        return activeDict[key]!;
+      }
+      return TRANSLATIONS.en[key] ?? fallback ?? key;
+    },
+    [language],
+  );
+
+  const value = useMemo<LanguageContextValue>(
+    () => ({
+      language,
+      currentMeta,
+      setLanguage,
+      t,
+      languages: SUPPORTED_LANGUAGES,
+    }),
+    [language, currentMeta, setLanguage, t],
+  );
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
+}
+
+export function useLanguage(): LanguageContextValue {
+  return useContext(LanguageContext);
+}

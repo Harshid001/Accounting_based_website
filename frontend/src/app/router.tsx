@@ -24,6 +24,9 @@ const Forbidden = lazy(async () => ({
 }));
 const NotFound = lazy(async () => ({ default: (await import('@/routes/errors/NotFound')).NotFound }));
 const Landing = lazy(async () => ({ default: (await import('@/routes/landing/Landing')).Landing }));
+const TeamPage = lazy(async () => ({
+  default: (await import('@/routes/landing/TeamPage')).TeamPage,
+}));
 
 const Dashboard = lazy(async () => ({
   default: (await import('@/routes/dashboard/Dashboard')).Dashboard,
@@ -251,6 +254,7 @@ export function AppRoutes() {
         <Route path="/portal/profile" element={<PortalProfile />} />
       </Route>
 
+      <Route path="/team" element={<TeamPage />} />
       <Route path="/" element={<Landing />} />
       <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>

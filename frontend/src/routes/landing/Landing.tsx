@@ -10,7 +10,6 @@ import { LandingNavbar } from './components/LandingNavbar';
 import { HeroSection } from './components/HeroSection';
 import { ServicesSection } from './components/ServicesSection';
 import { BentoFeaturesSection } from './components/BentoFeaturesSection';
-import { DualExperienceSection } from './components/DualExperienceSection';
 import { InteractiveProductShowcase } from './components/InteractiveProductShowcase';
 import { ComplianceRadarSection } from './components/ComplianceRadarSection';
 import { EntityRoadmapWidget } from './components/EntityRoadmapWidget';
@@ -21,7 +20,7 @@ import { CtaBanner } from './components/CtaBanner';
 import { LandingFooter } from './components/LandingFooter';
 
 export function Landing() {
-  usePageTitle('Strategic Accounting, Corporate Tax & Joint Venture Advisory | Accounting JV');
+  usePageTitle('Corporate Tax, Accounting & Statutory Audit | JV Tax Consultancy');
   const { status, user } = useSession();
 
   const isAuthenticated = status === 'authenticated' && user !== null;
@@ -57,7 +56,6 @@ export function Landing() {
         <HeroSection />
         <ServicesSection />
         <BentoFeaturesSection />
-        <DualExperienceSection />
         <InteractiveProductShowcase />
         <ComplianceRadarSection />
         <EntityRoadmapWidget />

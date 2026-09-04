@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { LogOut, User } from 'lucide-react';
+import { Globe, LogOut, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { signOutEverywhere } from '@/api/authClient';
@@ -8,6 +8,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { DropdownMenu } from '@/components/ui/dropdown-menu';
 import { ROLE_LABELS } from '@/lib/constants';
 import { useSession } from '@/context/SessionContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/context/ToastContext';
 
 export interface AccountMenuProps {
@@ -16,6 +17,7 @@ export interface AccountMenuProps {
 
 export function AccountMenu({ profilePath }: AccountMenuProps) {
   const { user, clear } = useSession();
+  const { currentMeta, t } = useLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { errorToast } = useToast();
@@ -41,8 +43,16 @@ export function AccountMenu({ profilePath }: AccountMenuProps) {
       actions={[
         {
           id: 'profile',
-          label: 'Your profile',
+          label: t('profile.title', 'Your profile'),
           icon: <User size={14} aria-hidden="true" />,
+          onSelect: () => {
+            void navigate(profilePath);
+          },
+        },
+        {
+          id: 'language',
+          label: `Language: ${currentMeta.name}`,
+          icon: <Globe size={14} aria-hidden="true" />,
           onSelect: () => {
             void navigate(profilePath);
           },

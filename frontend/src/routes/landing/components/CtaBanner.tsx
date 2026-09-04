@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarCheck, ShieldCheck, Sparkles, UserCheck } from 'lucide-react';
+import { ArrowRight, CalendarCheck, Sparkles, UserCheck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -16,11 +16,11 @@ export function CtaBanner() {
 
           <div className="inline-flex items-center gap-2 rounded-full border border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-3 py-1 text-xs font-semibold text-[var(--fd-accent)]">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Zero Late Fees · 100% Peace of Mind</span>
+            <span>Proactive Compliance · Dedicated Advisory</span>
           </div>
 
           <h2 className="mt-4 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">
-            Ready for Hassle-Free Accounting & Absolute Statutory Certainty?
+            Ready for Dependable Accounting & Seamless Statutory Compliance?
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base leading-relaxed text-[var(--fd-text-secondary)]">
@@ -46,9 +46,9 @@ export function CtaBanner() {
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-[var(--fd-text-tertiary)]">
-            <span>✓ No Setup Fees</span>
+            <span>✓ Transparent Pricing</span>
             <span>✓ Non-Disclosure Agreement (NDA) Protected</span>
-            <span>✓ 5-Day Onboarding Migration</span>
+            <span>✓ Structured Onboarding Migration</span>
           </div>
         </div>
       </div>

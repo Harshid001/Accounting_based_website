@@ -31,7 +31,7 @@ const SERVICES_CATALOGUE: ServiceItem[] = [
     category: 'tax',
     title: 'Corporate Tax & GST Compliance',
     badge: 'Direct & Indirect Tax',
-    tagline: 'Zero-penalty filings, maximum legitimate input tax credits, and stress-free audit defense.',
+    tagline: 'Timely and accurate filings, legitimate input tax credit reconciliation, and diligent audit defense.',
     description:
       'We manage your end-to-end statutory tax requirements. Our tax practice performs deep GSTR-2B reconciliation before filing, optimizes quarterly advance tax instalments, and provides audited representation for departmental inquiries.',
     deliverables: [
@@ -43,18 +43,18 @@ const SERVICES_CATALOGUE: ServiceItem[] = [
     icon: Calculator,
   },
   {
-    id: 'jv-advisory',
+    id: 'corp-advisory',
     category: 'advisory',
-    title: 'Joint Venture & SPV Financial Advisory',
-    badge: 'Specialized Practice',
-    tagline: 'Consortium accounting, equity profit-splits, and transaction due diligence.',
+    title: 'Corporate Financial Structuring & M&A Advisory',
+    badge: 'Strategic Advisory',
+    tagline: 'Capital structuring, equity reorganizations, and transaction due diligence.',
     description:
-      'Operating a Joint Venture requires strict financial separation, transparent cost allocation, and audited profit-sharing agreements. We act as an independent financial controller ensuring all parties maintain complete trust.',
+      'We provide strategic financial advisory for corporate reorganizations, mergers, acquisitions, and multi-entity group structuring. We help business owners protect value, optimize tax liabilities, and ensure seamless transaction closings.',
     deliverables: [
-      'Joint Venture consortium financial structuring & entity setup',
-      'Monthly profit-and-loss sharing reconciliations & waterfall audit',
-      'Inter-company balances & transfer pricing compliance',
-      'M&A financial due diligence and transaction valuation',
+      'Corporate reorganization & holding company financial structuring',
+      'Financial due diligence, business valuation & deal structuring',
+      'Inter-company agreements & transfer pricing documentation',
+      'Capital restructuring and promoter equity advisory',
     ],
     icon: Handshake,
   },
@@ -143,7 +143,7 @@ export function ServicesSection() {
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
             We combine rigorous statutory accounting expertise with commercial advisory. Whether you are scaling an operating
-            company or structuring a multi-stakeholder Joint Venture, we manage your finances with uncompromising integrity.
+            company or structuring a multi-entity corporate group, we manage your finances with uncompromising integrity.
           </p>
 
           {/* Filter Tabs */}
@@ -151,7 +151,7 @@ export function ServicesSection() {
             {[
               { id: 'all', label: 'All Practice Areas' },
               { id: 'tax', label: 'Corporate Tax & GST' },
-              { id: 'advisory', label: 'JV & Virtual CFO' },
+              { id: 'advisory', label: 'Corporate & CFO Advisory' },
               { id: 'accounting', label: 'Bookkeeping & ROC' },
               { id: 'audit', label: 'Statutory Audit' },
             ].map((tab) => (

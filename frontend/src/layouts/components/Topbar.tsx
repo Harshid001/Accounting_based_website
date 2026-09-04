@@ -4,6 +4,7 @@ import { AccountMenu } from '@/layouts/components/AccountMenu';
 import { IconButton } from '@/components/ui/icon-button';
 import { NotificationBell } from '@/components/domain/NotificationBell';
 import { ThemeToggle } from '@/components/domain/ThemeToggle';
+import { LanguageSwitcher } from '@/components/domain/LanguageSwitcher';
 
 export interface TopbarProps {
   onOpenDrawer: () => void;
@@ -13,19 +14,16 @@ export interface TopbarProps {
 export function Topbar({ onOpenDrawer, onOpenPalette }: TopbarProps) {
   return (
     <header
-      data-slot="topbar"
-      data-print="hide"
-      className="flex h-14 shrink-0 items-center justify-between gap-2 sm:gap-3 border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] px-2.5 sm:px-4"
+      aria-label="Application header"
+      className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-3 sm:px-6"
     >
-      <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
-        <span className="lg:hidden">
-          <IconButton
-            label="Open the navigation menu"
-            icon={<Menu size={17} aria-hidden="true" />}
-            onClick={onOpenDrawer}
-          />
-        </span>
-
+      <div className="flex items-center gap-2">
+        <IconButton
+          label="Open navigation menu"
+          onClick={onOpenDrawer}
+          className="lg:hidden"
+          icon={<Menu size={18} aria-hidden="true" />}
+        />
         <button
           type="button"
           onClick={onOpenPalette}
@@ -39,7 +37,8 @@ export function Topbar({ onOpenDrawer, onOpenPalette }: TopbarProps) {
         </button>
       </div>
 
-      <div className="flex items-center gap-0.5 sm:gap-1">
+      <div className="flex items-center gap-1 sm:gap-1.5">
+        <LanguageSwitcher compact />
         <ThemeToggle />
         <NotificationBell enabled />
         <AccountMenu profilePath="/profile" />

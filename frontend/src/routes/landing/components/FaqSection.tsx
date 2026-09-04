@@ -13,14 +13,14 @@ const FAQ_ITEMS: FaqItem[] = [
       'Most business transitions take fewer than 5 business days. Our team coordinates directly with your outgoing accountants or internal bookkeepers to migrate opening balances, verify prior period returns (GST, TDS, ITR), and immediately load your legal deadlines into your dedicated 120-day statutory calendar.',
   },
   {
-    question: 'How does your firm handle Joint Venture (JV) accounting and consortium profit splits?',
+    question: 'How does JV Tax Consultancy handle multi-entity and corporate group accounting?',
     answer:
-      'We act as an independent financial controller for Joint Ventures, Consortiums, and Special Purpose Vehicles (SPVs). We set up separated consortium books, audit inter-company cost recharges, ensure sub-contractor TDS compliance under Section 194C, and furnish audited quarterly waterfall profit distribution certificates that protect all venture partners.',
+      'We act as independent financial controllers and advisors for multi-entity corporate structures, holding companies, and operating subsidiaries. We consolidate group accounts, manage inter-company reconciliations, ensure transfer pricing compliance, and furnish executive-level financial reporting across all your entities.',
   },
   {
     question: 'What visibility does our internal leadership team receive through the Client Portal?',
     answer:
-      'Every client receives secure access to our 24/7 Client Portal. Your founders, CFO, and accounts team can monitor live statutory filing statuses, download official government receipts (ARN acknowledgements and tax challans) with 1 click, and upload required documents into bank-grade encrypted vaults.',
+      'Every client receives secure access to our 24/7 Client Portal. Your founders, CFO, and accounts team can monitor live statutory filing statuses, download official government receipts (ARN acknowledgements and tax challans) with 1 click, and upload required documents into securely encrypted vaults.',
   },
   {
     question: 'Can we engage your firm for Virtual CFO services while keeping our internal accountant?',
@@ -28,7 +28,7 @@ const FAQ_ITEMS: FaqItem[] = [
       'Yes, absolutely. In our Virtual CFO engagements, we work alongside your existing in-house bookkeeper. We oversee monthly book closings, build 12-month rolling cash flow forecasts, optimize unit economics, and prepare investor and board reporting packs, elevating your internal team’s output.',
   },
   {
-    question: 'How does your practice ensure zero late-filing penalty liability on statutory returns?',
+    question: 'How does your practice safeguard clients against late-filing penalties on statutory returns?',
     answer:
       'We never wait until the 11th hour. Our practice tracks statutory milestones across a 120-day horizon, initiating reconciliations and document collection weeks ahead of government cutoffs. Every tax computation undergoes dual-tier verification by a qualified Senior Chartered Accountant prior to government submission.',
   },
@@ -96,7 +96,7 @@ export function FaqSection() {
         {/* Still have questions banner */}
         <div className="mt-10 rounded-xl bg-[var(--fd-surface-2)] p-6 text-center border border-[var(--fd-border-subtle)]">
           <h3 className="text-sm font-bold text-[var(--fd-text-primary)]">
-            Have a specific scenario or complex Joint Venture structure?
+            Have a specific scenario or complex corporate structure?
           </h3>
           <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
             Our Senior Partners are available for a confidential review of your entity&apos;s financial framework.

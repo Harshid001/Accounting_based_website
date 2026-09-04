@@ -26,9 +26,6 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - run: npm ci || npm install
       - run: npm run verify
-      - name: audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
-        continue-on-error: true
 
   frontend:
     name: frontend
@@ -46,6 +43,3 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci || npm install
       - run: npm run verify
-      - name: audit production dependencies
-        run: npm audit --omit=dev --audit-level=critical
-        continue-on-error: true

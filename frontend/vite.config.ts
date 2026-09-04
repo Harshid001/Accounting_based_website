@@ -63,7 +63,14 @@ export default defineConfig(({ mode }) => {
           ],
         },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+          // Precache app-shell assets only; exclude heavy landing-page images
+          // (hero PNGs, generated images) which are fetched on demand and must
+          // not bloat the service-worker precache manifest.
+          globPatterns: ['**/*.{js,css,html,svg,ico,woff2}'],
+          globIgnores: ['**/images/**', '**/Gemini_Generated_Image*'],
+          // Safety-net: raise limit so large assets that slip through don't
+          // break the build; they are excluded above but belt-and-suspenders.
+          maximumFileSizeToCacheInBytes: 7 * 1024 * 1024, // 7 MiB
           navigateFallback: 'index.html',
           navigateFallbackDenylist: [/^\/api\//],
           cleanupOutdatedCaches: true,

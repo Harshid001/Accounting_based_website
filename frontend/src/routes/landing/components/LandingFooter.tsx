@@ -135,7 +135,7 @@ export function LandingFooter() {
                     href="https://www.google.com/maps/search/?api=1&query=Krushnam+Plaza,+Opposite+District+Court,+Siddhpur+Char+Rasta,+Patan,+Gujarat+384265"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-[var(--fd-accent)] transition-colors inline-block"
+                    className="hover:text-[var(--fd-accent)] transition-colors inline-block break-words hyphens-auto max-w-[250px] sm:max-w-none"
                   >
                     F-19 Krushnam Plaza opposite the District Court, near Siddhpur Char Rasta, Sardar Ganj, Patan, Gujarat 384265
                   </a>
@@ -173,7 +173,7 @@ export function LandingFooter() {
           </p>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 text-[10px]">
             <div>© {new Date().getFullYear()} JV Tax Consultancy. All rights reserved.</div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
               <span>Non-Disclosure Protected</span>
               <span>AES-256 Vault Architecture</span>
               <span>ICAI Standards on Auditing</span>

@@ -156,7 +156,7 @@ export function ConsultationSection() {
                     </h3>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label htmlFor="contact-fullName" className="block text-xs font-semibold text-[var(--fd-text-secondary)] mb-1">
                         Full Name *
@@ -188,7 +188,7 @@ export function ConsultationSection() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label htmlFor="contact-phone" className="block text-xs font-semibold text-[var(--fd-text-secondary)] mb-1">
                         Phone / Mobile
@@ -218,7 +218,7 @@ export function ConsultationSection() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label htmlFor="contact-entityType" className="block text-xs font-semibold text-[var(--fd-text-secondary)] mb-1">
                         Entity Structure
@@ -305,7 +305,8 @@ export function ConsultationSection() {
                   </div>
                   <p className="mt-0.5 text-xs text-[var(--fd-text-secondary)] flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5 text-[var(--fd-accent)] shrink-0" />
-                    <span>Chambers F-19, Krushnam Plaza, Opp. District Court, near Siddhpur Char Rasta, Sardar Ganj, Patan, Gujarat 384265</span>
+                    <span className="hidden sm:inline">Chambers F-19, Krushnam Plaza, Opp. District Court, near Siddhpur Char Rasta, Sardar Ganj, Patan, Gujarat 384265</span>
+                    <span className="inline sm:hidden">Krushnam Plaza, Patan 384265</span>
                   </p>
                 </div>
               </div>

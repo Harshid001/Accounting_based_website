@@ -59,7 +59,7 @@ export function BentoFeaturesSection() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]">
                   <Calendar className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <span className="rounded-full border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-3 py-1 text-xs font-mono font-semibold text-[var(--fd-accent)]">
+                <span className="rounded-full border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-2 py-1 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-mono font-semibold text-[var(--fd-accent)]">
                   120-Day Predictive Horizon
                 </span>
               </div>
@@ -67,7 +67,7 @@ export function BentoFeaturesSection() {
             <h3 className="mt-5 text-xl font-bold text-[var(--fd-text-primary)] sm:text-2xl">
               Proactive Statutory Planning — Advanced Milestone Tracking
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--fd-text-secondary)] max-w-xl">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--fd-text-secondary)] max-w-full lg:max-w-xl">
               Our practice forecasts statutory milestones across the 120-day horizon. We notify your finance team
               weeks before GST, TDS, advance tax, or MCA cutoff dates, ensuring books are closed, reconciled, and audited
               ahead of government penalty windows.
@@ -81,7 +81,7 @@ export function BentoFeaturesSection() {
                   <CheckCircle2 className="h-3.5 w-3.5" /> Monitored & On Track
                 </span>
               </div>
-              <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+              <div className="mt-3 grid grid-cols-1 xs:grid-cols-3 gap-2 text-center text-xs">
                 <div className="rounded-lg bg-[var(--fd-surface-2)] p-2.5">
                   <div className="font-mono text-xs text-[var(--fd-accent)] font-bold">11th · GSTR-1</div>
                   <div className="text-[11px] text-[var(--fd-text-secondary)]">Prepared & Filed Early</div>

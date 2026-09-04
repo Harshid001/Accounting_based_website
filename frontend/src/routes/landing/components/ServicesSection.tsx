@@ -155,7 +155,7 @@ export function ServicesSection() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveFilter(tab.id as typeof activeFilter)}
-                className={`rounded-lg px-3.5 py-1.5 text-xs sm:text-sm font-medium transition-colors ${
+                className={`rounded-lg px-3.5 py-1.5 text-[11px] sm:text-xs font-medium transition-colors ${
                   activeFilter === tab.id
                     ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] shadow-xs'
                     : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)] hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)]'
@@ -168,7 +168,7 @@ export function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {filteredServices.map((service) => {
             const Icon = service.icon;
             return (
@@ -181,7 +181,7 @@ export function ServicesSection() {
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--fd-accent)]/10 text-[var(--fd-accent)] group-hover:bg-[var(--fd-accent)] group-hover:text-[var(--fd-accent-contrast)] transition-colors duration-200">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
-                    <span className="rounded-full border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--fd-accent)]">
+                    <span className="rounded-full border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-2.5 py-0.5 text-[10px] font-semibold text-[var(--fd-accent)] truncate max-w-[140px] sm:max-w-none">
                       {service.badge}
                     </span>
                   </div>

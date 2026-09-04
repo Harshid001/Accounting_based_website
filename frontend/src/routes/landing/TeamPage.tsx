@@ -159,7 +159,7 @@ export function TeamPage() {
                   <CheckCircle2 className="h-4 w-4" />
                   ICAI Code of Ethics Compliant
                 </span>
-                <span className="text-[var(--fd-border)]">|</span>
+                <span className="hidden sm:inline text-[var(--fd-border)]">|</span>
                 <span className="flex items-center gap-1.5 text-[var(--fd-accent)]">
                   <ShieldCheck className="h-4 w-4" />
                   Patan Practice Headquarters (Krushnam Plaza)
@@ -180,7 +180,7 @@ export function TeamPage() {
                 >
                   <div>
                     {/* Top Credential Crest Header */}
-                    <div className="flex items-start justify-between gap-4 pb-6 border-b border-[var(--fd-border-subtle)]">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[var(--fd-border-subtle)]">
                       <div className="flex items-center gap-4">
                         {/* Institutional Credential Seal */}
                         <div
@@ -208,7 +208,7 @@ export function TeamPage() {
                       </div>
 
                       {/* ICAI Reg Badge */}
-                      <div className="text-right">
+                      <div className="sm:text-right mt-2 sm:mt-0">
                         <span className="block font-mono text-xs font-bold text-[var(--fd-accent)]">
                           {partner.icaiNumber}
                         </span>
@@ -245,7 +245,7 @@ export function TeamPage() {
                         {partner.specializations.map((spec, sIdx) => (
                           <span
                             key={sIdx}
-                            className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-2.5 py-1 text-[11px] text-[var(--fd-text-secondary)]"
+                            className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-2.5 py-1 text-[10px] sm:text-[11px] text-[var(--fd-text-secondary)]"
                           >
                             {spec}
                           </span>

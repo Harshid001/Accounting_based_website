@@ -13,12 +13,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/domain/ThemeToggle';
 import { LanguageSwitcher } from '@/components/domain/LanguageSwitcher';
+import { useLanguage } from '@/context/LanguageContext';
 import { useSession } from '@/context/SessionContext';
 import { homePathFor } from '@/lib/permissions';
 import { JVLogo } from '@/components/brand/JVLogo';
 
 export function LandingNavbar() {
   const { status, user } = useSession();
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -46,10 +48,10 @@ export function LandingNavbar() {
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { label: 'Services', href: '/#services' },
-    { label: 'Why Us', href: '/#firm-advantage' },
-    { label: 'Our Team', href: '/team' },
-    { label: 'FAQ', href: '/#faq' },
+    { label: t('nav.services', 'Services'), href: '/#services' },
+    { label: t('nav.whyUs', 'Why Us'), href: '/#firm-advantage' },
+    { label: t('nav.teamLogin', 'Our Team'), href: '/team' }, // fallback
+    { label: t('nav.faq', 'FAQ'), href: '/#faq' },
   ];
 
   const closeMenu = () => setMobileMenuOpen(false);
@@ -69,7 +71,7 @@ export function LandingNavbar() {
       />
 
       {/* 3-column grid: [logo] [nav island] [actions] — center column is truly centered */}
-      <div className="mx-auto grid h-[68px] max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 sm:px-8 lg:px-10">
+      <div className="mx-auto grid h-14 sm:h-[68px] max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4 px-3 sm:px-6 lg:px-10">
 
         {/* Col 1 — Brand Logo (left-anchored) */}
         <div className="flex items-center justify-start">
@@ -124,7 +126,7 @@ export function LandingNavbar() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 </span>
-                <span>Client Portal</span>
+                <span>{t('nav.clientPortal', 'Client Portal')}</span>
               </Link>
 
               {/* Book Consultation — primary CTA */}
@@ -136,7 +138,7 @@ export function LandingNavbar() {
               >
                 <a href="#consultation" className="flex items-center gap-2">
                   <CalendarCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Book Consultation</span>
+                  <span>{t('nav.bookConsultation', 'Book Consultation')}</span>
                 </a>
               </Button>
             </>
@@ -201,7 +203,7 @@ export function LandingNavbar() {
             </div>
           </div>
 
-          <nav className="grid grid-cols-2 gap-2 py-3">
+          <nav className="grid grid-cols-1 xs:grid-cols-2 gap-2 py-3">
             {navLinks.map((link) => {
               const isInternal = link.href.startsWith('/') && !link.href.includes('#');
               return isInternal ? (
@@ -239,20 +241,20 @@ export function LandingNavbar() {
                 <Button asChild variant="primary" size="md" className="w-full justify-center shadow-sm">
                   <a href="#consultation" onClick={closeMenu} className="flex items-center gap-2">
                     <CalendarCheck className="h-4 w-4" aria-hidden="true" />
-                    <span>Book a Free Consultation</span>
+                    <span>{t('nav.bookConsultation', 'Book a Free Consultation')}</span>
                   </a>
                 </Button>
                 <Button asChild variant="secondary" size="md" className="w-full justify-center">
                   <Link to="/sign-in?portal=client" onClick={closeMenu} className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                     <UserCheck className="h-4 w-4 text-[var(--fd-accent)]" aria-hidden="true" />
-                    <span>Client Portal Sign In</span>
+                    <span>{t('nav.clientPortal', 'Client Portal Sign In')}</span>
                   </Link>
                 </Button>
                 <Button asChild variant="ghost" size="md" className="w-full justify-center text-xs">
                   <Link to="/sign-in?portal=admin" onClick={closeMenu} className="flex items-center gap-2">
                     <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                    <span>Practice Team Workspace</span>
+                    <span>{t('nav.teamLogin', 'Practice Team Workspace')}</span>
                   </Link>
                 </Button>
               </>

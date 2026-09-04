@@ -19,7 +19,7 @@ export function CtaBanner() {
             <span>Proactive Compliance · Dedicated Advisory</span>
           </div>
 
-          <h2 className="mt-4 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">
+          <h2 className="mt-4 text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--fd-text-primary)] leading-tight">
             Ready for Dependable Accounting & Seamless Statutory Compliance?
           </h2>
 
@@ -45,7 +45,7 @@ export function CtaBanner() {
             </Button>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-[var(--fd-text-tertiary)]">
+          <div className="mt-6 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-[var(--fd-text-tertiary)]">
             <span>✓ Transparent Pricing</span>
             <span>✓ Non-Disclosure Agreement (NDA) Protected</span>
             <span>✓ Structured Onboarding Migration</span>

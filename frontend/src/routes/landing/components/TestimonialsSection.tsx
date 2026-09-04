@@ -119,7 +119,7 @@ export function TestimonialsSection() {
                 {/* Quote with subtle quote icon */}
                 <div className="relative mt-4">
                   <Quote className="absolute -top-2 -left-1 h-6 w-6 text-[var(--fd-border-strong)]/40 -z-0" />
-                  <p className="relative z-10 text-xs sm:text-sm leading-relaxed text-[var(--fd-text-secondary)] italic">
+                  <p className="relative z-10 text-xs sm:text-sm leading-relaxed text-[var(--fd-text-secondary)] italic line-clamp-6 sm:line-clamp-none">
                     &ldquo;{t.quote}&rdquo;
                   </p>
                 </div>

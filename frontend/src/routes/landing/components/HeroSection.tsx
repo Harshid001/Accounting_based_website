@@ -48,7 +48,7 @@ export function HeroSection() {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl text-center">
           {/* Prominent JV Tax Consultancy Official Brand Badge */}
-          <div className="inline-flex items-center gap-2 sm:gap-2.5 rounded-full border border-amber-500/30 bg-[var(--fd-surface-1)]/90 px-3.5 py-1.5 shadow-md backdrop-blur-md transition-all hover:border-amber-400/50">
+          <div className="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 rounded-full border border-amber-500/30 bg-[var(--fd-surface-1)]/90 px-3.5 py-1.5 shadow-md backdrop-blur-md transition-all hover:border-amber-400/50">
             <JVLogoMark size={22} badge />
             <span className="text-[11px] sm:text-xs font-bold tracking-wider text-amber-600 dark:text-amber-300 uppercase">
               JV Tax Consultancy
@@ -64,7 +64,7 @@ export function HeroSection() {
           </div>
 
           {/* Main Hero Heading — Perfectly Balanced 2-Line Architecture */}
-          <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[var(--fd-text-primary)] leading-[1.15] sm:leading-[1.12]">
+          <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[var(--fd-text-primary)] leading-[1.15] sm:leading-[1.12] break-words">
             <span>Strategic Accounting & Corporate Tax</span>
             <span className="block mt-1 sm:mt-2 bg-gradient-to-r from-indigo-600 via-[var(--fd-accent)] to-amber-600 dark:from-slate-100 dark:via-slate-200 dark:to-indigo-200 bg-clip-text text-transparent">
               Engineered for High-Growth Enterprises
@@ -125,7 +125,7 @@ export function HeroSection() {
 
         {/* Highlight Capability Cards — Institutional & Cohesive */}
         <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
-          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-3 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
             <div className="flex items-center justify-between">
               <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">Dual-Tier</span>
               <span className="h-2 w-2 rounded-full bg-amber-400" aria-hidden="true" />
@@ -134,7 +134,7 @@ export function HeroSection() {
             <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)] leading-normal">Senior CA verification prior to statutory filing</div>
           </div>
 
-          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-3 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
             <div className="flex items-center justify-between">
               <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">100%</span>
               <span className="h-2 w-2 rounded-full bg-indigo-400" aria-hidden="true" />
@@ -143,7 +143,7 @@ export function HeroSection() {
             <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)] leading-normal">Zero-penalty track record across GST & Direct Tax</div>
           </div>
 
-          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-3 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
             <div className="flex items-center justify-between">
               <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">24/7</span>
               <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
@@ -152,7 +152,7 @@ export function HeroSection() {
             <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)] leading-normal">Live statutory radar, ledger feeds & filed receipts</div>
           </div>
 
-          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-4 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
+          <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)]/80 p-3 sm:p-5 text-left shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--fd-border-strong)] hover:bg-[var(--fd-surface-2)] hover:-translate-y-0.5">
             <div className="flex items-center justify-between">
               <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">Strategic</span>
               <span className="h-2 w-2 rounded-full bg-sky-400" aria-hidden="true" />

@@ -108,7 +108,7 @@ export function TestimonialsSection() {
 
                 {/* 5-Star Rating */}
                 <div className="mt-4 flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
+                  {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                   ))}
                   <span className="ml-2 font-mono text-[10px] text-[var(--fd-text-tertiary)] uppercase tracking-wider">

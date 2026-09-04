@@ -37,7 +37,7 @@ function renderPanel() {
       value={{
         status: 'authenticated',
         user: mockUser,
-        refresh: async () => undefined,
+        refresh: () => Promise.resolve(undefined),
         clear: () => undefined,
         pendingVerification: null,
         error: null,

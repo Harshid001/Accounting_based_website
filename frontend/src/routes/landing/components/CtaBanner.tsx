@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Sparkles, UserCheck } from 'lucide-react';
+import { ArrowRight, CalendarCheck, ShieldCheck, Sparkles, UserCheck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -20,35 +20,35 @@ export function CtaBanner() {
           </div>
 
           <h2 className="mt-4 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--fd-text-primary)]">
-            Ready to Elevate Your Practice Operations?
+            Ready for Hassle-Free Accounting & Absolute Statutory Certainty?
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base leading-relaxed text-[var(--fd-text-secondary)]">
-            Whether you are managing hundreds of statutory returns as a CA practice or seeking total filing
-            visibility as a business client, FirmDesk keeps every deadline on track.
+            Partner with dedicated Chartered Accountants who treat your balance sheet with institutional precision.
+            Eliminate compliance stress and gain 24/7 financial transparency through our dedicated Client Portal.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Button asChild variant="primary" size="lg" className="w-full sm:w-auto shadow-md">
-              <Link to="/sign-in?portal=client" className="flex items-center justify-center gap-2">
-                <UserCheck className="h-4 w-4" aria-hidden="true" />
-                <span>Enter Client Portal</span>
+              <a href="#consultation" className="flex items-center justify-center gap-2">
+                <CalendarCheck className="h-4 w-4" aria-hidden="true" />
+                <span>Book Your Free Consultation</span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
+              </a>
             </Button>
 
             <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
-              <Link to="/sign-in?portal=admin" className="flex items-center justify-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-[var(--fd-accent)]" aria-hidden="true" />
-                <span>Practice Staff Sign In</span>
+              <Link to="/sign-in?portal=client" className="flex items-center justify-center gap-2">
+                <UserCheck className="h-4 w-4 text-[var(--fd-accent)]" aria-hidden="true" />
+                <span>Client Portal Sign In</span>
               </Link>
             </Button>
+          </div>
 
-            <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
-              <Link to="/sign-up" className="flex items-center justify-center gap-1.5">
-                <span>Create New Account</span>
-              </Link>
-            </Button>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-[var(--fd-text-tertiary)]">
+            <span>✓ No Setup Fees</span>
+            <span>✓ Non-Disclosure Agreement (NDA) Protected</span>
+            <span>✓ 5-Day Onboarding Migration</span>
           </div>
         </div>
       </div>

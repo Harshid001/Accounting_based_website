@@ -7,383 +7,475 @@ import {
   Download,
   FileCheck,
   FileText,
-  Filter,
+  Handshake,
+  Layers,
+  Lock,
   ShieldCheck,
+  Sparkles,
   UploadCloud,
   User,
 } from 'lucide-react';
 
 export function InteractiveProductShowcase() {
-  const [activeTab, setActiveTab] = useState<'staff' | 'client'>('staff');
-  const [staffFilter, setStaffFilter] = useState<'all' | 'due' | 'review' | 'filed'>('all');
+  const [activeTab, setActiveTab] = useState<'portal' | 'workflow' | 'entities'>('portal');
+  const [selectedEntity, setSelectedEntity] = useState<'apex_corp' | 'apex_jv' | 'director'>('apex_corp');
   const [uploadedDemoFile, setUploadedDemoFile] = useState<string | null>(null);
 
-  const complianceItems = [
+  const clientFilings = [
     {
-      id: 'cmp-1',
-      code: 'GSTR-3B',
-      client: 'Apex Technologies Pvt Ltd',
-      panGst: '27AABCA1234F1Z5',
+      id: 'f-1',
+      returnName: 'GSTR-3B Monthly Return',
+      entity: 'Apex Technologies Pvt Ltd',
+      period: 'August 2026',
       dueDate: '20 Sep 2026',
       status: 'review',
-      statusLabel: 'Under Review',
-      assignee: 'Priya Sharma (Sr. CA)',
-      notes: 'ITC reconciliation matched; awaiting partner sign-off',
+      statusLabel: 'Under CA Review',
+      actionNeeded: 'None (CA Team Verifying)',
+      taxPayable: '₹1,42,800',
     },
     {
-      id: 'cmp-2',
-      code: 'Tax Audit u/s 44AB',
-      client: 'Bharat Logistics LLP',
-      panGst: 'AABCB9876K',
+      id: 'f-2',
+      returnName: 'Tax Audit Report u/s 44AB',
+      entity: 'Apex Technologies Pvt Ltd',
+      period: 'FY 2025–26 (AY 2026–27)',
       dueDate: '30 Sep 2026',
-      status: 'due',
-      statusLabel: 'Due in 3 Days',
-      assignee: 'Rohan Mehta (Article)',
-      notes: 'Form 3CD Annexures compiled; turnover ₹9.4 Cr verified',
+      status: 'pending_docs',
+      statusLabel: 'Action Required',
+      actionNeeded: 'Upload Form 3CD Annexures',
+      taxPayable: 'Audit Sign-off',
     },
     {
-      id: 'cmp-3',
-      code: 'TDS Return 26Q',
-      client: 'Zenith Infra Solutions',
-      panGst: 'DELZ01928F',
+      id: 'f-3',
+      returnName: 'TDS Return Form 26Q',
+      entity: 'Apex Technologies Pvt Ltd',
+      period: 'Q2 (Jul - Sep 2026)',
       dueDate: '31 Oct 2026',
-      status: 'due',
-      statusLabel: 'Pending Challan',
-      assignee: 'Ananya Verma (Accountant)',
-      notes: '12 challans verified against TRACES portal',
+      status: 'scheduled',
+      statusLabel: 'Scheduled',
+      actionNeeded: 'Challans Reconciled',
+      taxPayable: '₹84,200',
     },
     {
-      id: 'cmp-4',
-      code: 'GSTR-1 Monthly',
-      client: 'Solis Healthcare Pvt Ltd',
-      panGst: '27AABCS9988D1Z2',
+      id: 'f-4',
+      returnName: 'GSTR-1 Outward Return',
+      entity: 'Apex Technologies Pvt Ltd',
+      period: 'August 2026',
       dueDate: '11 Sep 2026',
       status: 'filed',
       statusLabel: 'Filed & Verified',
-      assignee: 'Harshid K. (Partner)',
-      notes: 'ARN: AA270926019284K · Acknowledgment archived',
+      actionNeeded: 'Ack: ARN-AA27092601928',
+      taxPayable: 'Filed on 09 Sep',
     },
   ];
 
-  const filteredItems = complianceItems.filter((item) => {
-    if (staffFilter === 'all') return true;
-    if (staffFilter === 'due') return item.status === 'due';
-    if (staffFilter === 'review') return item.status === 'review';
-    if (staffFilter === 'filed') return item.status === 'filed';
-    return true;
-  });
-
   return (
-    <section id="product-tour" className="scroll-mt-20 py-16 lg:py-24 border-y border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)]">
+    <section id="portal-preview" className="scroll-mt-20 py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-1.5 rounded-md bg-[var(--fd-accent-subtle-bg)] px-2.5 py-1 text-xs font-semibold text-[var(--fd-accent)] uppercase tracking-wider">
-            Interactive System Preview
+            Client Experience Tour
           </div>
           <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--fd-text-primary)] sm:text-4xl">
-            Two Purpose-Built Portals. Zero Miscommunication.
+            Total Transparency Through Your 24/7 Client Portal
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
-            Explore how practice partners orchestrate filing pipelines, while corporate clients track their
-            statutory calendar and securely upload confidential records.
+            When you partner with Accounting JV, you never have to wonder whether your GST return was filed on time or if
+            your tax challan was paid. Experience the digital clarity we provide to every client.
           </p>
 
-          {/* Interactive Portal Switcher Tabs */}
-          <div className="mt-8 inline-flex rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-2)] p-1.5 shadow-sm">
+          {/* Interactive Navigation Tabs */}
+          <div className="mt-8 inline-flex rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] p-1 shadow-xs">
             <button
               type="button"
-              id="showcase-tab-staff"
-              onClick={() => setActiveTab('staff')}
+              onClick={() => setActiveTab('portal')}
               className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
-                activeTab === 'staff'
-                  ? 'bg-[var(--fd-surface-1)] text-[var(--fd-text-primary)] shadow-sm ring-1 ring-[var(--fd-border)]'
+                activeTab === 'portal'
+                  ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] shadow-sm'
                   : 'text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
               }`}
             >
-              <ShieldCheck className="h-4 w-4 text-[var(--fd-accent)]" aria-hidden="true" />
-              <span>Staff & Partner Workspace</span>
+              <FileCheck className="h-4 w-4" aria-hidden="true" />
+              <span>Live Filing Dashboard</span>
             </button>
+
             <button
               type="button"
-              id="showcase-tab-client"
-              onClick={() => setActiveTab('client')}
+              onClick={() => setActiveTab('workflow')}
               className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
-                activeTab === 'client'
-                  ? 'bg-[var(--fd-surface-1)] text-[var(--fd-text-primary)] shadow-sm ring-1 ring-[var(--fd-border)]'
+                activeTab === 'workflow'
+                  ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] shadow-sm'
                   : 'text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
               }`}
             >
-              <Building2 className="h-4 w-4 text-sky-400" aria-hidden="true" />
-              <span>Client Entity Portal</span>
+              <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+              <span>CA Audit Verification Flow</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('entities')}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                activeTab === 'entities'
+                  ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] shadow-sm'
+                  : 'text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
+              }`}
+            >
+              <Layers className="h-4 w-4" aria-hidden="true" />
+              <span>Multi-Entity & JV View</span>
             </button>
           </div>
         </div>
 
-        {/* Window Mockup Frame */}
-        <div className="mt-10 overflow-hidden rounded-2xl border border-[var(--fd-border)] bg-[var(--fd-bg)] shadow-2xl">
-          {/* Mockup Header Bar */}
-          <div className="flex h-11 items-center justify-between border-b border-[var(--fd-border)] bg-[var(--fd-surface-2)] px-4">
+        {/* Showcase Container */}
+        <div className="mt-10 rounded-2xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] shadow-xl overflow-hidden">
+          {/* Simulated Browser Bar */}
+          <div className="flex items-center justify-between border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/60 px-4 py-3">
             <div className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded-full bg-rose-500/80" />
-              <div className="h-3 w-3 rounded-full bg-amber-500/80" />
-              <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
+              <span className="h-3 w-3 rounded-full bg-rose-500/80" />
+              <span className="h-3 w-3 rounded-full bg-amber-500/80" />
+              <span className="h-3 w-3 rounded-full bg-emerald-500/80" />
               <span className="ml-2 text-xs font-mono text-[var(--fd-text-tertiary)]">
-                {activeTab === 'staff'
-                  ? 'firmdesk.internal/operations/compliance-tracker'
-                  : 'firmdesk.internal/portal/apex-technologies'}
+                portal.accountingjv.com/dashboard
               </span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-[var(--fd-text-secondary)]">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
-              <span className="hidden sm:inline font-mono">Realtime MongoDB GridFS · Connected</span>
+
+            <div className="flex items-center gap-3 text-xs text-[var(--fd-text-secondary)]">
+              <span className="flex items-center gap-1">
+                <Lock className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="hidden sm:inline">256-Bit Encrypted Session</span>
+              </span>
+              <span className="rounded bg-[var(--fd-accent-subtle-bg)] px-2 py-0.5 font-semibold text-[var(--fd-accent)]">
+                Client View
+              </span>
             </div>
           </div>
 
-          {/* VIEW 1: STAFF & PARTNER WORKSPACE */}
-          {activeTab === 'staff' && (
-            <div className="p-4 sm:p-6 lg:p-8 space-y-6">
-              {/* Practice Top Summary Strip */}
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <div className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-3">
-                  <div className="text-xs text-[var(--fd-text-secondary)]">Active Clients</div>
-                  <div className="mt-1 text-xl font-bold text-[var(--fd-text-primary)]">148 Entities</div>
-                  <div className="text-[11px] text-emerald-400">100% KYC verified</div>
+          {/* TAB 1: Live Filing Dashboard */}
+          {activeTab === 'portal' && (
+            <div className="p-4 sm:p-8 space-y-6">
+              {/* Executive Welcome & Top Summary */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-[var(--fd-text-primary)]">
+                      Apex Technologies Pvt Ltd
+                    </h3>
+                    <span className="rounded bg-emerald-500/15 text-emerald-400 px-2 py-0.5 text-xs font-semibold">
+                      GST Regular · Active
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
+                    Managed by <strong className="text-[var(--fd-text-primary)]">Senior CA Priya Sharma</strong> · Compliance Health Score: 100%
+                  </p>
                 </div>
-                <div className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-3">
-                  <div className="text-xs text-[var(--fd-text-secondary)]">Due in 7 Days</div>
-                  <div className="mt-1 text-xl font-bold text-amber-400">14 Filings</div>
-                  <div className="text-[11px] text-[var(--fd-text-tertiary)]">GST & Advance Tax</div>
-                </div>
-                <div className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-3">
-                  <div className="text-xs text-[var(--fd-text-secondary)]">Under Review</div>
-                  <div className="mt-1 text-xl font-bold text-[var(--fd-accent)]">9 Reviews</div>
-                  <div className="text-[11px] text-[var(--fd-text-tertiary)]">Requires CA Sign-off</div>
-                </div>
-                <div className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-3">
-                  <div className="text-xs text-[var(--fd-text-secondary)]">Statutory Success</div>
-                  <div className="mt-1 text-xl font-bold text-emerald-400">99.8%</div>
-                  <div className="text-[11px] text-[var(--fd-text-tertiary)]">Zero penalty notices</div>
+
+                <div className="flex items-center gap-2">
+                  <a
+                    href="#consultation"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--fd-accent)] px-3.5 py-2 text-xs font-semibold text-[var(--fd-accent-contrast)] hover:bg-[var(--fd-accent-hover)] transition-colors"
+                  >
+                    <span>Request Advisory Meeting</span>
+                  </a>
                 </div>
               </div>
 
-              {/* Filter controls */}
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--fd-border-subtle)] pb-4">
-                <div className="flex items-center gap-1.5">
-                  <Filter className="h-4 w-4 text-[var(--fd-text-tertiary)]" aria-hidden="true" />
-                  <span className="text-xs font-semibold text-[var(--fd-text-secondary)]">Filing Pipeline:</span>
-                  {(['all', 'due', 'review', 'filed'] as const).map((filterKey) => (
-                    <button
-                      key={filterKey}
-                      type="button"
-                      onClick={() => setStaffFilter(filterKey)}
-                      className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-                        staffFilter === filterKey
-                          ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]'
-                          : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)] hover:text-[var(--fd-text-primary)]'
-                      }`}
+              {/* Status Stat Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-bg)] p-4">
+                  <div className="text-xs font-medium text-[var(--fd-text-secondary)]">Upcoming in 14 Days</div>
+                  <div className="mt-1 text-2xl font-bold text-[var(--fd-accent)]">2 Returns</div>
+                  <div className="text-[11px] text-emerald-400 mt-0.5">All books reconciled</div>
+                </div>
+                <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-bg)] p-4">
+                  <div className="text-xs font-medium text-[var(--fd-text-secondary)]">Overdue Tasks</div>
+                  <div className="mt-1 text-2xl font-bold text-emerald-400">0</div>
+                  <div className="text-[11px] text-emerald-400 mt-0.5">Zero penalty liability</div>
+                </div>
+                <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-bg)] p-4">
+                  <div className="text-xs font-medium text-[var(--fd-text-secondary)]">Pending Action</div>
+                  <div className="mt-1 text-2xl font-bold text-amber-400">1 Document</div>
+                  <div className="text-[11px] text-[var(--fd-text-tertiary)] mt-0.5">Tax Audit 3CD Annexure</div>
+                </div>
+                <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-bg)] p-4">
+                  <div className="text-xs font-medium text-[var(--fd-text-secondary)]">Filed FY 2026–27</div>
+                  <div className="mt-1 text-2xl font-bold text-sky-400">18 Returns</div>
+                  <div className="text-[11px] text-[var(--fd-text-tertiary)] mt-0.5">100% on-time receipts</div>
+                </div>
+              </div>
+
+              {/* Filings Table */}
+              <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] overflow-hidden">
+                <div className="border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/50 px-4 py-3 flex items-center justify-between">
+                  <span className="text-xs font-bold text-[var(--fd-text-primary)] uppercase tracking-wider">
+                    Statutory Filing Track & Status
+                  </span>
+                  <span className="text-xs text-[var(--fd-text-tertiary)]">Updated in Real Time</span>
+                </div>
+
+                <div className="divide-y divide-[var(--fd-border-subtle)]">
+                  {clientFilings.map((f) => (
+                    <div
+                      key={f.id}
+                      className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[var(--fd-surface-2)]/30 transition-colors"
                     >
-                      {filterKey === 'all' && 'All Filings (4)'}
-                      {filterKey === 'due' && 'Due Soon (2)'}
-                      {filterKey === 'review' && 'Review (1)'}
-                      {filterKey === 'filed' && 'Filed (1)'}
-                    </button>
-                  ))}
-                </div>
-                <div className="text-xs text-[var(--fd-text-tertiary)]">
-                  Simulated Practice View · Updated live in IST
-                </div>
-              </div>
-
-              {/* Compliance Table Preview */}
-              <div className="overflow-x-auto rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)]">
-                <table className="w-full text-left text-xs text-[var(--fd-text-primary)]">
-                  <thead className="border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] text-[11px] font-semibold text-[var(--fd-text-secondary)] uppercase">
-                    <tr>
-                      <th className="px-4 py-3">Statutory Return</th>
-                      <th className="px-4 py-3">Entity Name</th>
-                      <th className="px-4 py-3">Due Date</th>
-                      <th className="px-4 py-3">Status</th>
-                      <th className="px-4 py-3">Assigned Team</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--fd-border-subtle)]">
-                    {filteredItems.map((item) => (
-                      <tr key={item.id} className="hover:bg-[var(--fd-surface-2)]/50 transition-colors">
-                        <td className="px-4 py-3 font-semibold text-[var(--fd-text-primary)]">
-                          <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-[var(--fd-accent)]" aria-hidden="true" />
-                            <span>{item.code}</span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="font-medium text-[var(--fd-text-primary)]">{item.client}</div>
-                          <div className="font-mono text-[10px] text-[var(--fd-text-tertiary)]">{item.panGst}</div>
-                        </td>
-                        <td className="px-4 py-3 font-mono font-medium">{item.dueDate}</td>
-                        <td className="px-4 py-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-[var(--fd-text-primary)]">{f.returnName}</span>
                           <span
-                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                              item.status === 'review'
-                                ? 'bg-indigo-500/15 text-indigo-400'
-                                : item.status === 'due'
-                                  ? 'bg-amber-500/15 text-amber-400'
-                                  : 'bg-emerald-500/15 text-emerald-400'
+                            className={`rounded px-2 py-0.5 text-[10px] font-semibold ${
+                              f.status === 'filed'
+                                ? 'bg-emerald-500/15 text-emerald-400'
+                                : f.status === 'review'
+                                ? 'bg-sky-500/15 text-sky-400'
+                                : f.status === 'pending_docs'
+                                ? 'bg-amber-500/15 text-amber-400'
+                                : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)]'
                             }`}
                           >
-                            {item.status === 'filed' && <CheckCircle2 className="h-3 w-3" />}
-                            {item.status === 'due' && <AlertCircle className="h-3 w-3" />}
-                            {item.status === 'review' && <Clock className="h-3 w-3" />}
-                            <span>{item.statusLabel}</span>
+                            {f.statusLabel}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-[var(--fd-text-secondary)]">
-                          <div className="flex items-center gap-1.5">
-                            <User className="h-3.5 w-3.5 text-[var(--fd-text-tertiary)]" />
-                            <span>{item.assignee}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-xs text-[var(--fd-text-secondary)]">
+                          <span>Period: {f.period}</span>
+                          <span>·</span>
+                          <span>Due: <strong className="text-[var(--fd-text-primary)]">{f.dueDate}</strong></span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="text-right text-xs">
+                          <div className="font-mono font-medium text-[var(--fd-text-primary)]">{f.taxPayable}</div>
+                          <div className="text-[11px] text-[var(--fd-text-tertiary)]">{f.actionNeeded}</div>
+                        </div>
+
+                        {f.status === 'filed' ? (
+                          <button
+                            type="button"
+                            onClick={() => alert('Simulated download: Official GSTR-1 Acknowledgement ARN-AA27092601928 downloaded.')}
+                            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--fd-border)] bg-[var(--fd-surface-2)] px-2.5 py-1.5 text-xs font-semibold text-[var(--fd-text-primary)] hover:border-[var(--fd-accent)] hover:text-[var(--fd-accent)] transition-colors"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            <span>Receipt</span>
+                          </button>
+                        ) : f.status === 'pending_docs' ? (
+                          <button
+                            type="button"
+                            onClick={() => setUploadedDemoFile('Form_3CD_Annexures_Apex.pdf')}
+                            className="inline-flex items-center gap-1.5 rounded-md bg-amber-500 text-slate-950 px-2.5 py-1.5 text-xs font-semibold hover:bg-amber-400 transition-colors shadow-xs"
+                          >
+                            <UploadCloud className="h-3.5 w-3.5" />
+                            <span>Upload Docs</span>
+                          </button>
+                        ) : (
+                          <div className="inline-flex items-center gap-1 text-xs text-sky-400 font-medium">
+                            <Clock className="h-3.5 w-3.5" />
+                            <span>In Progress</span>
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Interactive Document Dropzone simulation */}
+              <div className="rounded-xl border border-dashed border-[var(--fd-border)] bg-[var(--fd-bg)] p-6 text-center">
+                <UploadCloud className="mx-auto h-8 w-8 text-[var(--fd-accent)]" />
+                <h4 className="mt-2 text-sm font-bold text-[var(--fd-text-primary)]">
+                  Secure Bank Statement & Invoice Upload Handshake
+                </h4>
+                <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
+                  Files stream directly into AES-256 encrypted storage. Test the upload handshake below:
+                </p>
+
+                {uploadedDemoFile ? (
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-500/15 border border-emerald-500/30 px-3.5 py-2 text-xs font-semibold text-emerald-400">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>Transferred securely: <strong>{uploadedDemoFile}</strong> (Verification complete)</span>
+                    <button
+                      type="button"
+                      onClick={() => setUploadedDemoFile(null)}
+                      className="ml-2 text-xs text-[var(--fd-text-tertiary)] underline hover:text-[var(--fd-text-primary)]"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setUploadedDemoFile('Form_3CD_Annexures_Apex.pdf')}
+                    className="mt-4 inline-flex items-center gap-2 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-2)] px-4 py-2 text-xs font-semibold text-[var(--fd-text-primary)] hover:border-[var(--fd-accent)] transition-all"
+                  >
+                    <UploadCloud className="h-3.5 w-3.5 text-[var(--fd-accent)]" />
+                    <span>Test Upload Sample Document</span>
+                  </button>
+                )}
               </div>
             </div>
           )}
 
-          {/* VIEW 2: CLIENT ENTITY PORTAL */}
-          {activeTab === 'client' && (
-            <div className="p-4 sm:p-6 lg:p-8 space-y-6">
-              {/* Entity Header Banner */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4 sm:p-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-sky-500/15 text-sky-400">
-                    <Building2 className="h-6 w-6" aria-hidden="true" />
+          {/* TAB 2: CA Audit Verification Flow */}
+          {activeTab === 'workflow' && (
+            <div className="p-6 sm:p-8 space-y-6">
+              <div className="text-center max-w-xl mx-auto">
+                <h3 className="text-lg font-bold text-[var(--fd-text-primary)]">
+                  Dual-Tier Statutory Verification Protocol
+                </h3>
+                <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
+                  Here is the rigorous 4-stage process our firm executes for every single filing before submission to government portals.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] font-bold text-xs">
+                    01
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-[var(--fd-text-primary)]">Apex Technologies Pvt Ltd</h3>
-                      <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
-                        Active Client
-                      </span>
-                    </div>
-                    <div className="text-xs text-[var(--fd-text-secondary)]">
-                      GSTIN: <span className="font-mono">27AABCA1234F1Z5</span> · Assigned CA: Priya Sharma
-                    </div>
-                  </div>
+                  <h4 className="mt-3 text-sm font-bold text-[var(--fd-text-primary)]">Horizon Scheduling</h4>
+                  <p className="mt-1.5 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                    120 days ahead, our statutory engine schedules your required returns and assigns a dedicated CA team.
+                  </p>
+                  <div className="mt-3 text-[11px] text-emerald-400 font-mono">Automated Checklist</div>
                 </div>
+
+                <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500 text-slate-950 font-bold text-xs">
+                    02
+                  </div>
+                  <h4 className="mt-3 text-sm font-bold text-[var(--fd-text-primary)]">Data Reconciliation</h4>
+                  <p className="mt-1.5 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                    We reconcile sales ledgers with GSTR-2B, audit vendor TDS deductions, and resolve mismatches.
+                  </p>
+                  <div className="mt-3 text-[11px] text-sky-400 font-mono">Zero ITC Leakage</div>
+                </div>
+
+                <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 text-slate-950 font-bold text-xs">
+                    03
+                  </div>
+                  <h4 className="mt-3 text-sm font-bold text-[var(--fd-text-primary)]">Partner Scrutiny</h4>
+                  <p className="mt-1.5 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                    A qualified Senior Chartered Accountant conducts audit peer review before any tax challan is finalized.
+                  </p>
+                  <div className="mt-3 text-[11px] text-amber-400 font-mono">Senior CA Sign-Off</div>
+                </div>
+
+                <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs">
+                    04
+                  </div>
+                  <h4 className="mt-3 text-sm font-bold text-[var(--fd-text-primary)]">Instant Filing & Vault</h4>
+                  <p className="mt-1.5 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                    The return is submitted to government portals and the signed ARN acknowledgement is archived to your vault.
+                  </p>
+                  <div className="mt-3 text-[11px] text-emerald-400 font-mono">Real-Time Challan</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: Multi-Entity & Joint Venture View */}
+          {activeTab === 'entities' && (
+            <div className="p-6 sm:p-8 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--fd-border-subtle)] pb-5">
+                <div>
+                  <h3 className="text-lg font-bold text-[var(--fd-text-primary)]">
+                    Consolidated Multi-Entity Switching
+                  </h3>
+                  <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
+                    Running an operating company, a joint venture partnership, and individual director filings? Switch with 1 click.
+                  </p>
+                </div>
+
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[var(--fd-text-secondary)]">Filing Health:</span>
-                  <span className="rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs font-semibold text-emerald-400">
-                    Compliant (FY 26-27)
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEntity('apex_corp')}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      selectedEntity === 'apex_corp'
+                        ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]'
+                        : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)]'
+                    }`}
+                  >
+                    Apex Tech Pvt Ltd
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEntity('apex_jv')}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      selectedEntity === 'apex_jv'
+                        ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]'
+                        : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)]'
+                    }`}
+                  >
+                    Apex-L&T JV Consortium
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEntity('director')}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      selectedEntity === 'director'
+                        ? 'bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]'
+                        : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)]'
+                    }`}
+                  >
+                    Anil Kumar (Director ITR)
+                  </button>
                 </div>
               </div>
 
-              {/* Client Dual Grid: Upload Action & Document Checklist */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Simulated Document Upload Dropzone */}
-                <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold text-[var(--fd-text-primary)]">
-                      Requested by Your CA Team
-                    </h4>
-                    <span className="rounded bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-400">
-                      1 Pending Upload
-                    </span>
+              {selectedEntity === 'apex_jv' && (
+                <div className="rounded-xl border border-sky-500/30 bg-sky-500/10 p-5">
+                  <div className="flex items-center gap-2 text-sky-400 text-sm font-bold">
+                    <Handshake className="h-4 w-4" />
+                    <span>Joint Venture Consortium: Apex-L&T Infrastructure JV</span>
                   </div>
-                  <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
-                    Please upload the August bank statement (Current A/c) for GSTR-3B reconciliation.
+                  <p className="mt-2 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                    This SPV operates under a 60:40 equity waterfall. Accounting JV independently manages consortium book closing,
+                    TDS deduction on sub-contracts (Section 194C), GSTR-3B filings, and quarterly audited profit-distribution statements.
                   </p>
-
-                  <div className="mt-4 rounded-lg border-2 border-dashed border-[var(--fd-border)] bg-[var(--fd-surface-2)]/60 p-6 text-center transition-colors hover:border-[var(--fd-accent)]">
-                    <UploadCloud className="mx-auto h-8 w-8 text-[var(--fd-accent)]" aria-hidden="true" />
-                    <div className="mt-2 text-xs font-medium text-[var(--fd-text-primary)]">
-                      {uploadedDemoFile ? (
-                        <span className="text-emerald-400 font-semibold">
-                          Uploaded: {uploadedDemoFile} (Encrypted via GridFS)
-                        </span>
-                      ) : (
-                        'Drop PDF, Excel or scanned statements here'
-                      )}
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                    <div className="rounded-lg bg-[var(--fd-bg)] p-3">
+                      <div className="text-[var(--fd-text-tertiary)]">Consortium Turnover</div>
+                      <div className="text-sm font-bold text-[var(--fd-text-primary)] mt-0.5">₹42.80 Crores</div>
                     </div>
-                    <div className="mt-1 text-[11px] text-[var(--fd-text-tertiary)]">
-                      Direct signed stream to vault · Max 25 MB
+                    <div className="rounded-lg bg-[var(--fd-bg)] p-3">
+                      <div className="text-[var(--fd-text-tertiary)]">Profit Split Ratio</div>
+                      <div className="text-sm font-bold text-sky-400 mt-0.5">60% Apex / 40% L&T</div>
                     </div>
-                    {!uploadedDemoFile ? (
-                      <button
-                        type="button"
-                        onClick={() => setUploadedDemoFile('HDFC_August_Stmt_2026.pdf')}
-                        className="mt-3 rounded-md bg-[var(--fd-accent)] px-3 py-1.5 text-xs font-semibold text-[var(--fd-accent-contrast)] hover:bg-[var(--fd-accent-hover)] transition-colors"
-                      >
-                        Simulate File Upload
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setUploadedDemoFile(null)}
-                        className="mt-3 text-[11px] text-[var(--fd-text-secondary)] underline hover:text-[var(--fd-text-primary)]"
-                      >
-                        Reset demo file
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Available Filing Receipts Vault */}
-                <div className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-5">
-                  <h4 className="text-sm font-semibold text-[var(--fd-text-primary)]">
-                    Your Verified Filing Receipts
-                  </h4>
-                  <p className="mt-1 text-xs text-[var(--fd-text-secondary)]">
-                    Download stamped government challans, ITR acknowledgments & Form 3CD anytime.
-                  </p>
-
-                  <div className="mt-4 space-y-2.5">
-                    <div className="flex items-center justify-between rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] p-3 text-xs">
-                      <div className="flex items-center gap-2.5">
-                        <FileCheck className="h-4 w-4 text-emerald-400" />
-                        <div>
-                          <div className="font-semibold text-[var(--fd-text-primary)]">GSTR-3B July 2026 Receipt</div>
-                          <div className="text-[10px] text-[var(--fd-text-tertiary)]">ARN: AA270726001928M · 20 Jul 2026</div>
-                        </div>
-                      </div>
-                      <span className="flex items-center gap-1 font-medium text-[var(--fd-accent)] cursor-pointer hover:underline">
-                        <Download className="h-3.5 w-3.5" />
-                        PDF
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] p-3 text-xs">
-                      <div className="flex items-center gap-2.5">
-                        <FileCheck className="h-4 w-4 text-emerald-400" />
-                        <div>
-                          <div className="font-semibold text-[var(--fd-text-primary)]">ITR-6 Assessment Year 2026-27</div>
-                          <div className="text-[10px] text-[var(--fd-text-tertiary)]">Ack No: 981240192849102 · E-Verified</div>
-                        </div>
-                      </div>
-                      <span className="flex items-center gap-1 font-medium text-[var(--fd-accent)] cursor-pointer hover:underline">
-                        <Download className="h-3.5 w-3.5" />
-                        PDF
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] p-3 text-xs">
-                      <div className="flex items-center gap-2.5">
-                        <FileCheck className="h-4 w-4 text-emerald-400" />
-                        <div>
-                          <div className="font-semibold text-[var(--fd-text-primary)]">TDS Form 26Q Q1 Receipt</div>
-                          <div className="text-[10px] text-[var(--fd-text-tertiary)]">Token: 029104810294 · 31 Jul 2026</div>
-                        </div>
-                      </div>
-                      <span className="flex items-center gap-1 font-medium text-[var(--fd-accent)] cursor-pointer hover:underline">
-                        <Download className="h-3.5 w-3.5" />
-                        PDF
-                      </span>
+                    <div className="rounded-lg bg-[var(--fd-bg)] p-3">
+                      <div className="text-[var(--fd-text-tertiary)]">Statutory Status</div>
+                      <div className="text-sm font-bold text-emerald-400 mt-0.5">100% Tax Compliant</div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
+
+              {selectedEntity === 'apex_corp' && (
+                <div className="rounded-xl border border-[var(--fd-border)] bg-[var(--fd-bg)] p-5">
+                  <div className="flex items-center gap-2 text-[var(--fd-accent)] text-sm font-bold">
+                    <Building2 className="h-4 w-4" />
+                    <span>Operating Entity: Apex Technologies Private Limited</span>
+                  </div>
+                  <p className="mt-2 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                    Fast-growing enterprise software provider. Accounting JV handles monthly bookkeeping, statutory audit under Companies Act 2013,
+                    GSTR-1 & 3B, advance tax estimation, and Virtual CFO reporting for seed investors.
+                  </p>
+                </div>
+              )}
+
+              {selectedEntity === 'director' && (
+                <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-5">
+                  <div className="flex items-center gap-2 text-purple-400 text-sm font-bold">
+                    <User className="h-4 w-4" />
+                    <span>Personal Tax & Director Compliance: Anil Kumar (Managing Director)</span>
+                  </div>
+                  <p className="mt-2 text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                    DIR-3 KYC completed on 14 Aug 2026. Annual ITR-2 filed with comprehensive capital gains calculation, dividend income
+                    reconciliation against AIS / Form 26AS, and advance tax tracking.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

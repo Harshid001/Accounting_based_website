@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import {
   AlertCircle,
-  Bell,
   Calendar,
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  FileCheck2,
+  HelpCircle,
+  Scale,
+  ShieldAlert,
 } from 'lucide-react';
 
 interface ComplianceItem {
@@ -20,23 +25,23 @@ interface ComplianceItem {
 const STATUTORY_CATALOGUE: ComplianceItem[] = [
   {
     id: 'gstr1',
-    name: 'GSTR-1 Monthly Return',
+    name: 'GSTR-1 Monthly Outward Return',
     code: 'GSTR-1',
     category: 'gst',
     frequency: 'Monthly (or QRMP)',
     rule: '11th of succeeding month',
-    checklist: ['B2B outward tax invoices', 'Credit & debit notes register', 'Export invoices with shipping bills', 'HSN summary'],
-    penaltyRisk: 'Late fee ₹50/day (₹20 for nil) + blocked e-way bill generation',
+    checklist: ['B2B outward tax invoices', 'Credit & debit notes register', 'Export invoices with shipping bills', 'HSN code summary reconciliation'],
+    penaltyRisk: 'Late fee ₹50/day (₹20 for nil) + blocked e-way bill generation for buyers.',
   },
   {
     id: 'gstr3b',
-    name: 'GSTR-3B Summary & Tax Payment',
+    name: 'GSTR-3B Summary & Tax Settlement',
     code: 'GSTR-3B',
     category: 'gst',
     frequency: 'Monthly',
     rule: '20th of succeeding month',
-    checklist: ['Monthly purchase register', 'GSTR-2B ITC auto-populated comparison', 'Outward tax ledger', 'Bank payment challans'],
-    penaltyRisk: '18% p.a. interest on net tax + blocked ITC claims under Sec 16(4)',
+    checklist: ['Monthly purchase register', 'GSTR-2B ITC auto-populated comparison', 'Outward tax liability ledger', 'Bank payment challan verification'],
+    penaltyRisk: '18% p.a. interest on net tax + blocked ITC claims under Section 16(4).',
   },
   {
     id: 'taxaudit',
@@ -46,27 +51,27 @@ const STATUTORY_CATALOGUE: ComplianceItem[] = [
     frequency: 'Annual',
     rule: '30th September of Assessment Year',
     checklist: ['Trial balance & general ledger', 'Depreciation schedules (Companies vs IT Act)', 'Related party disclosures (Sec 40A(2)(b))', 'GST vs Income Tax turnover reconciliation'],
-    penaltyRisk: '0.5% of total turnover up to ₹1,50,000 penalty u/s 271B',
+    penaltyRisk: '0.5% of total business turnover up to ₹1,50,000 penalty u/s 271B.',
   },
   {
     id: 'advancetax',
-    name: 'Advance Tax Instalments (Q1-Q4)',
+    name: 'Advance Tax Instalments (Q1 to Q4)',
     code: 'Sec 208/211',
     category: 'income_tax',
     frequency: 'Quarterly',
     rule: '15 Jun (15%), 15 Sep (45%), 15 Dec (75%), 15 Mar (100%)',
-    checklist: ['Estimated annual profit computation', 'TDS credit in Form 26AS / AIS', 'Prior instalment challans'],
-    penaltyRisk: 'Mandatory interest @ 1% per month u/s 234B & 234C',
+    checklist: ['Estimated annual profit computation', 'TDS credit verification in Form 26AS / AIS', 'Prior instalment challan adjustment'],
+    penaltyRisk: 'Mandatory compound interest @ 1% per month under Sections 234B & 234C.',
   },
   {
     id: 'tds26q',
-    name: 'TDS Return (Non-Salary Payments)',
+    name: 'TDS Return (Non-Salary Vendor Payments)',
     code: 'Form 26Q',
     category: 'tds',
     frequency: 'Quarterly',
     rule: '31st of month following quarter end (31 May for Q4)',
     checklist: ['Vendor invoice register with TDS deducted', 'BSR code challans (ITNS 281)', 'PAN verification sheet', '194C / 194J / 194Q classification'],
-    penaltyRisk: 'Late fee ₹200/day u/s 234E + penalty up to ₹1,00,000 u/s 271H',
+    penaltyRisk: 'Late fee ₹200/day u/s 234E + discretionary penalty up to ₹1,00,000 u/s 271H.',
   },
   {
     id: 'aoc4',
@@ -76,7 +81,7 @@ const STATUTORY_CATALOGUE: ComplianceItem[] = [
     frequency: 'Annual',
     rule: 'Within 30 days of Annual General Meeting (AGM)',
     checklist: ['Audited balance sheet & P&L', 'Directors report & MGT-9 extract', 'Auditors report with CARO notes', 'Notice of AGM'],
-    penaltyRisk: '₹100/day continuing penalty on company and officers in default',
+    penaltyRisk: '₹100/day continuing penalty on company and directors until rectified.',
   },
 ];
 
@@ -93,25 +98,25 @@ export function ComplianceRadarSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-400 uppercase tracking-wider">
-            Built-in Indian Regulatory Engine
+            Proactive Statutory Radar
           </div>
           <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--fd-text-primary)] sm:text-4xl">
-            Statutory Horizon Radar & Rules
+            How We Protect Your Business From Costly Penalties
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
-            Never miss a regulatory deadline again. FirmDesk automatically tracks 40+ statutory filing schedules,
-            calculates legal due dates under the Income Tax Act, GST Law, and Companies Act, and sends automated
-            checklists to clients ahead of penalty windows.
+            Indian corporate and tax compliance moves fast. Our practice continuously tracks 40+ statutory filing schedules,
+            calculates statutory due dates under the Income Tax Act, GST Law, and Companies Act, and audits your numbers well
+            before government penalty windows.
           </p>
 
           {/* Category Filter Tabs */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
             {[
-              { id: 'all', label: 'All Compliance' },
+              { id: 'all', label: 'All Statutory Filings' },
               { id: 'gst', label: 'GST Filings (GSTR)' },
               { id: 'income_tax', label: 'Income Tax & Audit' },
-              { id: 'tds', label: 'TDS / TCS Returns' },
-              { id: 'mca', label: 'MCA & ROC Filings' },
+              { id: 'tds', label: 'TDS / TCS Statements' },
+              { id: 'mca', label: 'MCA & ROC Compliance' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -139,86 +144,74 @@ export function ComplianceRadarSection() {
                 className="flex flex-col justify-between rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] p-5 shadow-xs transition-all duration-200 hover:border-[var(--fd-accent)]"
               >
                 <div>
-                  {/* Card Header */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <span className="rounded bg-[var(--fd-accent-subtle-bg)] px-2 py-0.5 font-mono text-xs font-bold text-[var(--fd-accent)]">
-                        {item.code}
-                      </span>
-                      <h3 className="mt-2 text-base font-bold text-[var(--fd-text-primary)]">{item.name}</h3>
-                    </div>
-                    <span className="shrink-0 rounded-full border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--fd-text-secondary)]">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-[var(--fd-accent)] bg-[var(--fd-accent-subtle-bg)] px-2 py-0.5 rounded">
+                      {item.code}
+                    </span>
+                    <span className="text-[11px] font-medium text-[var(--fd-text-tertiary)]">
                       {item.frequency}
                     </span>
                   </div>
 
-                  {/* Statutory Rule */}
-                  <div className="mt-4 rounded-lg bg-[var(--fd-surface-2)] p-3 text-xs">
-                    <div className="flex items-center gap-1.5 font-semibold text-[var(--fd-text-primary)]">
-                      <Calendar className="h-3.5 w-3.5 text-[var(--fd-accent)]" aria-hidden="true" />
-                      <span>Statutory Due Date Rule:</span>
+                  <h3 className="mt-3 text-base font-bold text-[var(--fd-text-primary)]">
+                    {item.name}
+                  </h3>
+
+                  <div className="mt-3 flex items-start gap-2 text-xs text-[var(--fd-text-secondary)] bg-[var(--fd-surface-2)] p-2.5 rounded-lg">
+                    <Calendar className="h-4 w-4 shrink-0 text-[var(--fd-accent)] mt-0.5" />
+                    <div>
+                      <span className="font-semibold text-[var(--fd-text-primary)]">Statutory Deadline: </span>
+                      <span>{item.rule}</span>
                     </div>
-                    <div className="mt-1 text-[var(--fd-text-secondary)]">{item.rule}</div>
                   </div>
 
-                  {/* Document Checklist Preview */}
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between text-xs font-semibold text-[var(--fd-text-secondary)]">
-                      <span>Required Document Checklist:</span>
-                      <button
-                        type="button"
-                        onClick={() => setExpandedId(isExpanded ? null : item.id)}
-                        className="text-[var(--fd-accent)] hover:underline cursor-pointer"
-                      >
-                        {isExpanded ? 'Hide items' : `Show all (${item.checklist.length})`}
-                      </button>
+                  {/* Penalty Avoided Note */}
+                  <div className="mt-3 flex items-start gap-2 text-xs text-rose-300/90 bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-lg">
+                    <ShieldAlert className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
+                    <div>
+                      <span className="font-semibold text-rose-300">Penalty Saved: </span>
+                      <span>{item.penaltyRisk}</span>
                     </div>
-
-                    <ul className="mt-2 space-y-1.5 text-xs text-[var(--fd-text-secondary)]">
-                      {(isExpanded ? item.checklist : item.checklist.slice(0, 2)).map((check, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
-                          <span>{check}</span>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
+
+                  {/* Expandable Checklist */}
+                  {isExpanded && (
+                    <div className="mt-4 border-t border-[var(--fd-border-subtle)] pt-3 animate-in fade-in duration-200">
+                      <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--fd-text-secondary)] mb-2">
+                        What We Review & Audit:
+                      </div>
+                      <ul className="space-y-1.5 text-xs text-[var(--fd-text-secondary)]">
+                        {item.checklist.map((point, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
-                {/* Bottom Penalty Risk Guard */}
-                <div className="mt-5 border-t border-[var(--fd-border-subtle)] pt-3 text-[11px] text-[var(--fd-text-tertiary)] flex items-start gap-1.5">
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-400 mt-0.5" aria-hidden="true" />
-                  <span>
-                    <strong className="text-rose-400">Risk Guard:</strong> {item.penaltyRisk}
-                  </span>
+                <div className="mt-4 pt-3 border-t border-[var(--fd-border-subtle)] flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedId(isExpanded ? null : item.id)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--fd-accent)] hover:text-[var(--fd-accent-hover)]"
+                  >
+                    <span>{isExpanded ? 'Hide Audit Checklist' : 'View Audit Checklist'}</span>
+                    {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                  </button>
+
+                  <a
+                    href="#consultation"
+                    className="text-[11px] font-semibold text-[var(--fd-text-tertiary)] hover:text-[var(--fd-text-primary)] transition-colors"
+                  >
+                    Consult on this →
+                  </a>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        {/* Proactive Offsets Banner */}
-        <div className="mt-10 rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-2)] p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]">
-              <Bell className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-[var(--fd-text-primary)]">
-                Automated 7-Day, 3-Day & 1-Day Reminder Escalation
-              </h4>
-              <p className="text-xs text-[var(--fd-text-secondary)]">
-                FirmDesk automatically prompts clients to upload invoices and statements before the statutory cutoff,
-                ensuring zero last-minute portal crashes or late fees.
-              </p>
-            </div>
-          </div>
-          <div className="shrink-0">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-400">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              100% Automated Scheduler
-            </span>
-          </div>
         </div>
       </div>
     </section>

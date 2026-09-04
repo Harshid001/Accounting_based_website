@@ -1,7 +1,9 @@
 import {
-  Building2,
   CheckCircle2,
+  Landmark,
+  ShieldAlert,
   ShieldCheck,
+  XCircle,
 } from 'lucide-react';
 
 export function DualExperienceSection() {
@@ -10,116 +12,133 @@ export function DualExperienceSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-1.5 rounded-md bg-[var(--fd-accent-subtle-bg)] px-2.5 py-1 text-xs font-semibold text-[var(--fd-accent)] uppercase tracking-wider">
-            Dual Value Proposition
+            The Clear Choice
           </div>
           <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--fd-text-primary)] sm:text-4xl">
-            Built for Both Sides of the Professional Relationship
+            Traditional Accounting Firms vs. Partnering With Accounting JV
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
-            A great accounting system must empower practitioners while delighting busy founders and finance directors.
+            See how our modern, institutional approach transforms financial governance from a stressful chore
+            into your business&apos;s greatest strategic asset.
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Card 1: For the Accounting Practice */}
-          <div className="rounded-2xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] p-6 sm:p-8 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)]">
-                <ShieldCheck className="h-6 w-6" aria-hidden="true" />
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {/* Column 1: Traditional CA Firms */}
+          <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500/15 text-rose-400">
+                  <ShieldAlert className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-rose-400">
+                    The Legacy Status Quo
+                  </span>
+                  <h3 className="text-xl font-bold text-[var(--fd-text-primary)]">Traditional Accounting Firms</h3>
+                </div>
               </div>
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--fd-accent)]">
-                  For Partners & Staff
-                </span>
-                <h3 className="text-xl font-bold text-[var(--fd-text-primary)]">The Accounting Practice</h3>
-              </div>
+
+              <p className="mt-4 text-xs sm:text-sm text-[var(--fd-text-secondary)] leading-relaxed">
+                Characterized by friction, opaque processes, and reactive deadline scrambles that put your business at risk of penalties.
+              </p>
+
+              <ul className="mt-6 space-y-4 text-xs sm:text-sm text-[var(--fd-text-secondary)]">
+                <li className="flex items-start gap-3">
+                  <XCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">Disorganized WhatsApp Groups:</strong> Critical financial
+                    spreadsheets, bills, and PAN copies scattered across unencrypted chat logs.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">11th-Hour Tax Panics:</strong> Filings rushed hours before
+                    midnight deadlines, leading to Input Tax Credit (ITC) errors and GST mismatch notices.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">Unsupervised Delegation:</strong> High-stakes accounting
+                    delegated to inexperienced article trainees with little senior oversight.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">Document Chasing Scramble:</strong> Calling repeatedly
+                    for bank loan documents or filed ITR acknowledgements when urgent.
+                  </span>
+                </li>
+              </ul>
             </div>
 
-            <p className="mt-4 text-sm text-[var(--fd-text-secondary)] leading-relaxed">
-              Eliminate the chaos of tax season. Run multi-client operations with full operational clarity and
-              zero penalty liability.
-            </p>
-
-            <ul className="mt-6 space-y-3.5 text-sm text-[var(--fd-text-secondary)]">
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">120-Day Predictive Horizon:</strong> Automatically
-                  generates upcoming statutory filing tasks for every active client.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">Workload Balancing:</strong> Assign filings to
-                  Article Assistants and Managers with live capacity tracking.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">Immutable Audit Trail:</strong> Every document
-                  view, status change, and client interaction is logged for peer review.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">Zero Document Chasing:</strong> Automated 7d/3d/1d
-                  client alerts with structured upload links.
-                </span>
-              </li>
-            </ul>
+            <div className="mt-8 rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-300 font-medium">
+              High risk of late fees, blocked ITC credits, and surprise departmental tax notices.
+            </div>
           </div>
 
-          {/* Card 2: For Corporate Clients */}
-          <div className="rounded-2xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] p-6 sm:p-8 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400">
-                <Building2 className="h-6 w-6" aria-hidden="true" />
+          {/* Column 2: Partnering With Accounting JV */}
+          <div className="rounded-2xl border border-[var(--fd-accent)]/50 bg-gradient-to-b from-[var(--fd-surface-1)] to-[var(--fd-surface-2)] p-6 sm:p-8 flex flex-col justify-between shadow-lg relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-[var(--fd-accent)]/15 blur-2xl" />
+
+            <div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] shadow-xs">
+                  <Landmark className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--fd-accent)]">
+                    The Modern Standard
+                  </span>
+                  <h3 className="text-xl font-bold text-[var(--fd-text-primary)]">Partnering With Accounting JV</h3>
+                </div>
               </div>
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-sky-400">
-                  For Founders & Directors
-                </span>
-                <h3 className="text-xl font-bold text-[var(--fd-text-primary)]">The Corporate & SME Client</h3>
-              </div>
+
+              <p className="mt-4 text-xs sm:text-sm text-[var(--fd-text-secondary)] leading-relaxed">
+                Institutional precision, digital clarity, and senior advisory that gives founders and CFOs 100% peace of mind.
+              </p>
+
+              <ul className="mt-6 space-y-4 text-xs sm:text-sm text-[var(--fd-text-secondary)]">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">24/7 Digital Client Portal:</strong> All filings, tax
+                    challans, and stamped receipts centralized in your private, bank-grade encrypted dashboard.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">120-Day Predictive Horizon:</strong> All statutory
+                    returns planned weeks in advance, eliminating penalties, interest, and last-minute scrambles.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">Senior CA Dual-Tier Scrutiny:</strong> Every return,
+                    balance sheet, and tax deduction is audited by senior practitioners before government filing.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <strong className="text-[var(--fd-text-primary)]">Multi-Entity & JV Architecture:</strong> Manage sister
+                    concerns, joint ventures, and director returns under one unified corporate overview.
+                  </span>
+                </li>
+              </ul>
             </div>
 
-            <p className="mt-4 text-sm text-[var(--fd-text-secondary)] leading-relaxed">
-              Complete transparency over your statutory standing. Never wonder if your GST or ITR was filed on time.
-            </p>
-
-            <ul className="mt-6 space-y-3.5 text-sm text-[var(--fd-text-secondary)]">
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-sky-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">24/7 Filing Receipt Vault:</strong> Download stamped
-                  ITR-V, GSTR-3B receipts, and Form 3CD anytime for bank loan applications.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-sky-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">1-Click Mobile Uploads:</strong> Drag and drop bank
-                  statements or invoices straight from desktop or smartphone.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-sky-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">Single Login for Multiple Entities:</strong> Switch
-                  between your Private Limited, LLP, and family businesses seamlessly.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-sky-400 mt-0.5" aria-hidden="true" />
-                <span>
-                  <strong className="text-[var(--fd-text-primary)]">Contextual Messaging:</strong> Direct chat with your
-                  assigned CA team anchored directly to specific compliance returns.
-                </span>
-              </li>
-            </ul>
+            <div className="mt-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 text-xs text-emerald-400 font-medium flex items-center justify-between">
+              <span>Guaranteed 100% on-time statutory compliance</span>
+              <a href="#consultation" className="font-bold underline hover:text-emerald-300">
+                Partner with us →
+              </a>
+            </div>
           </div>
         </div>
       </div>

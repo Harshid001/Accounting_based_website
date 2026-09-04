@@ -1,35 +1,38 @@
 import {
   Eye,
+  FileCheck2,
   FolderLock,
   KeyRound,
   Lock,
+  Scale,
+  ShieldCheck,
 } from 'lucide-react';
 
 export function SecurityTrustSection() {
   const securityFeatures = [
     {
       icon: <Lock className="h-5 w-5 text-purple-400" />,
-      title: 'AES-256-GCM Aadhaar Protection',
+      title: 'AES-256-GCM Encrypted Vaults',
       description:
-        'Sensitive 12-digit Aadhaar identifiers are encrypted at rest using node:crypto with authenticated Galois/Counter Mode. Masked across all staff serialisers and exposed only through audited Partner reveals.',
+        'Sensitive financial statements, salary registers, Aadhaar, and PAN identifiers are encrypted at rest using authenticated Galois/Counter Mode encryption, preventing unauthorized access.',
     },
     {
       icon: <FolderLock className="h-5 w-5 text-emerald-400" />,
-      title: '60-Second Ephemeral Transfer URLs',
+      title: 'Ephemeral Signed Transfer Tokens',
       description:
-        'Confidential financial statements and invoices stream directly to MongoDB GridFS through short-lived signed URLs. Files are never stored on public CDNs or accessible without active session authorization.',
+        'Stop sending confidential balance sheets over open emails or WhatsApp. Files upload directly through short-lived, cryptographically signed tokens into private, isolated cloud storage.',
     },
     {
-      icon: <KeyRound className="h-5 w-5 text-sky-400" />,
-      title: 'Scrypt Password & Session Hardening',
+      icon: <Scale className="h-5 w-5 text-sky-400" />,
+      title: 'Strict NDA & ICAI Professional Ethics',
       description:
-        'Credentials hashed with memory-hard scrypt via Better Auth. Role-based session lifetimes (7-day sliding expiry for staff, 30 days for clients) with automated MongoDB TTL reaping.',
+        'Every client relationship is bound by institutional Non-Disclosure Agreements and the statutory Code of Ethics governed by the Institute of Chartered Accountants of India.',
     },
     {
       icon: <Eye className="h-5 w-5 text-amber-400" />,
-      title: 'Immutable Audit Logging',
+      title: 'Tamper-Evident Access Audit Trails',
       description:
-        'Every sensitive action—document uploads, filing status modifications, Aadhaar reveals, and client profile updates—is stamped with user IDs, IP addresses, and timestamps for ICAI peer review compliance.',
+        'Every document view, tax calculation modification, and government submission is permanently logged with timestamps and user identifiers for corporate governance compliance.',
     },
   ];
 
@@ -38,14 +41,14 @@ export function SecurityTrustSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-1.5 rounded-md bg-purple-500/15 px-2.5 py-1 text-xs font-semibold text-purple-400 uppercase tracking-wider">
-            Institutional Trust & Privacy
+            Institutional Trust & Confidentiality
           </div>
           <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--fd-text-primary)] sm:text-4xl">
-            Bank-Grade Security for Your Most Confidential Data
+            Bank-Grade Security for Your Critical Financial Data
           </h2>
           <p className="mt-3 text-base text-[var(--fd-text-secondary)]">
-            Tax documents, balance sheets, and identification numbers demand the highest standard of technical safeguards.
-            FirmDesk is engineered from the database layer up to protect client confidentiality.
+            Tax documents, cap tables, salary sheets, and joint venture contracts demand the highest standard of technical
+            and legal safeguards. We protect your business confidentiality with institutional rigor.
           </p>
         </div>
 
@@ -60,13 +63,32 @@ export function SecurityTrustSection() {
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--fd-surface-2)]">
                   {feat.icon}
                 </div>
-                <h3 className="text-base font-bold text-[var(--fd-text-primary)]">{feat.title}</h3>
+                <h3 className="text-base font-bold text-[var(--fd-text-primary)]">
+                  {feat.title}
+                </h3>
               </div>
               <p className="mt-3 text-xs sm:text-sm leading-relaxed text-[var(--fd-text-secondary)]">
                 {feat.description}
               </p>
             </div>
           ))}
+        </div>
+
+        {/* Reassurance Bar */}
+        <div className="mt-10 rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--fd-text-secondary)]">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0" />
+            <span>
+              <strong>ISO & ICAI Best-Practices: </strong>
+              All client data resides in isolated environments with zero third-party commercial data scraping.
+            </span>
+          </div>
+          <a
+            href="#consultation"
+            className="font-bold text-[var(--fd-accent)] hover:text-[var(--fd-accent-hover)] shrink-0"
+          >
+            Request our Security & Compliance Whitepaper →
+          </a>
         </div>
       </div>
     </section>

@@ -8,18 +8,20 @@ import { homePathFor } from '@/lib/permissions';
 
 import { LandingNavbar } from './components/LandingNavbar';
 import { HeroSection } from './components/HeroSection';
-import { InteractiveProductShowcase } from './components/InteractiveProductShowcase';
-import { ComplianceRadarSection } from './components/ComplianceRadarSection';
+import { ServicesSection } from './components/ServicesSection';
 import { BentoFeaturesSection } from './components/BentoFeaturesSection';
 import { DualExperienceSection } from './components/DualExperienceSection';
+import { InteractiveProductShowcase } from './components/InteractiveProductShowcase';
+import { ComplianceRadarSection } from './components/ComplianceRadarSection';
 import { EntityRoadmapWidget } from './components/EntityRoadmapWidget';
 import { SecurityTrustSection } from './components/SecurityTrustSection';
+import { ConsultationSection } from './components/ConsultationSection';
 import { FaqSection } from './components/FaqSection';
 import { CtaBanner } from './components/CtaBanner';
 import { LandingFooter } from './components/LandingFooter';
 
 export function Landing() {
-  usePageTitle('Statutory Practice Operations & Client Portal');
+  usePageTitle('Strategic Accounting, Corporate Tax & Joint Venture Advisory | Accounting JV');
   const { status, user } = useSession();
 
   const isAuthenticated = status === 'authenticated' && user !== null;
@@ -47,18 +49,20 @@ export function Landing() {
         </div>
       )}
 
-      {/* Navigation */}
+      {/* Navigation Header */}
       <LandingNavbar />
 
-      {/* Main Content */}
+      {/* Main Marketing Storyline */}
       <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
         <HeroSection />
-        <InteractiveProductShowcase />
-        <ComplianceRadarSection />
+        <ServicesSection />
         <BentoFeaturesSection />
         <DualExperienceSection />
+        <InteractiveProductShowcase />
+        <ComplianceRadarSection />
         <EntityRoadmapWidget />
         <SecurityTrustSection />
+        <ConsultationSection />
         <FaqSection />
         <CtaBanner />
       </main>

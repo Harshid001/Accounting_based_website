@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Building2, Menu, ShieldCheck, UserCheck, X } from 'lucide-react';
+import { ArrowRight, CalendarCheck, Landmark, Menu, ShieldCheck, UserCheck, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/domain/ThemeToggle';
@@ -15,11 +15,12 @@ export function LandingNavbar() {
   const userHome = isAuthenticated ? homePathFor(user.role) : '/dashboard';
 
   const navLinks = [
-    { label: 'Features', href: '#features' },
-    { label: 'Compliance Radar', href: '#compliance-radar' },
-    { label: 'Product Tour', href: '#product-tour' },
-    { label: 'Entity Roadmap', href: '#entity-roadmap' },
-    { label: 'Security & Trust', href: '#security' },
+    { label: 'Services', href: '#services' },
+    { label: 'Why Us', href: '#firm-advantage' },
+    { label: 'Client Portal', href: '#portal-preview' },
+    { label: 'Statutory Radar', href: '#compliance-radar' },
+    { label: 'Entity Roadmaps', href: '#entity-roadmap' },
+    { label: 'Security', href: '#security' },
     { label: 'FAQ', href: '#faq' },
   ];
 
@@ -33,18 +34,18 @@ export function LandingNavbar() {
           <Link
             to="/"
             className="group flex items-center gap-2.5 outline-none focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] rounded-md"
-            aria-label="FirmDesk Home"
+            aria-label="Accounting JV Home"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--fd-accent)] text-[var(--fd-accent-contrast)] shadow-sm transition-transform duration-200 group-hover:scale-105">
-              <Building2 className="h-5 w-5" aria-hidden="true" />
+              <Landmark className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="text-lg font-bold tracking-tight text-[var(--fd-text-primary)]">
-                  FirmDesk
+                  Accounting JV
                 </span>
                 <span className="rounded bg-[var(--fd-accent-subtle-bg)] px-1.5 py-0.5 text-[10px] font-semibold text-[var(--fd-accent)] uppercase tracking-wider">
-                  CA Operations
+                  Advisory & Tax
                 </span>
               </div>
             </div>
@@ -53,7 +54,7 @@ export function LandingNavbar() {
 
         {/* Desktop Navigation Links */}
         <nav
-          className="hidden md:flex items-center gap-6 text-sm font-medium text-[var(--fd-text-secondary)]"
+          className="hidden lg:flex items-center gap-6 text-sm font-medium text-[var(--fd-text-secondary)]"
           aria-label="Main Navigation"
         >
           {navLinks.map((link) => (
@@ -67,7 +68,7 @@ export function LandingNavbar() {
           ))}
         </nav>
 
-        {/* Right Actions (Auth & Theme) */}
+        {/* Right Actions (Auth, Consultation & Theme) */}
         <div className="hidden md:flex items-center gap-2.5">
           <ThemeToggle />
 
@@ -81,15 +82,21 @@ export function LandingNavbar() {
           ) : (
             <>
               <Button asChild variant="ghost" size="sm">
+                <a href="#consultation" className="flex items-center gap-1.5 text-[var(--fd-accent)] font-semibold">
+                  <CalendarCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Book Consultation</span>
+                </a>
+              </Button>
+              <Button asChild variant="secondary" size="sm">
                 <Link to="/sign-in?portal=client" className="flex items-center gap-1.5">
-                  <UserCheck className="h-3.5 w-3.5 text-[var(--fd-text-secondary)]" aria-hidden="true" />
+                  <UserCheck className="h-3.5 w-3.5 text-[var(--fd-accent)]" aria-hidden="true" />
                   <span>Client Portal</span>
                 </Link>
               </Button>
-              <Button asChild variant="secondary" size="sm">
-                <Link to="/sign-in?portal=admin" className="flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[var(--fd-accent)]" aria-hidden="true" />
-                  <span>Staff & Admin</span>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/sign-in?portal=admin" className="flex items-center gap-1.5 text-xs text-[var(--fd-text-tertiary)] hover:text-[var(--fd-text-primary)]">
+                  <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Team Login</span>
                 </Link>
               </Button>
             </>
@@ -97,7 +104,7 @@ export function LandingNavbar() {
         </div>
 
         {/* Mobile Actions: Theme + Hamburger */}
-        <div className="flex items-center gap-1.5 md:hidden">
+        <div className="flex items-center gap-1.5 lg:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -121,7 +128,7 @@ export function LandingNavbar() {
       {mobileMenuOpen && (
         <div
           id="mobile-navigation"
-          className="border-b border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-4 pt-3 pb-6 md:hidden shadow-lg animate-in slide-in-from-top-2 duration-150"
+          className="border-b border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-4 pt-3 pb-6 lg:hidden shadow-lg animate-in slide-in-from-top-2 duration-150"
         >
           <nav className="flex flex-col gap-2 pb-4">
             {navLinks.map((link) => (
@@ -146,16 +153,22 @@ export function LandingNavbar() {
               </Button>
             ) : (
               <>
+                <Button asChild variant="primary" size="md" className="w-full justify-center">
+                  <a href="#consultation" onClick={closeMenu} className="flex items-center gap-2">
+                    <CalendarCheck className="h-4 w-4" aria-hidden="true" />
+                    <span>Book a Free Consultation</span>
+                  </a>
+                </Button>
                 <Button asChild variant="secondary" size="md" className="w-full justify-center">
                   <Link to="/sign-in?portal=client" onClick={closeMenu} className="flex items-center gap-2">
                     <UserCheck className="h-4 w-4" aria-hidden="true" />
                     <span>Client Portal Sign In</span>
                   </Link>
                 </Button>
-                <Button asChild variant="primary" size="md" className="w-full justify-center">
-                  <Link to="/sign-in?portal=admin" onClick={closeMenu} className="flex items-center gap-2">
+                <Button asChild variant="ghost" size="md" className="w-full justify-center">
+                  <Link to="/sign-in?portal=admin" onClick={closeMenu} className="flex items-center gap-2 text-xs">
                     <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                    <span>Staff & Admin Sign In</span>
+                    <span>Practice Team Workspace</span>
                   </Link>
                 </Button>
               </>

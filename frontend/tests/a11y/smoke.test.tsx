@@ -54,6 +54,12 @@ const RULES: axe.RunOptions = {
   rules: {
     'color-contrast': { enabled: false },
   },
+  // jsdom cannot load cross-origin iframes (e.g. the Google Maps embed on the
+  // landing page), so axe's postMessage handshake throws
+  // "Respondable target must be a frame in the current window".
+  // Disabling iframe scanning is the correct fix: we can't meaningfully audit
+  // third-party iframe content in a unit-test environment anyway.
+  iframes: false,
 };
 
 function Harness({ children }: { children: ReactNode }) {

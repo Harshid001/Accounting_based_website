@@ -13,14 +13,17 @@ export interface MessageThreadProps {
   messages: readonly MessageView[];
   loading?: boolean;
   contextLinkFor?: (kind: string, id: string) => string | null;
+  onDelete?: (messageId: string) => void;
 }
 
 function MessageBubble({
   message,
   contextLinkFor,
+  onDelete,
 }: {
   message: MessageView;
   contextLinkFor?: (kind: string, id: string) => string | null;
+  onDelete?: (messageId: string) => void;
 }) {
   const contextLink =
     message.contextRef === null
@@ -49,6 +52,15 @@ function MessageBubble({
           >
             {formatDateTime(message.createdAt)}
           </time>
+          {message.mine && onDelete && (
+            <button
+              onClick={() => onDelete(message.id)}
+              className="text-2xs text-red-500 hover:underline"
+              aria-label="Delete message"
+            >
+              Delete
+            </button>
+          )}
         </div>
 
         <div
@@ -91,7 +103,7 @@ function MessageBubble({
   );
 }
 
-export function MessageThread({ messages, loading = false, contextLinkFor }: MessageThreadProps) {
+export function MessageThread({ messages, loading = false, contextLinkFor, onDelete }: MessageThreadProps) {
   if (loading) {
     return (
       <div className="space-y-4" aria-busy="true">
@@ -121,7 +133,7 @@ export function MessageThread({ messages, loading = false, contextLinkFor }: Mes
   return (
     <ul className="space-y-4">
       {[...messages].reverse().map((message) => (
-        <MessageBubble key={message.id} message={message} {...(contextLinkFor ? { contextLinkFor } : {})} />
+        <MessageBubble key={message.id} message={message} {...(contextLinkFor ? { contextLinkFor } : {})} {...(onDelete ? { onDelete } : {})} />
       ))}
     </ul>
   );

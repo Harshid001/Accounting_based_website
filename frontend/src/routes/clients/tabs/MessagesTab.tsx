@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { listMessages, postMessage } from '@/api/messages.api';
+import { deleteMessage, listMessages, postMessage } from '@/api/messages.api';
 import { queryKeys } from '@/api/queryKeys';
 import { Card } from '@/components/ui/card';
 import { ErrorState } from '@/components/ui/error-state';
@@ -39,6 +39,17 @@ export function MessagesTab() {
     },
   });
 
+  const remove = useMutation({
+    mutationFn: (messageId: string) => deleteMessage(clientId, messageId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.clients.messages(clientId) });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.messages.threads });
+    },
+    onError: (error: unknown) => {
+      errorToast(error, 'That message could not be deleted');
+    },
+  });
+
   return (
     <div className="space-y-4">
       <Card>
@@ -56,6 +67,15 @@ export function MessagesTab() {
             loading={query.isPending}
             contextLinkFor={(kind, id) =>
               kind === 'compliance_item' ? `/compliance/${id}` : `/clients/${clientId}/requests`
+            }
+            onDelete={
+              allows('message:write') && !readOnly
+                ? (messageId) => {
+                    if (window.confirm('Are you sure you want to delete this message?')) {
+                      void remove.mutateAsync(messageId);
+                    }
+                  }
+                : undefined
             }
           />
         )}

@@ -76,6 +76,18 @@ export function PortalMessages() {
     },
   });
 
+  const remove = useMutation({
+    mutationFn: (messageId: string) => {
+      return import('@/api/messages.api').then(({ deleteMessage }) => deleteMessage(clientId, messageId));
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.clients.messages(clientId) });
+    },
+    onError: (error: unknown) => {
+      errorToast(error, 'That message could not be deleted');
+    },
+  });
+
 
   const sendPreset = async (text: string) => {
     await send.mutateAsync(text).catch(() => undefined);
@@ -167,7 +179,15 @@ export function PortalMessages() {
               }}
             />
           ) : (
-            <MessageThread messages={query.data?.items ?? []} loading={query.isPending} />
+            <MessageThread 
+              messages={query.data?.items ?? []} 
+              loading={query.isPending}
+              onDelete={(messageId) => {
+                if (window.confirm('Are you sure you want to delete this message?')) {
+                  void remove.mutateAsync(messageId);
+                }
+              }} 
+            />
           )}
 
           {query.data === undefined || query.data.total <= query.data.limit ? null : (

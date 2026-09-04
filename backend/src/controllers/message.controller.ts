@@ -2,7 +2,7 @@ import { sendCreated, sendData, sendList } from '../lib/http.js';
 import { buildPageMeta, toPageRequest } from '../lib/pagination.js';
 import type { RouteContext } from '../middleware/validate.js';
 import { serialiseMessage, serialiseThread } from '../serializers/message.serializer.js';
-import { listMessages, listThreads, postMessage } from '../services/message.service.js';
+import { deleteMessage, listMessages, listThreads, postMessage } from '../services/message.service.js';
 import type { PostMessageBody } from '../validators/message.validators.js';
 
 export const list = async (
@@ -25,6 +25,14 @@ export const create = async (
 ): Promise<void> => {
   const message = await postMessage(ctx.clientId(), input.body, ctx.user, ctx.actor);
   sendCreated(ctx.res, serialiseMessage(message, ctx.user.id.toString()));
+};
+
+export const remove = async (
+  input: { params: { messageId: string } },
+  ctx: RouteContext,
+): Promise<void> => {
+  await deleteMessage(ctx.clientId(), input.params.messageId, ctx.user, ctx.actor);
+  ctx.res.status(204).end();
 };
 
 export const threads = async (_input: unknown, ctx: RouteContext): Promise<void> => {

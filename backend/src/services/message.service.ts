@@ -135,6 +135,31 @@ export const postMessage = async (
   return record;
 };
 
+export const deleteMessage = async (
+  clientId: Types.ObjectId,
+  messageId: string,
+  user: AuthenticatedUser,
+  actor: RequestActor,
+): Promise<void> => {
+  const message = await Message.findOne({ _id: messageId, client: clientId }).exec();
+  if (!message) throw notFound('message');
+
+  if (user.role !== 'admin' && message.author?.toString() !== user.id.toString()) {
+    throw validationFailed('You can only delete your own messages.', []);
+  }
+
+  await Message.deleteOne({ _id: messageId }).exec();
+
+  await recordAudit({
+    actor,
+    action: 'hard_delete',
+    entityKind: 'message',
+    entityId: message._id,
+    client: clientId,
+    summary: 'Deleted a message on the client thread',
+  });
+};
+
 export interface ThreadSummary {
   clientId: string;
   clientName: string;

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { z } from 'zod';
 
 import * as controller from '../controllers/client.controller.js';
 import * as services from '../controllers/clientService.controller.js';
@@ -23,7 +24,7 @@ import {
   createClientServiceBody,
   updateClientServiceBody,
 } from '../validators/clientService.validators.js';
-import { idParam } from '../validators/common.validators.js';
+import { idParam, objectId } from '../validators/common.validators.js';
 import { messageListQuery, postMessageBody } from '../validators/message.validators.js';
 
 const PRIVILEGED_CLIENT_FIELDS = [
@@ -181,6 +182,17 @@ clientRouter.post(
   requireCapability('message:write'),
   requireClientScope('param:id'),
   handle({ params: idParam, body: postMessageBody }, messages.create),
+);
+
+clientRouter.delete(
+  '/:id/messages/:messageId',
+  mutationLimiter,
+  requireCapability('message:write'),
+  requireClientScope('param:id'),
+  handle(
+    { params: z.object({ id: objectId, messageId: objectId }) },
+    messages.remove,
+  ),
 );
 
 export const clientServiceRouter: Router = Router();

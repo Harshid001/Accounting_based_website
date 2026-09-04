@@ -1,4 +1,4 @@
-import { apiGet, apiList, apiPost } from '@/api/client';
+import { apiDelete, apiGet, apiList, apiPost } from '@/api/client';
 import type { Paged, QueryParams } from '@/types/api';
 import type { ContextRefKind } from '@/types/enums';
 import type { MessageView, ThreadView } from '@/types/models';
@@ -19,3 +19,6 @@ export const postMessage = (clientId: string, input: PostMessageInput): Promise<
   apiPost<MessageView>(`/clients/${clientId}/messages`, input);
 
 export const listThreads = (): Promise<ThreadView[]> => apiGet<ThreadView[]>('/messages/threads');
+
+export const deleteMessage = (clientId: string, messageId: string): Promise<void> =>
+  apiDelete<void>(`/clients/${clientId}/messages/${messageId}`);

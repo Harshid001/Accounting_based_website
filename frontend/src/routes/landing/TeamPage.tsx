@@ -9,7 +9,6 @@ import {
   Phone,
   Scale,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react';
 
 import { usePageTitle } from '@/hooks/usePageTitle';

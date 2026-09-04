@@ -19,7 +19,11 @@ const mockUser: Me = {
   phone: '9820012345',
   status: 'active',
   image: null,
-  createdAt: '2026-01-01T00:00:00.000Z',
+  emailVerified: true,
+  linkedClients: [],
+  pinnedClients: [],
+  unlinked: false,
+  permissions: {},
   notificationPreferences: {
     emailOnAssignment: true,
     emailDeadlineReminders: true,
@@ -35,9 +39,9 @@ function renderPanel() {
         user: mockUser,
         refresh: async () => undefined,
         clear: () => undefined,
-        pendingVerification: false,
+        pendingVerification: null,
         error: null,
-        allows: () => true,
+        allows: (_capability) => true,
       }}
     >
       <ToastProvider>

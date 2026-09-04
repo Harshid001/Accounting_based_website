@@ -12,12 +12,14 @@ import { StatRow } from '@/routes/dashboard/components/StatRow';
 import { TaskBreakdown } from '@/routes/dashboard/components/RecentActivity';
 import { WorkloadPanel } from '@/routes/dashboard/components/WorkloadPanel';
 import { useCurrentUser, useSession } from '@/context/SessionContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 export function Dashboard() {
   usePageTitle('Dashboard');
   const user = useCurrentUser();
   const { allows } = useSession();
+  const { t } = useLanguage();
 
   const query = useQuery({
     queryKey: queryKeys.reports.dashboard,
@@ -30,22 +32,22 @@ export function Dashboard() {
   return (
     <>
       <PageHeader
-        title={`Good to see you, ${firstName}`}
+        title={`${t('dashboard.greeting', 'Good to see you')}, ${firstName}`}
         description={
           user.role === 'admin'
-            ? 'Firm-wide figures across every client.'
-            : 'Everything below is scoped to the clients assigned to you.'
+            ? t('dashboard.descAdmin', 'Firm-wide figures across every client.')
+            : t('dashboard.descUser', 'Everything below is scoped to the clients assigned to you.')
         }
         actions={
           <>
             <Button asChild variant="secondary" size="sm">
-              <Link to="/my-work">Open my work</Link>
+              <Link to="/my-work">{t('dashboard.openMyWork', 'Open my work')}</Link>
             </Button>
             {allows('client:create') ? (
               <Button asChild variant="primary" size="sm">
                 <Link to="/clients/new">
                   <Plus size={14} aria-hidden="true" />
-                  Add client
+                  {t('dashboard.addClient', 'Add client')}
                 </Link>
               </Button>
             ) : null}
@@ -56,7 +58,7 @@ export function Dashboard() {
       {query.isError ? (
         <ErrorState
           error={query.error}
-          title="The dashboard did not load"
+          title={t('dashboard.errorLoad', 'The dashboard did not load')}
           onRetry={() => {
             void query.refetch();
           }}

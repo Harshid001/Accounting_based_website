@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { addDaysDateOnly, todayDateOnly } from '@/lib/date';
 import { formatNumber } from '@/lib/format';
 import type { DashboardSummary } from '@/types/models';
+import { useLanguage } from '@/context/LanguageContext';
 
 export interface DeadlineBucketsProps {
   summary: DashboardSummary | undefined;
@@ -12,16 +13,20 @@ export interface DeadlineBucketsProps {
 }
 
 export function DeadlineBuckets({ summary, loading }: DeadlineBucketsProps) {
+  const { t } = useLanguage();
   const today = todayDateOnly();
   const buckets = [
-    { label: 'Due within 7 days', days: 7, value: summary?.dueIn7 },
-    { label: 'Due within 14 days', days: 14, value: summary?.dueIn14 },
-    { label: 'Due within 30 days', days: 30, value: summary?.dueIn30 },
+    { label: t('dashboard.buckets.7days', 'Due within 7 days'), days: 7, value: summary?.dueIn7 },
+    { label: t('dashboard.buckets.14days', 'Due within 14 days'), days: 14, value: summary?.dueIn14 },
+    { label: t('dashboard.buckets.30days', 'Due within 30 days'), days: 30, value: summary?.dueIn30 },
   ];
 
   return (
     <Card>
-      <CardHeader title="What is coming up" description="Filings not yet filed, by window." />
+      <CardHeader 
+        title={t('dashboard.buckets.title', 'What is coming up')} 
+        description={t('dashboard.buckets.desc', 'Filings not yet filed, by window.')} 
+      />
       <ul className="divide-y divide-[var(--fd-border-subtle)]">
         {buckets.map((bucket) => (
           <li key={bucket.days}>

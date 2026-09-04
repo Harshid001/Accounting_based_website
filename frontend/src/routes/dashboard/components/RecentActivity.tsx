@@ -7,6 +7,7 @@ import { TASK_STATUS_LABELS } from '@/lib/constants';
 import { formatNumber } from '@/lib/format';
 import { TASK_STATUSES } from '@/types/enums';
 import type { DashboardSummary } from '@/types/models';
+import { useLanguage } from '@/context/LanguageContext';
 
 export interface TaskBreakdownProps {
   summary: DashboardSummary | undefined;
@@ -14,12 +15,16 @@ export interface TaskBreakdownProps {
 }
 
 export function TaskBreakdown({ summary, loading }: TaskBreakdownProps) {
+  const { t } = useLanguage();
   const counts = summary?.tasksByStatus ?? {};
   const total = TASK_STATUSES.reduce((sum, status) => sum + (counts[status] ?? 0), 0);
 
   return (
     <Card>
-      <CardHeader title="Tasks by state" description="Everything on your plate, grouped." />
+      <CardHeader 
+        title={t('dashboard.tasks.title', 'Tasks by state')} 
+        description={t('dashboard.tasks.desc', 'Everything on your plate, grouped.')} 
+      />
 
       {loading ? (
         <div className="grid grid-cols-2 gap-3">
@@ -29,8 +34,8 @@ export function TaskBreakdown({ summary, loading }: TaskBreakdownProps) {
         </div>
       ) : total === 0 ? (
         <EmptyState
-          title="No tasks yet"
-          description="Tasks you create or are assigned appear here, grouped by state."
+          title={t('dashboard.tasks.emptyTitle', 'No tasks yet')}
+          description={t('dashboard.tasks.emptyDesc', 'Tasks you create or are assigned appear here, grouped by state.')}
         />
       ) : (
         <div className="grid grid-cols-2 gap-3">
@@ -41,7 +46,7 @@ export function TaskBreakdown({ summary, loading }: TaskBreakdownProps) {
               className="rounded-lg border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)] px-3 py-2 transition-colors hover:border-[var(--fd-border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fd-focus-ring)]"
             >
               <span className="block text-xs text-[var(--fd-text-secondary)]">
-                {TASK_STATUS_LABELS[status]}
+                {t(`task.status.${status}`, TASK_STATUS_LABELS[status])}
               </span>
               <span className="numeric block text-2xl font-semibold text-[var(--fd-text-primary)]">
                 {formatNumber(counts[status] ?? 0)}

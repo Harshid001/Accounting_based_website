@@ -19,64 +19,65 @@ import { cn } from '@/lib/cn';
 import type { Capability } from '@/lib/permissions';
 import { IconButton } from '@/components/ui/icon-button';
 import { useSession } from '@/context/SessionContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { JVLogo } from '@/components/brand/JVLogo';
 
 export interface NavEntry {
   to: string;
-  label: string;
+  labelKey: string;
   icon: ReactNode;
   capability?: Capability;
   end?: boolean;
 }
 
 export const STAFF_NAV: NavEntry[] = [
-  { to: '/dashboard', label: 'Dashboard', icon: <Gauge size={16} aria-hidden="true" />, end: true },
-  { to: '/my-work', label: 'My work', icon: <ListTodo size={16} aria-hidden="true" /> },
+  { to: '/dashboard', labelKey: 'sidebar.dashboard', icon: <Gauge size={16} aria-hidden="true" />, end: true },
+  { to: '/my-work', labelKey: 'sidebar.myWork', icon: <ListTodo size={16} aria-hidden="true" /> },
   {
     to: '/clients',
-    label: 'Clients',
+    labelKey: 'sidebar.clients',
     icon: <Building2 size={16} aria-hidden="true" />,
     capability: 'client:read',
   },
   {
     to: '/compliance',
-    label: 'Filings',
+    labelKey: 'sidebar.filings',
     icon: <CalendarClock size={16} aria-hidden="true" />,
     capability: 'compliance:read',
   },
   {
     to: '/tasks',
-    label: 'Tasks',
+    labelKey: 'sidebar.tasks',
     icon: <CheckSquare size={16} aria-hidden="true" />,
     capability: 'task:read',
   },
   {
     to: '/documents',
-    label: 'Documents',
+    labelKey: 'sidebar.documents',
     icon: <FileText size={16} aria-hidden="true" />,
     capability: 'document:read',
   },
   {
     to: '/requests',
-    label: 'Requests',
+    labelKey: 'sidebar.requests',
     icon: <Inbox size={16} aria-hidden="true" />,
     capability: 'document_request:read',
   },
   {
     to: '/messages',
-    label: 'Messages',
+    labelKey: 'sidebar.messages',
     icon: <MessagesSquare size={16} aria-hidden="true" />,
     capability: 'message:threads',
   },
   {
     to: '/reports/compliance',
-    label: 'Reports',
+    labelKey: 'sidebar.reports',
     icon: <PieChart size={16} aria-hidden="true" />,
     capability: 'report:read',
   },
   {
     to: '/settings/firm',
-    label: 'Settings',
+    labelKey: 'sidebar.settings',
     icon: <Settings size={16} aria-hidden="true" />,
     capability: 'settings:write',
   },
@@ -91,6 +92,7 @@ export interface SidebarProps {
 
 export function Sidebar({ collapsed, onToggle, onNavigate, variant = 'fixed' }: SidebarProps) {
   const { allows } = useSession();
+  const { t } = useLanguage();
   const entries = STAFF_NAV.filter(
     (entry) => entry.capability === undefined || allows(entry.capability),
   );
@@ -143,7 +145,7 @@ export function Sidebar({ collapsed, onToggle, onNavigate, variant = 'fixed' }: 
               to={entry.to}
               end={entry.end}
               onClick={onNavigate}
-              title={narrow ? entry.label : undefined}
+              title={narrow ? t(entry.labelKey) : undefined}
               className={({ isActive }) =>
                 cn(
                   'flex items-center gap-3 rounded-md px-2.5 py-2 text-base transition-colors',
@@ -156,7 +158,7 @@ export function Sidebar({ collapsed, onToggle, onNavigate, variant = 'fixed' }: 
               }
             >
               <span className="shrink-0">{entry.icon}</span>
-              {narrow ? <span className="sr-only">{entry.label}</span> : <span>{entry.label}</span>}
+              {narrow ? <span className="sr-only">{t(entry.labelKey)}</span> : <span>{t(entry.labelKey)}</span>}
             </NavLink>
           </li>
         ))}

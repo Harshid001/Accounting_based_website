@@ -4,6 +4,7 @@ import { ProgressBar } from '@/components/ui/progress-bar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatNumber } from '@/lib/format';
 import type { DashboardSummary } from '@/types/models';
+import { useLanguage } from '@/context/LanguageContext';
 
 export interface WorkloadPanelProps {
   summary: DashboardSummary | undefined;
@@ -11,14 +12,15 @@ export interface WorkloadPanelProps {
 }
 
 export function WorkloadPanel({ summary, loading }: WorkloadPanelProps) {
+  const { t } = useLanguage();
   const rows = summary?.workload ?? [];
   const peak = rows.reduce((max, row) => Math.max(max, row.openItems), 0);
 
   return (
     <Card>
       <CardHeader
-        title="Who is carrying what"
-        description="Open tasks plus open filings, per person."
+        title={t('dashboard.workload.title', 'Who is carrying what')}
+        description={t('dashboard.workload.desc', 'Open tasks plus open filings, per person.')}
       />
 
       {loading ? (
@@ -32,8 +34,8 @@ export function WorkloadPanel({ summary, loading }: WorkloadPanelProps) {
         </div>
       ) : rows.length === 0 ? (
         <EmptyState
-          title="No workload to show"
-          description="Once work is assigned, each person's open item count appears here."
+          title={t('dashboard.workload.emptyTitle', 'No workload to show')}
+          description={t('dashboard.workload.emptyDesc', 'Once work is assigned, each person\'s open item count appears here.')}
         />
       ) : (
         <ul className="space-y-3">
@@ -44,13 +46,13 @@ export function WorkloadPanel({ summary, loading }: WorkloadPanelProps) {
                   {row.staffName}
                 </span>
                 <span className="numeric text-xs text-[var(--fd-text-tertiary)]">
-                  {formatNumber(row.openItems)} open
+                  {formatNumber(row.openItems)} {t('dashboard.workload.open', 'open')}
                 </span>
               </div>
               <ProgressBar
                 value={row.openItems}
                 max={Math.max(peak, 1)}
-                label={`${row.staffName} has ${row.openItems} open items`}
+                label={`${row.staffName} ${t('dashboard.workload.hasOpen', 'has {count} open items').replace('{count}', String(row.openItems))}`}
                 tone={row.openItems === peak && peak > 0 ? 'waiting' : 'accent'}
               />
             </li>

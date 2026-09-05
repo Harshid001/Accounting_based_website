@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto';
-
 import type { Request, RequestHandler, Response } from 'express';
 import { MemoryStore, rateLimit } from 'express-rate-limit';
 import type { Options } from 'express-rate-limit';
@@ -15,11 +13,6 @@ const keyByUserOrIp = (req: Request): string =>
   req.authUser ? `u:${req.authUser.id.toString()}` : `ip:${requestIp(req) ?? 'unknown'}`;
 
 const emailFromBody = (req: Request): string | null => req.authEmail ?? null;
-
-const transferTokenKey = (req: Request): string => {
-  const token = typeof req.query.token === 'string' ? req.query.token : '';
-  return `tk:${createHash('sha256').update(token).digest('base64url')}`;
-};
 
 const handler = (req: Request, _res: Response, next: (error: AppError) => void): void => {
   if (req.path.startsWith('/sign-') || req.path.includes('password')) {
@@ -95,12 +88,6 @@ export const authSessionLimiter: RequestHandler = build(
 export const readLimiter: RequestHandler = build('read', MINUTE, 600, keyByUserOrIp);
 export const mutationLimiter: RequestHandler = build('mutation', MINUTE, 120, keyByUserOrIp);
 export const uploadLimiter: RequestHandler = build('upload', HOUR, 60, keyByUserOrIp);
-export const downloadTransferLimiter: RequestHandler = build(
-  'download-transfer',
-  MINUTE,
-  3,
-  transferTokenKey,
-);
 export const exportLimiter: RequestHandler = build('export', HOUR, 10, keyByUserOrIp);
 export const searchLimiter: RequestHandler = build('search', MINUTE, 120, keyByUserOrIp);
 export const bulkLimiter: RequestHandler = build('bulk', HOUR, 10, keyByUserOrIp);

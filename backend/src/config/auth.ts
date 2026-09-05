@@ -24,7 +24,7 @@ import { renderResetPassword } from '../email/templates/resetPassword.js';
 import { renderVerifyEmail } from '../email/templates/verifyEmail.js';
 import { sendMail } from '../email/send.js';
 import { User } from '../models/user.model.js';
-import { env, googleOAuthConfigured, isProduction, isTest } from './env.js';
+import { env, googleOAuthConfigured, isProduction } from './env.js';
 import { getDb } from './db.js';
 import { logger } from './logger.js';
 
@@ -46,6 +46,19 @@ const readString = (source: unknown, key: string): string | null => {
 const PASSWORD_PATHS = new Set(['/sign-up/email', '/reset-password', '/change-password']);
 
 const passwordPolicyGate = createAuthMiddleware(async (ctx) => {
+  if (ctx.path === '/sign-up/email') {
+    const rawEmail = readString(ctx.body, 'email');
+    if (rawEmail) {
+      const normalized = rawEmail.toLowerCase().trim();
+      const existing = await User.findOne({ email: normalized }).select('_id').lean().exec();
+      if (existing) {
+        throw new APIError('CONFLICT', {
+          message: 'That email address is already in use.',
+          code: 'EMAIL_ALREADY_EXISTS',
+        });
+      }
+    }
+  }
   if (!PASSWORD_PATHS.has(ctx.path)) return;
   const password = readString(ctx.body, 'password') ?? readString(ctx.body, 'newPassword');
   if (password === null) return;
@@ -119,7 +132,7 @@ const buildAuth = () =>
       },
     },
     emailVerification: {
-      sendOnSignUp: isTest,
+      sendOnSignUp: true,
       sendOnSignIn: false,
       autoSignInAfterVerification: true,
       expiresIn: 60 * 60 * 24,
@@ -182,13 +195,23 @@ const buildAuth = () =>
       user: {
         create: {
           before: async (user) => {
-            await Promise.resolve();
+            const normalizedEmail = typeof user.email === 'string' ? user.email.toLowerCase().trim() : '';
+            if (normalizedEmail) {
+              const existing = await getDb().collection('user').findOne({ email: normalizedEmail });
+              if (existing) {
+                throw new APIError('CONFLICT', {
+                  message: 'That email address is already in use.',
+                  code: 'EMAIL_ALREADY_EXISTS',
+                });
+              }
+            }
             return {
               data: {
                 ...user,
+                email: normalizedEmail || user.email,
                 role: 'client',
                 status: 'active',
-                ...(isTest ? {} : { emailVerified: true }),
+                emailVerified: false,
               },
             };
           },

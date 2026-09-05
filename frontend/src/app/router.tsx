@@ -82,6 +82,9 @@ const ComplianceGenerate = lazy(async () => ({
 const DocumentsIndex = lazy(async () => ({
   default: (await import('@/routes/documents/DocumentsIndex')).DocumentsIndex,
 }));
+const ConverterPage = lazy(async () => ({
+  default: (await import('@/routes/converter/ConverterPage')).ConverterPage,
+}));
 const RequestsIndex = lazy(async () => ({
   default: (await import('@/routes/requests/RequestsIndex')).RequestsIndex,
 }));
@@ -193,6 +196,7 @@ export function AppRoutes() {
         <Route path="/compliance/generate" element={<ComplianceGenerate />} />
         <Route path="/compliance/:complianceId" element={<ComplianceDetail />} />
         <Route path="/documents" element={<DocumentsIndex />} />
+        <Route path="/converter" element={<ConverterPage />} />
         <Route path="/requests" element={<RequestsIndex />} />
         <Route path="/messages" element={<MessagesIndex />} />
         <Route path="/reports/compliance" element={<ComplianceReport />} />

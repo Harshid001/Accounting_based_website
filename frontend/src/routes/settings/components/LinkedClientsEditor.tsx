@@ -17,9 +17,14 @@ import type { NamedRef } from '@/types/models';
 export interface LinkedClientsEditorProps {
   userId: string;
   linked: readonly NamedRef[];
+  emailVerified?: boolean;
 }
 
-export function LinkedClientsEditor({ userId, linked }: LinkedClientsEditorProps) {
+export function LinkedClientsEditor({
+  userId,
+  linked,
+  emailVerified = true,
+}: LinkedClientsEditorProps) {
   const queryClient = useQueryClient();
   const { success, errorToast } = useToast();
   const [selected, setSelected] = useState<string[]>(linked.map((client) => client.id));
@@ -69,9 +74,14 @@ export function LinkedClientsEditor({ userId, linked }: LinkedClientsEditorProps
           <Button
             variant="primary"
             size="sm"
-            disabled={!dirty}
+            disabled={!dirty || !emailVerified}
             loading={mutation.isPending}
             loadingLabel="Saving links"
+            title={
+              !emailVerified
+                ? 'Only verified accounts can be linked to client records.'
+                : undefined
+            }
             onClick={() => {
               mutation.mutate(selected);
             }}
@@ -82,6 +92,13 @@ export function LinkedClientsEditor({ userId, linked }: LinkedClientsEditorProps
       />
 
       <div className="space-y-3">
+        {!emailVerified ? (
+          <div className="rounded-md border border-[var(--fd-border-warning)] bg-[var(--fd-surface-warning)] p-3 text-xs text-[var(--fd-text-warning)]">
+            <span className="font-semibold">Security Requirement:</span> This account has not
+            verified their email address yet. Only verified accounts can be linked to client
+            records to prevent account squatting.
+          </div>
+        ) : null}
         <Input
           type="search"
           value={term}

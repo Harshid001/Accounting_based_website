@@ -45,6 +45,9 @@ export const createApp = (): Express => {
     }),
   );
 
+  app.use(compression());
+  app.use(requestContext);
+
   app.use(
     cors({
       origin: (origin, callback) => {
@@ -66,9 +69,6 @@ export const createApp = (): Express => {
     }),
   );
 
-  app.use(compression());
-  app.use(requestContext);
-
   app.use('/api/auth', betterAuthRouter);
 
   app.use(express.json({ limit: '1mb' }));
@@ -86,7 +86,7 @@ export const createApp = (): Express => {
       res.redirect(env.APP_BASE_URL);
       return;
     }
-    res.status(200).json({ status: 'ok', service: 'FirmDesk API' });
+    res.status(200).json({ status: 'ok' });
   });
 
   app.use('/api/v1', apiRouter);

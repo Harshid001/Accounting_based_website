@@ -46,6 +46,7 @@ export const linkedClientsBody = z.object({ clientIds: z.array(objectId).max(50)
 
 export const purgeUnlinkedBody = z.object({
   olderThanDays: z.coerce.number().int().min(1).max(3650).default(30),
+  unverifiedOnly: z.boolean().default(true),
 });
 
 export const jobNameParam = z.object({ name: z.enum(JOB_NAMES) });
@@ -54,11 +55,13 @@ export const jobListQuery = pageQuery.extend({
   jobName: z.enum(JOB_NAMES).optional(),
 });
 
-export const clientErrorBody = z.object({
-  message: z.string().trim().min(1).max(2000),
-  stack: z.string().trim().max(6000).optional(),
-  path: z.string().trim().max(500),
-  userAgent: z.string().trim().max(400).optional(),
-});
+export const clientErrorBody = z
+  .object({
+    message: z.string().trim().min(1).max(2000),
+    stack: z.string().trim().max(6000).optional(),
+    path: z.string().trim().max(500),
+    userAgent: z.string().trim().max(400).optional(),
+  })
+  .strict();
 
 export type UpdateMeBody = z.infer<typeof updateMeBody>;

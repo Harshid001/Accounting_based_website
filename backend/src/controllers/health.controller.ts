@@ -12,6 +12,18 @@ export const health = (req: Request, res: Response): void => {
   });
 };
 
+const sanitizeLogLine = (val: string | undefined | null, maxLen: number): string => {
+  if (typeof val !== 'string') return '';
+  return Array.from(val)
+    .filter((char) => {
+      const code = char.charCodeAt(0);
+      return code >= 32 && code !== 127;
+    })
+    .join('')
+    .trim()
+    .slice(0, maxLen);
+};
+
 export const reportClientError = async (
   input: { body: z.infer<typeof clientErrorBody> },
   ctx: { req: Request; res: Response; requestId: string },
@@ -19,10 +31,10 @@ export const reportClientError = async (
   ctx.req.log.warn(
     {
       event: 'client.error',
-      path: input.body.path,
-      message: input.body.message.slice(0, 500),
+      path: sanitizeLogLine(input.body.path, 500),
+      message: sanitizeLogLine(input.body.message, 500),
       stack: input.body.stack?.slice(0, 2000) ?? null,
-      userAgent: input.body.userAgent ?? null,
+      userAgent: input.body.userAgent ? sanitizeLogLine(input.body.userAgent, 400) : null,
     },
     'the browser reported an unhandled error',
   );

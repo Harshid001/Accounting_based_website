@@ -15,7 +15,7 @@ import { logger } from './logger.js';
 
 export const PRESIGN_TTL_SECONDS = 60;
 
-const s3 = new S3Client({
+export const s3 = new S3Client({
   region: 'auto',
   endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
   credentials: {
@@ -24,7 +24,7 @@ const s3 = new S3Client({
   },
 });
 
-const bucket = env.R2_BUCKET_NAME;
+export const bucket = env.R2_BUCKET_NAME;
 
 export interface PresignedUpload {
   uploadUrl: string;

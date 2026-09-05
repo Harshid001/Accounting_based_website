@@ -77,10 +77,22 @@ const schema = z.object({
   BOOTSTRAP_ADMIN_NAME: z.string().optional(),
   BOOTSTRAP_ADMIN_PASSWORD: z.string().optional(),
 
-  R2_ACCOUNT_ID: z.string().min(1),
-  R2_ACCESS_KEY_ID: z.string().min(1),
-  R2_SECRET_ACCESS_KEY: z.string().min(1),
-  R2_BUCKET_NAME: z.string().min(1),
+  R2_ACCOUNT_ID:
+    process.env.NODE_ENV === 'test'
+      ? z.string().min(1).default('test-account-id')
+      : z.string().min(1),
+  R2_ACCESS_KEY_ID:
+    process.env.NODE_ENV === 'test'
+      ? z.string().min(1).default('test-access-key-id')
+      : z.string().min(1),
+  R2_SECRET_ACCESS_KEY:
+    process.env.NODE_ENV === 'test'
+      ? z.string().min(1).default('test-secret-access-key')
+      : z.string().min(1),
+  R2_BUCKET_NAME:
+    process.env.NODE_ENV === 'test'
+      ? z.string().min(1).default('test-bucket')
+      : z.string().min(1),
 });
 
 export type Env = z.infer<typeof schema>;

@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { FileText } from 'lucide-react';
+import { ArrowRightLeft, FileText } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { listDocuments } from '@/api/documents.api';
 import { queryKeys } from '@/api/queryKeys';
+import { Button } from '@/components/ui/button';
 import { EmptyState, FilteredEmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
 import { PageHeader } from '@/components/ui/page-header';
@@ -81,6 +83,14 @@ export function DocumentsIndex() {
         title="Documents"
         featureKey="documents"
         description="Every file across the clients in your scope. Uploads happen from a client record."
+        actions={
+          <Button asChild variant="secondary" size="sm">
+            <Link to="/converter" className="flex items-center gap-1.5">
+              <ArrowRightLeft size={14} aria-hidden="true" />
+              <span>File Converter</span>
+            </Link>
+          </Button>
+        }
       />
 
       <div data-tour="doc-search">

@@ -94,7 +94,7 @@ export default defineConfig(({ mode }) => {
     preview: { port: 4173 },
     build: {
       target: 'es2022',
-      sourcemap: true,
+      sourcemap: false,
       chunkSizeWarningLimit: 900,
     },
   };

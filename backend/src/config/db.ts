@@ -17,6 +17,14 @@ export const connectDatabase = async (uri: string = env.MONGODB_URI): Promise<vo
     autoIndex: !isProduction,
   });
   connected = true;
+  try {
+    const db = mongoose.connection.db;
+    if (db) {
+      await db.collection('user').createIndex({ email: 1 }, { unique: true });
+    }
+  } catch (err) {
+    logger.warn({ err }, 'could not ensure unique index on user.email');
+  }
   logger.info({ event: 'db.connected' }, 'database connection established');
 };
 

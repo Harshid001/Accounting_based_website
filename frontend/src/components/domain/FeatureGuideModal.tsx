@@ -28,22 +28,6 @@ import { useFeatureGuide } from '@/context/FeatureGuideContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { FEATURE_GUIDES } from '@/lib/featureGuides/featureGuideData';
 import { cn } from '@/lib/cn';
-import type { FeatureKey } from '@/types/featureGuides';
-
-const ALL_FEATURES: Array<{ key: FeatureKey; label: string; icon: string }> = [
-  { key: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
-  { key: 'myWork', label: 'My Work', icon: 'Briefcase' },
-  { key: 'clients', label: 'Clients', icon: 'Building2' },
-  { key: 'compliance', label: 'Filings', icon: 'ShieldCheck' },
-  { key: 'tasks', label: 'Tasks', icon: 'CheckSquare' },
-  { key: 'documents', label: 'Documents', icon: 'FileText' },
-  { key: 'requests', label: 'Requests', icon: 'Inbox' },
-  { key: 'messages', label: 'Messages', icon: 'MessageSquare' },
-  { key: 'reports', label: 'Reports', icon: 'BarChart' },
-  { key: 'notifications', label: 'Alerts', icon: 'Bell' },
-  { key: 'settings', label: 'Settings', icon: 'Settings' },
-  { key: 'portal', label: 'Portal', icon: 'Globe' },
-];
 
 const ICON_MAP: Record<string, ReactNode> = {
   LayoutDashboard: <LayoutDashboard className="h-5 w-5" />,
@@ -124,7 +108,7 @@ const UI_TEXT = {
 };
 
 export function FeatureGuideModal() {
-  const { isGuideOpen, closeGuide, activeGuideFeature, openGuide, startTour, currentFeatureKey } =
+  const { isGuideOpen, closeGuide, activeGuideFeature, startTour, currentFeatureKey } =
     useFeatureGuide();
   const { language, setLanguage, languages } = useLanguage();
   const navigate = useNavigate();
@@ -230,35 +214,6 @@ export function FeatureGuideModal() {
                 </button>
               </RadixDialog.Close>
             </div>
-          </div>
-
-          {/* Feature Switcher Ribbon - Switch between any of the 12 features seamlessly */}
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/50 px-4 sm:px-6 py-2 no-scrollbar">
-            {ALL_FEATURES.map((feat) => {
-              const isSelected = activeGuideFeature === feat.key;
-              const isCurrentScreen = currentFeatureKey === feat.key;
-              return (
-                <button
-                  key={feat.key}
-                  type="button"
-                  onClick={() => openGuide(feat.key)}
-                  className={cn(
-                    'inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all cursor-pointer',
-                    isSelected
-                      ? 'bg-[var(--fd-surface-1)] text-[var(--fd-accent)] shadow-xs font-semibold border border-[var(--fd-accent)]/30'
-                      : 'text-[var(--fd-text-secondary)] hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)] border border-transparent',
-                  )}
-                >
-                  <span className="shrink-0">{ICON_MAP[feat.icon]}</span>
-                  <span>{feat.label}</span>
-                  {isCurrentScreen && (
-                    <span className="rounded-full bg-[var(--fd-accent)]/15 px-1.5 py-0.2 text-[9px] font-bold text-[var(--fd-accent)]">
-                      Here
-                    </span>
-                  )}
-                </button>
-              );
-            })}
           </div>
 
           {/* Scrollable Body Content */}

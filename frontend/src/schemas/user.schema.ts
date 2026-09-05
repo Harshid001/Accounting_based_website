@@ -26,6 +26,7 @@ export const purgeSchema = z.object({
       (value) => /^\d{1,4}$/.test(value) && Number.parseInt(value, 10) >= 1,
       'Enter a whole number of days, at least 1.',
     ),
+  unverifiedOnly: z.boolean(),
 });
 export type PurgeValues = z.infer<typeof purgeSchema>;
 

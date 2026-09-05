@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Building2, CalendarClock, CheckSquare, Plus, Sparkles } from 'lucide-react';
+import { ArrowRightLeft, CalendarClock, CheckSquare, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { fetchDashboard } from '@/api/reports.api';
@@ -12,7 +12,6 @@ import { StatRow } from '@/routes/dashboard/components/StatRow';
 import { TaskBreakdown } from '@/routes/dashboard/components/RecentActivity';
 import { WorkloadPanel } from '@/routes/dashboard/components/WorkloadPanel';
 import { useCurrentUser, useSession } from '@/context/SessionContext';
-import { useFeatureGuide } from '@/context/FeatureGuideContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
@@ -20,7 +19,6 @@ export function Dashboard() {
   usePageTitle('Dashboard');
   const user = useCurrentUser();
   const { allows } = useSession();
-  const { openGuide } = useFeatureGuide();
   const { t } = useLanguage();
 
   const query = useQuery({
@@ -77,14 +75,6 @@ export function Dashboard() {
             <span className="px-2 text-xs font-bold uppercase tracking-wider text-[var(--fd-text-tertiary)]">
               Quick Actions:
             </span>
-            {allows('client:create') && (
-              <Button asChild variant="secondary" size="sm">
-                <Link to="/clients/new" className="flex items-center gap-1.5">
-                  <Building2 size={13} className="text-[var(--fd-accent)]" />
-                  <span>Add Client</span>
-                </Link>
-              </Button>
-            )}
             {allows('task:create') && (
               <Button asChild variant="secondary" size="sm">
                 <Link to="/tasks" className="flex items-center gap-1.5">
@@ -101,15 +91,14 @@ export function Dashboard() {
                 </Link>
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openGuide('dashboard')}
-              className="flex items-center gap-1.5 text-[var(--fd-text-secondary)] hover:text-[var(--fd-accent)] cursor-pointer"
-            >
-              <Sparkles size={13} className="text-[var(--fd-accent)]" />
-              <span>Interactive Tour</span>
-            </Button>
+            {allows('document:read') && (
+              <Button asChild variant="secondary" size="sm">
+                <Link to="/converter" className="flex items-center gap-1.5">
+                  <ArrowRightLeft size={13} className="text-violet-500" />
+                  <span>Convert File</span>
+                </Link>
+              </Button>
+            )}
           </div>
 
           <div data-tour="dashboard-stats">

@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ShieldCheck, Trash2 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
 import { listUsers, purgeUnlinkedAccounts } from '@/api/users.api';
@@ -9,6 +9,7 @@ import { queryKeys } from '@/api/queryKeys';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
@@ -46,11 +47,12 @@ export function UnlinkedAccounts() {
 
   const form = useForm<PurgeValues>({
     resolver: zodResolver(purgeSchema),
-    defaultValues: { olderThanDays: '30' },
+    defaultValues: { olderThanDays: '30', unverifiedOnly: true },
   });
 
   const purge = useMutation({
-    mutationFn: (days: number) => purgeUnlinkedAccounts(days),
+    mutationFn: (values: { days: number; unverifiedOnly: boolean }) =>
+      purgeUnlinkedAccounts(values.days, values.unverifiedOnly),
     onSuccess: (result) => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
       success(
@@ -130,25 +132,28 @@ export function UnlinkedAccounts() {
         <Card>
           <CardHeader
             title="Bulk delete"
-            description="Unverified, unlinked client accounts older than the age you set. Verified accounts are never touched here."
+            description="Permanently delete old unlinked client accounts that have never been connected to any client record."
           />
           <form
             onSubmit={form.handleSubmit((values) => {
               confirm.ask({
                 title: 'Delete old unlinked accounts?',
-                body: `Every unverified, unlinked client account older than ${values.olderThanDays} days is deleted permanently. This cannot be undone.`,
+                body: `Every ${values.unverifiedOnly ? 'unverified, ' : ''}unlinked client account older than ${values.olderThanDays} days is deleted permanently. This cannot be undone.`,
                 confirmLabel: 'Delete accounts',
                 destructive: true,
                 typedConfirmation: 'DELETE',
                 typedHint: 'Type DELETE to confirm',
                 onConfirm: async () => {
                   await purge
-                    .mutateAsync(Number.parseInt(values.olderThanDays, 10))
+                    .mutateAsync({
+                      days: Number.parseInt(values.olderThanDays, 10),
+                      unverifiedOnly: values.unverifiedOnly,
+                    })
                     .catch(() => undefined);
                 },
               });
             })}
-            className="flex flex-wrap items-end gap-3"
+            className="flex flex-wrap items-end gap-4"
           >
             <FormField
               label="Older than, in days"
@@ -166,6 +171,21 @@ export function UnlinkedAccounts() {
                 />
               )}
             </FormField>
+
+            <div className="pb-2.5">
+              <Controller
+                control={form.control}
+                name="unverifiedOnly"
+                render={({ field }) => (
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    label="Only delete unverified accounts"
+                  />
+                )}
+              />
+            </div>
+
             <Button
               type="submit"
               variant="danger"

@@ -1,4 +1,5 @@
 import {
+  ArrowRightLeft,
   Building2,
   CalendarClock,
   CheckSquare,
@@ -55,6 +56,12 @@ export const STAFF_NAV: NavEntry[] = [
     to: '/documents',
     labelKey: 'sidebar.documents',
     icon: <FileText size={16} aria-hidden="true" />,
+    capability: 'document:read',
+  },
+  {
+    to: '/converter',
+    labelKey: 'sidebar.converter',
+    icon: <ArrowRightLeft size={16} aria-hidden="true" />,
     capability: 'document:read',
   },
   {

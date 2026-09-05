@@ -281,7 +281,11 @@ export function UserDetail() {
         </Card>
 
         {user.role === 'client' ? (
-          <LinkedClientsEditor userId={user.id} linked={user.linkedClients} />
+          <LinkedClientsEditor
+            userId={user.id}
+            linked={user.linkedClients}
+            emailVerified={user.emailVerified}
+          />
         ) : null}
 
         <Card>

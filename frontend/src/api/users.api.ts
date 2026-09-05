@@ -28,5 +28,8 @@ export const deactivateUser = (id: string): Promise<AdminUser> =>
 export const activateUser = (id: string): Promise<AdminUser> =>
   apiPost<AdminUser>(`/users/${id}/activate`);
 
-export const purgeUnlinkedAccounts = (olderThanDays: number): Promise<{ deleted: number }> =>
-  apiDelete<{ deleted: number }>('/users/unlinked', { olderThanDays });
+export const purgeUnlinkedAccounts = (
+  olderThanDays: number,
+  unverifiedOnly = true,
+): Promise<{ deleted: number }> =>
+  apiDelete<{ deleted: number }>('/users/unlinked', { olderThanDays, unverifiedOnly });

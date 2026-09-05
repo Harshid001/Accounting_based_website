@@ -89,7 +89,7 @@ describe('sign-up', () => {
     const repeated = await signUp(email);
 
     expect(first.status).toBeLessThan(400);
-    expect(repeated.status).toBeLessThan(400);
+    expect(repeated.status).toBe(409);
     expect(await User.countDocuments({ email })).toBe(1);
     expect(send).toHaveBeenCalledTimes(1);
   });

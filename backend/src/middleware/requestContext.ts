@@ -19,11 +19,7 @@ export const requestContext: RequestHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  const inbound = req.headers['x-request-id'];
-  const requestId =
-    typeof inbound === 'string' && /^[A-Za-z0-9-]{8,64}$/.test(inbound)
-      ? inbound
-      : randomUUID();
+  const requestId = randomUUID();
 
   req.requestId = requestId;
   req.log = logger.child({ requestId });

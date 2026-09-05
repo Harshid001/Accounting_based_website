@@ -1,6 +1,7 @@
 import type { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
 
+import { logger } from '../config/logger.js';
 import { AppError, isAppError } from '../lib/errors.js';
 import type { FieldError } from '../lib/errors.js';
 
@@ -104,12 +105,14 @@ export const errorHandler: ErrorRequestHandler = (
     err: error,
   };
 
+  const log = req.log ?? logger;
+
   if (appError.status >= 500) {
-    req.log.error(logPayload, 'request failed unexpectedly');
+    log.error(logPayload, 'request failed unexpectedly');
   } else if (appError.code === 'RATE_LIMITED' || appError.code === 'FORBIDDEN') {
-    req.log.warn(logPayload, 'request refused');
+    log.warn(logPayload, 'request refused');
   } else {
-    req.log.debug(logPayload, 'request rejected');
+    log.debug(logPayload, 'request rejected');
   }
 
   res.status(appError.status).json(payload);

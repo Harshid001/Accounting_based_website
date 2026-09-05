@@ -85,7 +85,7 @@ describe('Usability Enhancements Across Features', () => {
     expect(screen.getByText(/Document Vault/i)).toBeInTheDocument();
   });
 
-  it('allows browsing and switching between feature guides in FeatureGuideModal', async () => {
+  it('renders feature guide content properly in FeatureGuideModal', async () => {
     const user = userEvent.setup();
 
     function TestApp() {
@@ -107,15 +107,7 @@ describe('Usability Enhancements Across Features', () => {
 
     // Verify modal is open with Dashboard guide
     expect(screen.getByRole('heading', { name: /Executive Dashboard/i })).toBeInTheDocument();
-
-    // Verify ribbon tabs exist (e.g. Clients, Filings, Tasks, Documents)
-    const clientsTab = screen.getByRole('button', { name: /Clients/i });
-    expect(clientsTab).toBeInTheDocument();
-
-    // Click Clients tab in the ribbon
-    await user.click(clientsTab);
-
-    // Verify modal switched content to Clients
-    expect(screen.getByRole('heading', { name: /Client Management Directory/i })).toBeInTheDocument();
+    expect(screen.getByText(/In Simple Terms/i)).toBeInTheDocument();
+    expect(screen.getByText(/Why This Matters/i)).toBeInTheDocument();
   });
 });

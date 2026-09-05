@@ -114,6 +114,10 @@ export const purgeUnlinked = async (
   input: { body: z.infer<typeof purgeUnlinkedBody> },
   ctx: RouteContext,
 ): Promise<void> => {
-  const deleted = await purgeUnlinkedAccounts(input.body.olderThanDays, ctx.actor);
+  const deleted = await purgeUnlinkedAccounts(
+    input.body.olderThanDays,
+    ctx.actor,
+    input.body.unverifiedOnly,
+  );
   sendData(ctx.res, { deleted });
 };

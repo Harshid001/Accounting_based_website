@@ -182,6 +182,11 @@ export const setLinkedClients = async (
   if (doc.role !== 'client') {
     throw conflict('Only a client account can be linked to client records.');
   }
+  if (clientIds.length > 0 && !doc.emailVerified) {
+    throw conflict(
+      'This user account has not verified their email address yet. Only verified accounts can be linked to client records.',
+    );
+  }
   if (clientIds.length > 0) {
     const found = await Client.countDocuments({ _id: { $in: clientIds } }).exec();
     if (found !== new Set(clientIds).size) {
@@ -232,14 +237,18 @@ export const setUserStatus = async (
 export const purgeUnlinkedAccounts = async (
   olderThanDays: number,
   actor: RequestActor,
+  unverifiedOnly = true,
 ): Promise<number> => {
   const cutoff = new Date(Date.now() - olderThanDays * 24 * 60 * 60 * 1000);
-  const candidates = await User.find({
+  const filter: Record<string, unknown> = {
     role: 'client',
-    emailVerified: false,
     linkedClients: { $size: 0 },
     createdAt: { $lt: cutoff },
-  })
+  };
+  if (unverifiedOnly) {
+    filter.emailVerified = false;
+  }
+  const candidates = await User.find(filter)
     .select('_id')
     .lean()
     .exec();
@@ -253,7 +262,7 @@ export const purgeUnlinkedAccounts = async (
     actor,
     action: 'hard_delete',
     entityKind: 'user',
-    summary: `Purged ${ids.length} unverified, unlinked account${ids.length === 1 ? '' : 's'} older than ${olderThanDays} days`,
+    summary: `Purged ${ids.length} ${unverifiedOnly ? 'unverified, ' : ''}unlinked account${ids.length === 1 ? '' : 's'} older than ${olderThanDays} days`,
   });
   return ids.length;
 };

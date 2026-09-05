@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import * as RadixDialog from '@radix-ui/react-dialog';
 import {
+  ArrowRightLeft,
   Bell,
   Building2,
   CalendarClock,
@@ -178,6 +179,17 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         onSelect: () => {
           close(false);
           void navigate('/documents');
+        },
+      },
+      {
+        id: 'nav-converter',
+        title: 'File Converter & Modifier',
+        subtitle: 'Convert PDF to Word, PNG to JPG, Word to PDF & modify images',
+        group: 'Quick Jump',
+        icon: <ArrowRightLeft size={14} />,
+        onSelect: () => {
+          close(false);
+          void navigate('/converter');
         },
       },
       {

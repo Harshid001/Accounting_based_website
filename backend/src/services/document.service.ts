@@ -57,6 +57,12 @@ export const assertUploadAllowed = (
       `The file name ends in .${extension} but its contents are declared as ${mimeType}. Rename the file or export it again.`,
     );
   }
+  if (entry.maxSizeBytes !== undefined && sizeBytes > entry.maxSizeBytes) {
+    const limitMB = Math.round(entry.maxSizeBytes / 1_048_576);
+    throw payloadTooLarge(
+      `${extension.toUpperCase()} files are limited to ${limitMB} MB. Compress or split the file and try again.`,
+    );
+  }
 };
 
 /**

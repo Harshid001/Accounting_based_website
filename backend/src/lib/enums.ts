@@ -172,8 +172,9 @@ export const MAX_CLIENT_STORAGE_BYTES = 52_428_800; // 50 MB per client
 export const ALLOWED_UPLOAD_TYPES: ReadonlyArray<{
   mimeType: string;
   extensions: readonly string[];
+  maxSizeBytes?: number; // overrides MAX_UPLOAD_BYTES when set
 }> = [
-  { mimeType: 'application/pdf', extensions: ['pdf'] },
+  { mimeType: 'application/pdf', extensions: ['pdf'], maxSizeBytes: 5_242_880 }, // 5 MB
   { mimeType: 'image/jpeg', extensions: ['jpg', 'jpeg'] },
   { mimeType: 'image/png', extensions: ['png'] },
   {

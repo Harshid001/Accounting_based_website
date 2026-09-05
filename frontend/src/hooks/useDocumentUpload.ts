@@ -8,7 +8,6 @@ import {
   ALLOWED_EXTENSIONS,
   ALLOWED_UPLOADS,
   MAX_UPLOAD_BYTES,
-  MAX_UPLOAD_LABEL,
 } from '@/lib/constants';
 import { ApiError, normaliseError } from '@/lib/errors';
 import type { DocumentType } from '@/types/enums';
@@ -41,11 +40,13 @@ export const checkFile = (file: File): UploadCheck => {
   if (file.size <= 0) {
     return { ok: false, mimeType: match.mimeType, message: 'That file is empty.' };
   }
-  if (file.size > MAX_UPLOAD_BYTES) {
+  const sizeLimit = match.maxSizeBytes ?? MAX_UPLOAD_BYTES;
+  const sizeLimitMB = Math.round(sizeLimit / 1_048_576);
+  if (file.size > sizeLimit) {
     return {
       ok: false,
       mimeType: match.mimeType,
-      message: `That file is larger than the ${MAX_UPLOAD_LABEL} limit. Split or compress it first.`,
+      message: `${extension.toUpperCase()} files are limited to ${sizeLimitMB} MB. Compress or split the file and try again.`,
     };
   }
   return { ok: true, mimeType: match.mimeType, message: null };

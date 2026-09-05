@@ -50,10 +50,11 @@ export const PUBLIC_PATHS = [
 export interface UploadKind {
   extension: string;
   mimeType: string;
+  maxSizeBytes?: number; // per-type override; falls back to MAX_UPLOAD_BYTES
 }
 
 export const ALLOWED_UPLOADS: readonly UploadKind[] = [
-  { extension: 'pdf', mimeType: 'application/pdf' },
+  { extension: 'pdf', mimeType: 'application/pdf', maxSizeBytes: 5_242_880 }, // 5 MB
   { extension: 'jpg', mimeType: 'image/jpeg' },
   { extension: 'jpeg', mimeType: 'image/jpeg' },
   { extension: 'png', mimeType: 'image/png' },

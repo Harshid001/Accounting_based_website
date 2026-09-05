@@ -1895,9 +1895,9 @@ export const FEATURE_GUIDES: Record<FeatureKey, FeatureGuide> = {
           {
             id: 'tour-mywork-tabs',
             selector: '[data-tour="mywork-tabs"]',
-            name: 'Work Type Tabs',
-            description: 'Switch between Assigned Filings, Assigned Tasks, and Awaiting Client Inputs.',
-            proTip: 'Start with Assigned Filings during tax deadline weeks.',
+            name: 'Assigned Work Queue',
+            description: 'Your priority queue of statutory filings and task assignments ready for action.',
+            proTip: 'Tackle filings first during tax deadline periods to avoid penalties.',
             iconName: 'Layers',
           },
           {
@@ -1942,9 +1942,9 @@ export const FEATURE_GUIDES: Record<FeatureKey, FeatureGuide> = {
           {
             id: 'tour-mywork-tabs',
             selector: '[data-tour="mywork-tabs"]',
-            name: 'कार्य श्रेणी टैब्स',
-            description: 'फाइलिंग्स, टास्क और क्लाइंट अनुरोधों के बीच बदलें।',
-            proTip: 'फाइलिंग की तारीखों में सबसे पहले "Filings" टैब देखें।',
+            name: 'सौंपे गए कार्य और फाइलिंग्स',
+            description: 'आपको सौंपे गए सभी महत्वपूर्ण फाइलिंग्स और कार्यों की प्राथमिकता सूची।',
+            proTip: 'फाइलिंग की समयसीमा के दौरान रिटर्न फाइलिंग्स को प्राथमिकता दें।',
             iconName: 'Layers',
           },
           {
@@ -1989,9 +1989,9 @@ export const FEATURE_GUIDES: Record<FeatureKey, FeatureGuide> = {
           {
             id: 'tour-mywork-tabs',
             selector: '[data-tour="mywork-tabs"]',
-            name: 'વર્ક ટેબ્સ',
-            description: 'ફાઇલિંગ્સ અને સામાન્ય ટાસ્ક વચ્ચે સ્વિચ કરો.',
-            proTip: 'રિટર્ન ફાઇલિંગના દિવસોમાં પહેલા ફાઇલિંગ્સ પતાવો.',
+            name: 'સોંપાયેલ કામની યાદી',
+            description: 'તમને સોંપાયેલ તમામ અગત્યના ફાઇલિંગ્સ અને કાર્યોની પ્રાથમિકતા કતાર.',
+            proTip: 'ટેક્સ ડેડલાઇનના દિવસોમાં પહેલા ફાઇલિંગ્સ ઝડપથી પતાવો.',
             iconName: 'Layers',
           },
           {
@@ -2036,9 +2036,9 @@ export const FEATURE_GUIDES: Record<FeatureKey, FeatureGuide> = {
           {
             id: 'tour-mywork-tabs',
             selector: '[data-tour="mywork-tabs"]',
-            name: 'कार्य प्रकार टॅब',
-            description: 'विवरणपत्रे आणि अंतर्गत कामांमध्ये अदलाबदल करा.',
-            proTip: 'मुदतीच्या दिवसांत विवरणपत्रांना प्राधान्य द्या.',
+            name: 'सोपवलेली कामांची यादी',
+            description: 'तुम्हाला नेमून दिलेली सर्व महत्त्वाची विवरणपत्रे आणि कार्यांची प्राधान्य यादी.',
+            proTip: 'मुदतीच्या दिवसांत आधी विवरणपत्रे पूर्ण करण्यास प्राधान्य द्या.',
             iconName: 'Layers',
           },
           {

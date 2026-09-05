@@ -95,7 +95,31 @@ export function InteractiveTourOverlay() {
 
   const ui = UI_TEXT[language] ?? UI_TEXT.en;
 
-  // Handle Target Rect calculation and auto-scroll
+  // Scroll element into view when tour step changes
+  useEffect(() => {
+    if (!isTourActive || !currentTourStep) return;
+
+    const timer = window.setTimeout(() => {
+      try {
+        const el = document.querySelector(currentTourStep.selector);
+        if (el) {
+          const r = el.getBoundingClientRect();
+          const inViewport =
+            r.top >= 60 &&
+            r.bottom <= (window.innerHeight || document.documentElement.clientHeight) - 60;
+          if (!inViewport) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      } catch {
+        // ignore selector errors
+      }
+    }, 50);
+
+    return () => window.clearTimeout(timer);
+  }, [isTourActive, currentTourStep]);
+
+  // Handle Target Rect calculation and real-time scroll/resize tracking
   useEffect(() => {
     if (!isTourActive || !currentTourStep) return;
 
@@ -104,23 +128,17 @@ export function InteractiveTourOverlay() {
         const el = document.querySelector(currentTourStep.selector);
         if (el) {
           const r = el.getBoundingClientRect();
-          setRect({
-            top: r.top + window.scrollY,
-            left: r.left + window.scrollX,
-            width: r.width,
-            height: r.height,
-          });
-
-          // Smooth scroll to target if off-screen
-          const inViewport =
-            r.top >= 60 &&
-            r.bottom <= (window.innerHeight || document.documentElement.clientHeight) - 60;
-          if (!inViewport) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (r.width > 0 && r.height > 0) {
+            setRect({
+              top: r.top,
+              left: r.left,
+              width: r.width,
+              height: r.height,
+            });
+            return;
           }
-        } else {
-          setRect(null);
         }
+        setRect(null);
       } catch {
         setRect(null);
       }
@@ -174,22 +192,21 @@ export function InteractiveTourOverlay() {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const popoverWidth = Math.min(420, viewportWidth - 32);
-    const popoverHeight = 260;
+    const popoverHeight = 280;
 
-    // Viewport-relative coords of the target
-    const targetViewportTop = rect.top - window.scrollY;
-    const targetViewportLeft = rect.left - window.scrollX;
-    const targetCenterX = targetViewportLeft + rect.width / 2;
-
-    let computedTop = targetViewportTop + rect.height + 14;
+    // Viewport-relative center of target element
+    const targetCenterX = rect.left + rect.width / 2;
     let computedLeft = targetCenterX - popoverWidth / 2;
 
-    // If bottom overflow, place above target
+    // Place below target by default
+    let computedTop = rect.top + rect.height + 14;
+
+    // If overflowing bottom of viewport, place above target
     if (computedTop + popoverHeight > viewportHeight - 20) {
-      computedTop = Math.max(16, targetViewportTop - popoverHeight - 14);
+      computedTop = Math.max(16, rect.top - popoverHeight - 14);
     }
 
-    // Horizontal bounds
+    // Horizontal bounds protection
     if (computedLeft < 16) {
       computedLeft = 16;
     } else if (computedLeft + popoverWidth > viewportWidth - 16) {
@@ -216,36 +233,70 @@ export function InteractiveTourOverlay() {
   const progressPercent = Math.round(((tourStepIndex + 1) / totalTourSteps) * 100);
 
   return (
-    <div className="fixed inset-0 z-[9990] pointer-events-auto select-none" aria-modal="true" role="dialog">
-      {/* Dark backdrop overlay with subtle blur */}
+    <div className="fixed inset-0 z-[9990] select-none" aria-modal="true" role="dialog">
+      {/* Invisible backdrop click catcher to exit tour */}
       <button
         type="button"
         aria-label={ui.exit}
-        className="fixed inset-0 h-full w-full cursor-default border-none bg-black/60 backdrop-blur-[1px] transition-all duration-300 outline-none"
+        className="fixed inset-0 h-full w-full cursor-default border-none bg-transparent outline-none"
+        style={{ zIndex: 9990 }}
         onClick={stopTour}
       />
 
-      {/* Spotlight cutout highlight around the targeted element */}
+      {/* SVG Masked Backdrop: Darkens outside, keeps target hole 100% crystal clear & unblurred */}
+      <svg
+        className="fixed inset-0 h-full w-full pointer-events-none transition-all duration-300"
+        style={{ zIndex: 9991 }}
+        aria-hidden="true"
+      >
+        <defs>
+          <mask id="tour-spotlight-mask">
+            {/* White fills entire viewport (makes dark backdrop visible) */}
+            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+            {/* Black cuts out a 100% transparent, unblurred cutout hole */}
+            {rect && (
+              <rect
+                x={Math.max(0, rect.left - 6)}
+                y={Math.max(0, rect.top - 6)}
+                width={rect.width + 12}
+                height={rect.height + 12}
+                rx="12"
+                ry="12"
+                fill="black"
+              />
+            )}
+          </mask>
+        </defs>
+        {/* Shaded backdrop rectangle with cutout mask */}
+        <rect
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          fill="rgba(5, 8, 16, 0.74)"
+          mask="url(#tour-spotlight-mask)"
+        />
+      </svg>
+
+      {/* Spotlight frame with bright illumination and glowing borders */}
       {rect && (
         <div
           style={{
-            position: 'absolute',
-            top: `${rect.top - 6}px`,
-            left: `${rect.left - 6}px`,
+            position: 'fixed',
+            top: `${Math.max(0, rect.top - 6)}px`,
+            left: `${Math.max(0, rect.left - 6)}px`,
             width: `${rect.width + 12}px`,
             height: `${rect.height + 12}px`,
-            borderRadius: '10px',
-            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.65), 0 0 15px rgba(99, 102, 241, 0.8)',
-            zIndex: 9995,
-            pointerEvents: 'none',
-            transition: 'all 0.25s cubic-bezier(0.2, 0, 0, 1)',
+            borderRadius: '12px',
+            zIndex: 9993,
+            transition: 'all 0.2s cubic-bezier(0.2, 0, 0, 1)',
           }}
-          className="border-2 border-indigo-400/90 ring-4 ring-indigo-500/30"
+          className="pointer-events-none border-2 border-indigo-400 ring-4 ring-indigo-500/25 shadow-[0_0_35px_rgba(99,102,241,0.5),inset_0_0_20px_rgba(255,255,255,0.06)] bg-white/[0.04]"
         >
           {/* Animated beacon ring */}
           <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-indigo-500" />
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-indigo-500 shadow-md ring-2 ring-white" />
           </span>
         </div>
       )}

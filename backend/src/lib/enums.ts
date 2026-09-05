@@ -165,8 +165,9 @@ export const JOB_NAMES = [
 ] as const;
 export type JobName = (typeof JOB_NAMES)[number];
 
-export const MAX_UPLOAD_BYTES = 26_214_400;
+export const MAX_UPLOAD_BYTES = 26_214_400; // 25 MB per file
 export const MAX_DOCUMENT_VERSIONS = 20;
+export const MAX_CLIENT_STORAGE_BYTES = 10_200_547_328; // 9.5 GB per client
 
 export const ALLOWED_UPLOAD_TYPES: ReadonlyArray<{
   mimeType: string;

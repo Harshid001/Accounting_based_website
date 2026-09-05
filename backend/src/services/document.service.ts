@@ -8,6 +8,7 @@ import { randomStorageKey } from '../lib/crypto.js';
 import {
   ALLOWED_UPLOAD_EXTENSIONS,
   ALLOWED_UPLOAD_TYPES,
+  MAX_CLIENT_STORAGE_BYTES,
   MAX_DOCUMENT_VERSIONS,
   MAX_UPLOAD_BYTES,
 } from '../lib/enums.js';
@@ -58,6 +59,19 @@ export const assertUploadAllowed = (
   }
 };
 
+/**
+ * Returns the total bytes stored across all non-archived document versions
+ * for the given client. Uses a MongoDB aggregation so it is a single round-trip.
+ */
+export const storageUsedByClient = async (clientId: Types.ObjectId): Promise<number> => {
+  const result = await DocumentModel.aggregate<{ totalBytes: number }>([
+    { $match: { client: clientId } },
+    { $unwind: '$versions' },
+    { $group: { _id: null, totalBytes: { $sum: '$versions.sizeBytes' } } },
+  ]).exec();
+  return result[0]?.totalBytes ?? 0;
+};
+
 export const presignUpload = async (
   clientId: Types.ObjectId,
   filename: string,
@@ -65,6 +79,16 @@ export const presignUpload = async (
   sizeBytes: number,
 ): Promise<PresignedUpload> => {
   assertUploadAllowed(filename, mimeType, sizeBytes);
+
+  const usedBytes = await storageUsedByClient(clientId);
+  if (usedBytes + sizeBytes > MAX_CLIENT_STORAGE_BYTES) {
+    const usedMB = (usedBytes / 1_048_576).toFixed(0);
+    const limitGB = (MAX_CLIENT_STORAGE_BYTES / 1_073_741_824).toFixed(1);
+    throw payloadTooLarge(
+      `This client has used ${usedMB} MB and adding this file would exceed the ${limitGB} GB storage limit. Archive or delete older documents first.`,
+    );
+  }
+
   const key = randomStorageKey(
     `clients/${clientId.toString()}`,
     extname(filename).replace('.', ''),

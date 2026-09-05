@@ -65,7 +65,7 @@ const UI_TEXT = {
     howItWorks: 'कार्यप्रणाली (Workflow)',
     buttonsExplained: 'इस स्क्रीन के मुख्य बटन्स और उनके कार्य',
     proTipsTitle: 'सीए फर्म उपयोगी सुझाव',
-    startTourBtn: 'लाइव ट्यूटोरियल शुरू करें',
+    startTourBtn: 'Interactive Tutorial',
     takeTourBadge: 'इंटरैक्टिव टूर',
     bannerTitle: 'क्या आप हर बटन का लाइव ट्यूटोरियल देखना चाहते हैं?',
     bannerDesc: 'यह इंटरैक्टिव टूर स्क्रीन के हर बटन को हाइलाइट करके उसके काम को विस्तार से समझाएगा।',
@@ -80,7 +80,7 @@ const UI_TEXT = {
     howItWorks: 'કામ કરવાની પદ્ધતિ (Workflow)',
     buttonsExplained: 'આ સ્ક્રીન પરના તમામ બટનો અને તેમની કામગીરી',
     proTipsTitle: 'સીએ પ્રેક્ટિસ ઉપયોગી ટિપ્સ',
-    startTourBtn: 'લાઈવ ટ્યુટોરિયલ શરૂ કરો',
+    startTourBtn: 'Interactive Tutorial',
     takeTourBadge: 'ઇન્ટરેક્ટિવ ટૂર',
     bannerTitle: 'શું તમે દરેક બટનનું લાઈવ ટ્યુટોરિયલ જોવા માંગો છો?',
     bannerDesc: 'આ ટૂર સ્ક્રીન પરના દરેક બટનને હાઇલાઇટ કરીને તેનું કાર્ય સરળ રીતે સમજાવશે.',
@@ -95,7 +95,7 @@ const UI_TEXT = {
     howItWorks: 'कार्यपद्धती (Workflow)',
     buttonsExplained: 'या स्क्रीनवरील सर्व बटने आणि त्यांची कार्ये',
     proTipsTitle: 'सीए फर्म उपयुक्त टिप्स',
-    startTourBtn: 'थेट ट्युटोरियल सुरू करा',
+    startTourBtn: 'Interactive Tutorial',
     takeTourBadge: 'इंटरॅक्टिव्ह टूर',
     bannerTitle: 'आपल्याला प्रत्येक बटणाचे थेट ट्युटोरियल पहायचे आहे का?',
     bannerDesc: 'हा परस्परसंवादी टूर स्क्रीनवरील प्रत्येक बटणावर प्रकाश टाकून त्याचे काम समजावून सांगेल.',
@@ -140,18 +140,19 @@ export function FeatureGuideModal() {
             'rounded-2xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] shadow-2xl overflow-hidden outline-none',
           )}
         >
-          {/* Header Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/80 px-6 py-4 backdrop-blur-md">
-            <div className="flex items-center gap-3.5 min-w-0">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white shadow-md">
+          {/* Header Bar - Fixed layout with Language and Tutorial controls pinned at top-right corner */}
+          <div className="flex items-center justify-between gap-3 sm:gap-4 border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/80 px-4 sm:px-6 py-3.5 sm:py-4">
+            {/* Feature Icon, Title, Badge & Subtitle */}
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white shadow-md">
                 {ICON_MAP[currentGuide.iconName] ?? <BookOpen className="h-5 w-5" />}
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <RadixDialog.Title className="text-lg font-semibold text-[var(--fd-text-primary)] truncate">
+                  <RadixDialog.Title className="text-base sm:text-lg font-semibold text-[var(--fd-text-primary)] truncate">
                     {content.title}
                   </RadixDialog.Title>
-                  <span className="hidden sm:inline-flex rounded-full bg-[var(--fd-accent-subtle-bg)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--fd-accent)] border border-[var(--fd-accent)]/20">
+                  <span className="hidden lg:inline-flex rounded-full bg-[var(--fd-accent-subtle-bg)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--fd-accent)] border border-[var(--fd-accent)]/20 shrink-0">
                     {content.badge}
                   </span>
                 </div>
@@ -161,8 +162,8 @@ export function FeatureGuideModal() {
               </div>
             </div>
 
-            {/* Language Switcher & Interactive Tutorial Button */}
-            <div className="flex items-center gap-2 shrink-0 ml-auto sm:ml-0">
+            {/* Top Right Corner: Language Selector & Interactive Tutorial Controls */}
+            <div className="flex items-center gap-2 shrink-0 ml-auto">
               {/* Language Switcher Dropdown */}
               <DropdownMenu
                 ariaLabel="Select Explanation Language"
@@ -172,38 +173,38 @@ export function FeatureGuideModal() {
                   <button
                     type="button"
                     aria-label={`Current language: ${activeLangMeta.name}. Click to change language.`}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-3 text-xs font-semibold text-[var(--fd-text-primary)] shadow-2xs transition-colors hover:bg-[var(--fd-surface-3)] focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)]"
+                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-2.5 sm:px-3 text-xs font-semibold text-[var(--fd-text-primary)] shadow-2xs transition-colors hover:bg-[var(--fd-surface-3)] focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] shrink-0"
                   >
-                    <Globe className="h-3.5 w-3.5 text-[var(--fd-accent)]" aria-hidden="true" />
+                    <Globe className="h-3.5 w-3.5 text-[var(--fd-accent)] shrink-0" aria-hidden="true" />
                     <span>{activeLangMeta.name}</span>
                   </button>
                 }
               />
 
-              {/* Tutorial Button - Directly beside the language button as requested */}
+              {/* Interactive Tutorial Button - Always in English and locked at the top-right corner */}
               <button
                 type="button"
                 onClick={() => startTour(activeGuideFeature)}
-                aria-label={ui.startTourBtn}
+                aria-label="Interactive Tutorial"
                 className={cn(
-                  'relative group inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-xs font-bold text-white shadow-sm transition-all',
+                  'relative group inline-flex h-9 items-center gap-2 rounded-lg px-3 sm:px-3.5 text-xs font-bold text-white shadow-sm transition-all shrink-0',
                   'bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500',
                   'focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] focus-visible:outline-offset-2',
                 )}
               >
-                <Play className="h-3 w-3 fill-current" aria-hidden="true" />
-                <span>{ui.startTourBtn}</span>
-                <span className="hidden md:inline-block rounded bg-white/20 px-1 py-0.2 text-[9px] font-medium uppercase tracking-wider">
+                <Play className="h-3 w-3 fill-current shrink-0" aria-hidden="true" />
+                <span>Interactive Tutorial</span>
+                <span className="hidden sm:inline-block rounded bg-white/20 px-1 py-0.2 text-[9px] font-medium uppercase tracking-wider">
                   Tour
                 </span>
               </button>
 
-              {/* Close Button */}
+              {/* Modal Close Button */}
               <RadixDialog.Close asChild>
                 <button
                   type="button"
                   aria-label={ui.close}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fd-text-tertiary)] transition-colors hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)]"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fd-text-tertiary)] transition-colors hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)] shrink-0"
                 >
                   <X className="h-4 w-4" aria-hidden="true" />
                 </button>

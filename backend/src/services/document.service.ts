@@ -82,10 +82,10 @@ export const presignUpload = async (
 
   const usedBytes = await storageUsedByClient(clientId);
   if (usedBytes + sizeBytes > MAX_CLIENT_STORAGE_BYTES) {
-    const usedMB = (usedBytes / 1_048_576).toFixed(0);
-    const limitGB = (MAX_CLIENT_STORAGE_BYTES / 1_073_741_824).toFixed(1);
+    const usedMB = (usedBytes / 1_048_576).toFixed(1);
+    const limitMB = (MAX_CLIENT_STORAGE_BYTES / 1_048_576).toFixed(0);
     throw payloadTooLarge(
-      `This client has used ${usedMB} MB and adding this file would exceed the ${limitGB} GB storage limit. Archive or delete older documents first.`,
+      `This client has used ${usedMB} MB of the ${limitMB} MB storage limit. Archive or delete older documents to free up space.`,
     );
   }
 

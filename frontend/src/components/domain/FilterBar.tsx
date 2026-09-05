@@ -19,6 +19,15 @@ export interface FilterDefinition {
   allLabel?: string;
 }
 
+export interface FilterPreset {
+  id: string;
+  label: string;
+  icon?: ReactNode;
+  active: boolean;
+  onClick: () => void;
+  count?: number;
+}
+
 export interface FilterBarProps {
   search: string;
   onSearchChange: (value: string) => void;
@@ -31,6 +40,7 @@ export interface FilterBarProps {
   extra?: ReactNode;
   showSearch?: boolean;
   className?: string;
+  presets?: readonly FilterPreset[];
 }
 
 const ALL = '__all__';
@@ -47,6 +57,7 @@ export function FilterBar({
   extra,
   showSearch = true,
   className,
+  presets,
 }: FilterBarProps) {
   const [draft, setDraft] = useState(search);
   const [lastSearch, setLastSearch] = useState(search);
@@ -98,6 +109,38 @@ export function FilterBar({
 
         {extra}
       </div>
+
+      {presets && presets.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5 pt-0.5" data-slot="filter-presets">
+          {presets.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={preset.onClick}
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all shadow-2xs cursor-pointer',
+                'focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] focus-visible:outline-offset-1',
+                preset.active
+                  ? 'bg-[var(--fd-accent)] text-white border border-[var(--fd-accent)] shadow-xs font-semibold'
+                  : 'bg-[var(--fd-surface-2)] text-[var(--fd-text-secondary)] border border-[var(--fd-border)] hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)]',
+              )}
+            >
+              {preset.icon}
+              <span>{preset.label}</span>
+              {preset.count !== undefined && (
+                <span
+                  className={cn(
+                    'ml-0.5 rounded-full px-1.5 py-0.2 text-[10px] font-semibold',
+                    preset.active ? 'bg-white/25 text-white' : 'bg-[var(--fd-surface-3)] text-[var(--fd-text-tertiary)]',
+                  )}
+                >
+                  {preset.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       {activeFilters.length > 0 ? (
         <div className="flex flex-wrap items-center gap-2">

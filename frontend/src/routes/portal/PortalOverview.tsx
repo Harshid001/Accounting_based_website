@@ -43,6 +43,7 @@ export function PortalOverview() {
     <>
       <PageHeader
         title={`Hello, ${firstName}`}
+        featureKey="portal"
         description={
           activeClient === null
             ? 'Here is where your account stands.'

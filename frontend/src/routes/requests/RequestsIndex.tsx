@@ -32,18 +32,48 @@ export function RequestsIndex() {
     staleTime: 30_000,
   });
 
+  const presets = [
+    {
+      id: 'overdue',
+      label: '⚡ Overdue',
+      active: params.filters.overdue === 'true',
+      onClick: () => {
+        params.setFilter('overdue', params.filters.overdue === 'true' ? null : 'true');
+      },
+    },
+    {
+      id: 'pending',
+      label: '⏳ Pending Upload',
+      active: params.filters.status === 'pending',
+      onClick: () => {
+        params.setFilter('status', params.filters.status === 'pending' ? null : 'pending');
+      },
+    },
+    {
+      id: 'received',
+      label: '✅ Received',
+      active: params.filters.status === 'received',
+      onClick: () => {
+        params.setFilter('status', params.filters.status === 'received' ? null : 'received');
+      },
+    },
+  ];
+
   return (
     <>
       <PageHeader
         title="Requests"
+        featureKey="requests"
         description="Everything the firm is waiting on from clients, across your scope."
       />
 
       <div data-tour="request-filter">
         <FilterBar
-          showSearch={false}
-          search=""
-          onSearchChange={() => undefined}
+          showSearch
+          search={params.search}
+          onSearchChange={params.setSearch}
+          searchPlaceholder="Search request descriptions..."
+          presets={presets}
           values={params.filters}
           onFilterChange={params.setFilter}
           activeFilters={params.activeFilters}

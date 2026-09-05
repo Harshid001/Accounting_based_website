@@ -61,10 +61,31 @@ export function NotificationsIndex() {
   const rows = query.data?.items ?? [];
   const unread = rows.filter((row) => !row.read).length;
 
+  const presets = [
+    {
+      id: 'all',
+      label: 'All Alerts',
+      active: !params.filters.unread,
+      onClick: () => {
+        params.setFilter('unread', null);
+      },
+    },
+    {
+      id: 'unread',
+      label: '⚡ Unread Only',
+      count: unread,
+      active: params.filters.unread === 'true',
+      onClick: () => {
+        params.setFilter('unread', params.filters.unread === 'true' ? null : 'true');
+      },
+    },
+  ];
+
   return (
     <>
       <PageHeader
         title="Notifications"
+        featureKey="notifications"
         description="Everything FirmDesk has flagged for you, newest first."
         actions={
           <Button
@@ -87,6 +108,7 @@ export function NotificationsIndex() {
         showSearch={false}
         search=""
         onSearchChange={() => undefined}
+        presets={presets}
         values={params.filters}
         onFilterChange={params.setFilter}
         activeFilters={params.activeFilters}

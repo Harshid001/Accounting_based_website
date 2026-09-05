@@ -102,6 +102,7 @@ export function RosterReport() {
     <>
       <PageHeader
         title="Client roster"
+        featureKey="reports"
         description="Every client with its status, services, assigned staff and next deadline."
       />
       <ReportTabs />

@@ -84,6 +84,7 @@ export function FirmSettings() {
     <>
       <PageHeader
         title="Settings"
+        featureKey="settings"
         description="Firm details, the compliance catalogue, users and the audit trail."
       />
       <SettingsNav />

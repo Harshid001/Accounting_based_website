@@ -1,0 +1,121 @@
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import { describe, expect, it, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { FilterBar } from '@/components/domain/FilterBar';
+import { CommandPalette } from '@/components/domain/CommandPalette';
+import { FeatureGuideModal } from '@/components/domain/FeatureGuideModal';
+import { FeatureGuideProvider, useFeatureGuide } from '@/context/FeatureGuideContext';
+import { LanguageProvider } from '@/context/LanguageContext';
+import { TooltipProvider } from '@/components/ui/tooltip';
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false } },
+});
+
+function renderWithContext(ui: React.ReactNode, initialPath = '/dashboard') {
+  return render(
+    <MemoryRouter initialEntries={[initialPath]}>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <LanguageProvider>
+            <FeatureGuideProvider>
+              {ui}
+            </FeatureGuideProvider>
+          </LanguageProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </MemoryRouter>,
+  );
+}
+
+describe('Usability Enhancements Across Features', () => {
+  it('renders FilterBar with 1-click presets and handles click events', async () => {
+    const user = userEvent.setup();
+    const handlePresetClick = vi.fn();
+
+    render(
+      <FilterBar
+        search=""
+        onSearchChange={() => undefined}
+        filters={[]}
+        values={{}}
+        onFilterChange={() => undefined}
+        activeFilters={[]}
+        onClear={() => undefined}
+        presets={[
+          {
+            id: 'due7',
+            label: 'Due in 7 Days',
+            active: false,
+            onClick: handlePresetClick,
+          },
+          {
+            id: 'overdue',
+            label: 'Overdue Filings',
+            active: true,
+            onClick: () => undefined,
+          },
+        ]}
+      />,
+    );
+
+    const due7Btn = screen.getByRole('button', { name: /Due in 7 Days/i });
+    const overdueBtn = screen.getByRole('button', { name: /Overdue Filings/i });
+
+    expect(due7Btn).toBeInTheDocument();
+    expect(overdueBtn).toBeInTheDocument();
+
+    await user.click(due7Btn);
+    expect(handlePresetClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders CommandPalette with quick launch navigation items when query is empty', () => {
+    renderWithContext(
+      <CommandPalette open={true} onOpenChange={() => undefined} />,
+    );
+
+    // Should render quick actions and quick navigation items
+    expect(screen.getByText(/Feature Guide & Interactive Tour/i)).toBeInTheDocument();
+    expect(screen.getByText(/Add New Client/i)).toBeInTheDocument();
+    expect(screen.getByText(/Executive Dashboard/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Statutory Filings/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/Document Vault/i)).toBeInTheDocument();
+  });
+
+  it('allows browsing and switching between feature guides in FeatureGuideModal', async () => {
+    const user = userEvent.setup();
+
+    function TestApp() {
+      const { openGuide } = useFeatureGuide();
+      return (
+        <div>
+          <button type="button" onClick={() => openGuide('dashboard')}>
+            Open Guide
+          </button>
+          <FeatureGuideModal />
+        </div>
+      );
+    }
+
+    renderWithContext(<TestApp />, '/dashboard');
+
+    // Click trigger to open modal
+    await user.click(screen.getByRole('button', { name: 'Open Guide' }));
+
+    // Verify modal is open with Dashboard guide
+    expect(screen.getByRole('heading', { name: /Executive Dashboard/i })).toBeInTheDocument();
+
+    // Verify ribbon tabs exist (e.g. Clients, Filings, Tasks, Documents)
+    const clientsTab = screen.getByRole('button', { name: /Clients/i });
+    expect(clientsTab).toBeInTheDocument();
+
+    // Click Clients tab in the ribbon
+    await user.click(clientsTab);
+
+    // Verify modal switched content to Clients
+    expect(screen.getByRole('heading', { name: /Client Management Directory/i })).toBeInTheDocument();
+  });
+});

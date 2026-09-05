@@ -50,13 +50,13 @@ describe('checkFile', () => {
   });
 
   it('refuses anything past the 25 MB ceiling', () => {
-    const result = checkFile(makeFile('huge.pdf', 'application/pdf', 30 * 1024 * 1024));
+    const result = checkFile(makeFile('huge.zip', 'application/zip', 30 * 1024 * 1024));
     expect(result.ok).toBe(false);
     expect(result.message).toContain('25 MB');
   });
 
   it('accepts a file exactly on the ceiling', () => {
-    expect(checkFile(makeFile('edge.pdf', 'application/pdf', MAX_UPLOAD_BYTES)).ok).toBe(true);
+    expect(checkFile(makeFile('edge.zip', 'application/zip', MAX_UPLOAD_BYTES)).ok).toBe(true);
   });
 
   it('refuses an empty file', () => {
@@ -109,7 +109,7 @@ describe('useDocumentUpload guards', () => {
     await act(async () => {
       created = await result.current.uploadNew({
         clientId: 'client-1',
-        file: makeFile('huge.pdf', 'application/pdf', 30 * 1024 * 1024),
+        file: makeFile('huge.zip', 'application/zip', 30 * 1024 * 1024),
         title: 'Huge',
         documentType: 'other',
         customTypeLabel: 'Huge',

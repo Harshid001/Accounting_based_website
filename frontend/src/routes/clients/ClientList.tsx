@@ -50,10 +50,46 @@ export function ClientList() {
 
   const rows = query.data?.items ?? [];
 
+  const presets = [
+    {
+      id: 'active',
+      label: 'Active Only',
+      active: params.filters.status === 'active',
+      onClick: () => {
+        params.setFilter('status', params.filters.status === 'active' ? null : 'active');
+      },
+    },
+    {
+      id: 'company',
+      label: '🏢 Companies',
+      active: params.filters.clientType === 'company',
+      onClick: () => {
+        params.setFilter('clientType', params.filters.clientType === 'company' ? null : 'company');
+      },
+    },
+    {
+      id: 'individual',
+      label: '👤 Individuals',
+      active: params.filters.clientType === 'individual',
+      onClick: () => {
+        params.setFilter('clientType', params.filters.clientType === 'individual' ? null : 'individual');
+      },
+    },
+    {
+      id: 'pinned',
+      label: '📌 Pinned',
+      active: params.filters.pinned === 'true',
+      onClick: () => {
+        params.setFilter('pinned', params.filters.pinned === 'true' ? null : 'true');
+      },
+    },
+  ];
+
   return (
     <>
       <PageHeader
         title="Clients"
+        featureKey="clients"
         description={
           allows('client:create')
             ? 'Every client record the firm holds.'
@@ -90,6 +126,7 @@ export function ClientList() {
             search={params.search}
             onSearchChange={params.setSearch}
             searchPlaceholder="Search by name, PAN or GSTIN"
+            presets={presets}
             values={params.filters}
             onFilterChange={params.setFilter}
             activeFilters={params.activeFilters}

@@ -90,6 +90,7 @@ export function ComplianceReport() {
     <>
       <PageHeader
         title="Compliance status"
+        featureKey="reports"
         description="Filings by type, period and status, with overdue highlighted."
       />
       <ReportTabs />

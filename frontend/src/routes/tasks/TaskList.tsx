@@ -50,10 +50,54 @@ export function TaskList() {
     staleTime: 30_000,
   });
 
+  const presets = [
+    {
+      id: 'me',
+      label: '👤 Assigned to Me',
+      active: params.filters.assignee === user.id,
+      onClick: () => {
+        params.setFilter('assignee', params.filters.assignee === user.id ? null : user.id);
+      },
+    },
+    {
+      id: 'high',
+      label: '🔥 High Priority',
+      active: params.filters.priority === 'high',
+      onClick: () => {
+        params.setFilter('priority', params.filters.priority === 'high' ? null : 'high');
+      },
+    },
+    {
+      id: 'overdue',
+      label: '⚡ Overdue',
+      active: params.filters.overdue === 'true',
+      onClick: () => {
+        params.setFilter('overdue', params.filters.overdue === 'true' ? null : 'true');
+      },
+    },
+    {
+      id: 'in_progress',
+      label: '⏳ In Progress',
+      active: params.filters.status === 'in_progress',
+      onClick: () => {
+        params.setFilter('status', params.filters.status === 'in_progress' ? null : 'in_progress');
+      },
+    },
+    {
+      id: 'completed',
+      label: '✅ Completed',
+      active: params.filters.status === 'completed',
+      onClick: () => {
+        params.setFilter('status', params.filters.status === 'completed' ? null : 'completed');
+      },
+    },
+  ];
+
   return (
     <>
       <PageHeader
         title="Tasks"
+        featureKey="tasks"
         description="Every task in your scope, from filings prep to internal work."
         actions={
           allows('task:create') ? (
@@ -79,6 +123,7 @@ export function TaskList() {
             search={params.search}
             onSearchChange={params.setSearch}
             searchPlaceholder="Search task titles"
+            presets={presets}
             values={params.filters}
             onFilterChange={params.setFilter}
             activeFilters={params.activeFilters}

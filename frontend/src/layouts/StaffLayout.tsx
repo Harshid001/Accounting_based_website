@@ -9,6 +9,7 @@ import { Sidebar } from '@/layouts/components/Sidebar';
 import { Topbar } from '@/layouts/components/Topbar';
 import { SIDEBAR_STORAGE_KEY } from '@/lib/constants';
 import { useHotkey } from '@/hooks/useHotkey';
+import { useFeatureGuide } from '@/context/FeatureGuideContext';
 
 const readCollapsed = (): boolean => {
   try {
@@ -22,9 +23,18 @@ export function StaffLayout() {
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const { openGuide, isGuideOpen, closeGuide } = useFeatureGuide();
 
   useHotkey({ key: 'k', meta: true, allowInInput: true }, () => {
     setPaletteOpen(true);
+  });
+
+  useHotkey({ key: '?', shift: true, allowInInput: false }, () => {
+    if (isGuideOpen) {
+      closeGuide();
+    } else {
+      openGuide();
+    }
   });
 
   const toggleSidebar = (): void => {

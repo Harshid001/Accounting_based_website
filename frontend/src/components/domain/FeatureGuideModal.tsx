@@ -1,5 +1,6 @@
 import * as RadixDialog from '@radix-ui/react-dialog';
 import {
+  ArrowRight,
   BarChart,
   Bell,
   BookOpen,
@@ -20,12 +21,29 @@ import {
   X,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { DropdownMenu } from '@/components/ui/dropdown-menu';
 import { useFeatureGuide } from '@/context/FeatureGuideContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { FEATURE_GUIDES } from '@/lib/featureGuides/featureGuideData';
 import { cn } from '@/lib/cn';
+import type { FeatureKey } from '@/types/featureGuides';
+
+const ALL_FEATURES: Array<{ key: FeatureKey; label: string; icon: string }> = [
+  { key: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+  { key: 'myWork', label: 'My Work', icon: 'Briefcase' },
+  { key: 'clients', label: 'Clients', icon: 'Building2' },
+  { key: 'compliance', label: 'Filings', icon: 'ShieldCheck' },
+  { key: 'tasks', label: 'Tasks', icon: 'CheckSquare' },
+  { key: 'documents', label: 'Documents', icon: 'FileText' },
+  { key: 'requests', label: 'Requests', icon: 'Inbox' },
+  { key: 'messages', label: 'Messages', icon: 'MessageSquare' },
+  { key: 'reports', label: 'Reports', icon: 'BarChart' },
+  { key: 'notifications', label: 'Alerts', icon: 'Bell' },
+  { key: 'settings', label: 'Settings', icon: 'Settings' },
+  { key: 'portal', label: 'Portal', icon: 'Globe' },
+];
 
 const ICON_MAP: Record<string, ReactNode> = {
   LayoutDashboard: <LayoutDashboard className="h-5 w-5" />,
@@ -106,8 +124,10 @@ const UI_TEXT = {
 };
 
 export function FeatureGuideModal() {
-  const { isGuideOpen, closeGuide, activeGuideFeature, startTour } = useFeatureGuide();
+  const { isGuideOpen, closeGuide, activeGuideFeature, openGuide, startTour, currentFeatureKey } =
+    useFeatureGuide();
   const { language, setLanguage, languages } = useLanguage();
+  const navigate = useNavigate();
 
   const currentGuide = FEATURE_GUIDES[activeGuideFeature] ?? FEATURE_GUIDES.dashboard;
   const content = currentGuide.translations[language] ?? currentGuide.translations.en;
@@ -173,7 +193,7 @@ export function FeatureGuideModal() {
                   <button
                     type="button"
                     aria-label={`Current language: ${activeLangMeta.name}. Click to change language.`}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-2.5 sm:px-3 text-xs font-semibold text-[var(--fd-text-primary)] shadow-2xs transition-colors hover:bg-[var(--fd-surface-3)] focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] shrink-0"
+                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-2.5 sm:px-3 text-xs font-semibold text-[var(--fd-text-primary)] shadow-2xs transition-colors hover:bg-[var(--fd-surface-3)] focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] shrink-0 cursor-pointer"
                   >
                     <Globe className="h-3.5 w-3.5 text-[var(--fd-accent)] shrink-0" aria-hidden="true" />
                     <span>{activeLangMeta.name}</span>
@@ -187,7 +207,7 @@ export function FeatureGuideModal() {
                 onClick={() => startTour(activeGuideFeature)}
                 aria-label="Interactive Tutorial"
                 className={cn(
-                  'relative group inline-flex h-9 items-center gap-2 rounded-lg px-3 sm:px-3.5 text-xs font-bold text-white shadow-sm transition-all shrink-0',
+                  'relative group inline-flex h-9 items-center gap-2 rounded-lg px-3 sm:px-3.5 text-xs font-bold text-white shadow-sm transition-all shrink-0 cursor-pointer',
                   'bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500',
                   'focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] focus-visible:outline-offset-2',
                 )}
@@ -204,7 +224,7 @@ export function FeatureGuideModal() {
                 <button
                   type="button"
                   aria-label={ui.close}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fd-text-tertiary)] transition-colors hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)] shrink-0"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fd-text-tertiary)] transition-colors hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)] shrink-0 cursor-pointer"
                 >
                   <X className="h-4 w-4" aria-hidden="true" />
                 </button>
@@ -212,8 +232,60 @@ export function FeatureGuideModal() {
             </div>
           </div>
 
+          {/* Feature Switcher Ribbon - Switch between any of the 12 features seamlessly */}
+          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/50 px-4 sm:px-6 py-2 no-scrollbar">
+            {ALL_FEATURES.map((feat) => {
+              const isSelected = activeGuideFeature === feat.key;
+              const isCurrentScreen = currentFeatureKey === feat.key;
+              return (
+                <button
+                  key={feat.key}
+                  type="button"
+                  onClick={() => openGuide(feat.key)}
+                  className={cn(
+                    'inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all cursor-pointer',
+                    isSelected
+                      ? 'bg-[var(--fd-surface-1)] text-[var(--fd-accent)] shadow-xs font-semibold border border-[var(--fd-accent)]/30'
+                      : 'text-[var(--fd-text-secondary)] hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)] border border-transparent',
+                  )}
+                >
+                  <span className="shrink-0">{ICON_MAP[feat.icon]}</span>
+                  <span>{feat.label}</span>
+                  {isCurrentScreen && (
+                    <span className="rounded-full bg-[var(--fd-accent)]/15 px-1.5 py-0.2 text-[9px] font-bold text-[var(--fd-accent)]">
+                      Here
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Scrollable Body Content */}
           <div className="min-h-0 flex-1 overflow-y-auto p-6 space-y-6">
+            {/* Context Notice if viewing another feature's guide with 1-click jump button */}
+            {activeGuideFeature !== currentFeatureKey && (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--fd-accent)]/30 bg-[var(--fd-accent-subtle-bg)]/60 px-4 py-3">
+                <div className="flex items-center gap-2.5 text-xs text-[var(--fd-text-primary)]">
+                  <Sparkles className="h-4 w-4 text-[var(--fd-accent)] shrink-0" />
+                  <span>
+                    Viewing guide for <strong>{content.title}</strong>. Want to open that screen?
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeGuide();
+                    void navigate(currentGuide.defaultRoute);
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--fd-accent)] px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:opacity-90 transition-all shrink-0 cursor-pointer"
+                >
+                  <span>Go to {content.title.split(' ')[0]}</span>
+                  <ArrowRight className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+
             {/* In Simple Words Banner */}
             <section className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/60 p-5">
               <div className="flex items-start gap-3.5">

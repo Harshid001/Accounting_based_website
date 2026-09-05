@@ -40,10 +40,46 @@ export function DocumentsIndex() {
     staleTime: 30_000,
   });
 
+  const presets = [
+    {
+      id: 'pan',
+      label: '🆔 Identity & KYC',
+      active: params.filters.documentType === 'pan',
+      onClick: () => {
+        params.setFilter('documentType', params.filters.documentType === 'pan' ? null : 'pan');
+      },
+    },
+    {
+      id: 'tax_return',
+      label: '📑 Tax Returns',
+      active: params.filters.documentType === 'tax_return',
+      onClick: () => {
+        params.setFilter('documentType', params.filters.documentType === 'tax_return' ? null : 'tax_return');
+      },
+    },
+    {
+      id: 'bank_statement',
+      label: '🏦 Bank Statements',
+      active: params.filters.documentType === 'bank_statement',
+      onClick: () => {
+        params.setFilter('documentType', params.filters.documentType === 'bank_statement' ? null : 'bank_statement');
+      },
+    },
+    {
+      id: 'invoice',
+      label: '🧾 Invoices & Bills',
+      active: params.filters.documentType === 'invoice',
+      onClick: () => {
+        params.setFilter('documentType', params.filters.documentType === 'invoice' ? null : 'invoice');
+      },
+    },
+  ];
+
   return (
     <>
       <PageHeader
         title="Documents"
+        featureKey="documents"
         description="Every file across the clients in your scope. Uploads happen from a client record."
       />
 
@@ -53,6 +89,7 @@ export function DocumentsIndex() {
             search={params.search}
             onSearchChange={params.setSearch}
             searchPlaceholder="Search document titles"
+            presets={presets}
             values={params.filters}
             onFilterChange={params.setFilter}
             activeFilters={params.activeFilters}

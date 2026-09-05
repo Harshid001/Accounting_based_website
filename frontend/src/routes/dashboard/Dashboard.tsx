@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Building2, CalendarClock, CheckSquare, Plus, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { fetchDashboard } from '@/api/reports.api';
@@ -12,6 +12,7 @@ import { StatRow } from '@/routes/dashboard/components/StatRow';
 import { TaskBreakdown } from '@/routes/dashboard/components/RecentActivity';
 import { WorkloadPanel } from '@/routes/dashboard/components/WorkloadPanel';
 import { useCurrentUser, useSession } from '@/context/SessionContext';
+import { useFeatureGuide } from '@/context/FeatureGuideContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
@@ -19,6 +20,7 @@ export function Dashboard() {
   usePageTitle('Dashboard');
   const user = useCurrentUser();
   const { allows } = useSession();
+  const { openGuide } = useFeatureGuide();
   const { t } = useLanguage();
 
   const query = useQuery({
@@ -33,6 +35,7 @@ export function Dashboard() {
     <>
       <PageHeader
         title={`${t('dashboard.greeting', 'Good to see you')}, ${firstName}`}
+        featureKey="dashboard"
         description={
           user.role === 'admin'
             ? t('dashboard.descAdmin', 'Firm-wide figures across every client.')
@@ -69,6 +72,46 @@ export function Dashboard() {
         />
       ) : (
         <div className="space-y-4">
+          {/* Daily Quick Launch Actions */}
+          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-1)] p-2.5 shadow-2xs">
+            <span className="px-2 text-xs font-bold uppercase tracking-wider text-[var(--fd-text-tertiary)]">
+              Quick Actions:
+            </span>
+            {allows('client:create') && (
+              <Button asChild variant="secondary" size="sm">
+                <Link to="/clients/new" className="flex items-center gap-1.5">
+                  <Building2 size={13} className="text-[var(--fd-accent)]" />
+                  <span>Add Client</span>
+                </Link>
+              </Button>
+            )}
+            {allows('task:create') && (
+              <Button asChild variant="secondary" size="sm">
+                <Link to="/tasks" className="flex items-center gap-1.5">
+                  <CheckSquare size={13} className="text-amber-500" />
+                  <span>New Task</span>
+                </Link>
+              </Button>
+            )}
+            {allows('compliance:bulk') && (
+              <Button asChild variant="secondary" size="sm">
+                <Link to="/compliance/generate" className="flex items-center gap-1.5">
+                  <CalendarClock size={13} className="text-emerald-500" />
+                  <span>Generate Filings</span>
+                </Link>
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openGuide('dashboard')}
+              className="flex items-center gap-1.5 text-[var(--fd-text-secondary)] hover:text-[var(--fd-accent)] cursor-pointer"
+            >
+              <Sparkles size={13} className="text-[var(--fd-accent)]" />
+              <span>Interactive Tour</span>
+            </Button>
+          </div>
+
           <div data-tour="dashboard-stats">
             <StatRow summary={query.data} loading={query.isPending} />
           </div>

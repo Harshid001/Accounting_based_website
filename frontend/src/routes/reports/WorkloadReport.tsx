@@ -101,6 +101,7 @@ export function WorkloadReport() {
     <>
       <PageHeader
         title="Workload"
+        featureKey="reports"
         description="Open, overdue and completed work per person, with estimate against logged time."
       />
       <ReportTabs />

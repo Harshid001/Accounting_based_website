@@ -77,7 +77,8 @@ export const createApp = (): Express => {
   app.get('/', (req, res) => {
     const rawError = req.query.error;
     if (typeof rawError === 'string' && rawError.length > 0) {
-      const errorMsg = encodeURIComponent(rawError);
+      const sanitized = rawError.slice(0, 200).replace(/[\r\n<>"]/g, '');
+      const errorMsg = encodeURIComponent(sanitized);
       res.redirect(`${env.APP_BASE_URL}/sign-in?error=${errorMsg}`);
       return;
     }

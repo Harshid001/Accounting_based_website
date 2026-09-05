@@ -211,7 +211,7 @@ const buildAuth = () =>
                 email: normalizedEmail || user.email,
                 role: 'client',
                 status: 'active',
-                emailVerified: false,
+                emailVerified: Boolean(user.emailVerified),
               },
             };
           },

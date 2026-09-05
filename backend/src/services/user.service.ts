@@ -1,5 +1,6 @@
 import type { QueryFilter, Types } from 'mongoose';
 
+import { getDb } from '../config/db.js';
 import type { Role, UserStatus } from '../lib/enums.js';
 import { conflict, notFound, validationFailed } from '../lib/errors.js';
 import { escapeRegex } from '../lib/identifiers.js';
@@ -255,7 +256,11 @@ export const purgeUnlinkedAccounts = async (
   if (candidates.length === 0) return 0;
 
   const ids = candidates.map((candidate) => candidate._id);
+  const stringIds = ids.map((id) => id.toString());
   await Session.deleteMany({ userId: { $in: ids } }).exec();
+  await getDb()
+    .collection('account')
+    .deleteMany({ userId: { $in: [...ids, ...stringIds] } });
   await User.deleteMany({ _id: { $in: ids } }).exec();
 
   await recordAudit({

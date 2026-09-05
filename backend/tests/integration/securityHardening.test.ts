@@ -245,3 +245,113 @@ describe('H-01 regression: unverified accounts are never auto-verified', () => {
     expect(response.body.error.code).toBe('EMAIL_UNVERIFIED');
   });
 });
+
+// ─── Regression: Revision 3 Security Hardening ──────────────────────────────
+
+describe('Security Hardening Revision 3', () => {
+  it('preserves audit logs beyond 10 records without anti-forensic truncation', async () => {
+    const { recordAudit } = await import('../../src/services/audit.service.js');
+    const { AuditLog } = await import('../../src/models/auditLog.model.js');
+    const clientId = await makeClient();
+
+    const initialCount = await AuditLog.countDocuments();
+    // Record 15 audit logs
+    for (let i = 0; i < 15; i++) {
+      await recordAudit({
+        actor: { id: null, role: 'admin', ip: '127.0.0.1', userAgent: 'test', requestId: null },
+        action: 'sign_in',
+        entityKind: 'session',
+        client: clientId,
+        summary: `Audit log entry test #${i}`,
+      });
+    }
+
+    const finalCount = await AuditLog.countDocuments();
+    expect(finalCount).toBe(initialCount + 15);
+    expect(finalCount).toBeGreaterThan(10);
+  });
+
+  it('rejects document finalise if storageKey prefix does not match clientId', async () => {
+    const admin = await createAccount({ role: 'admin' });
+    const clientA = await makeClient();
+    const clientB = await makeClient();
+
+    // Attacker tries to finalize an S3 key belonging to clientA under clientB
+    const response = await request(app())
+      .post('/api/v1/documents')
+      .set(auth(admin))
+      .send({
+        clientId: clientB.toString(),
+        storageKey: `clients/${clientA.toString()}/some-file.pdf`,
+        filename: 'tax-filing.pdf',
+        mimeType: 'application/pdf',
+        title: 'Attacker Attached Document',
+        documentType: 'tax_document',
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe('VALIDATION_FAILED');
+  });
+
+  it('rejects task creation if blockedBy references a task from another client', async () => {
+    const admin = await createAccount({ role: 'admin' });
+    const clientA = await makeClient();
+    const clientB = await makeClient();
+    const { makeTask } = await import('../helpers/factories.js');
+
+    const foreignTask = await makeTask({
+      client: clientA,
+      assignee: admin.id,
+      title: 'Client A Secret Task',
+    });
+
+    const response = await request(app())
+      .post('/api/v1/tasks')
+      .set(auth(admin))
+      .send({
+        clientId: clientB.toString(),
+        title: 'Client B Task',
+        assigneeId: admin.id.toString(),
+        blockedBy: [foreignTask.toString()],
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe('VALIDATION_FAILED');
+  });
+
+  it('rejects task creation if complianceItemId belongs to another client', async () => {
+    const admin = await createAccount({ role: 'admin' });
+    const clientA = await makeClient();
+    const clientB = await makeClient();
+    const { makeComplianceItem, makeComplianceType } = await import('../helpers/factories.js');
+
+    const typeId = await makeComplianceType();
+    const foreignCompliance = await makeComplianceItem(clientA, typeId);
+
+    const response = await request(app())
+      .post('/api/v1/tasks')
+      .set(auth(admin))
+      .send({
+        clientId: clientB.toString(),
+        title: 'Client B Task With Foreign Filing',
+        assigneeId: admin.id.toString(),
+        complianceItemId: foreignCompliance.toString(),
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe('VALIDATION_FAILED');
+  });
+
+  it('sanitizes CRLF and control characters in root redirect error query', async () => {
+    const response = await request(app())
+      .get('/?error=Malicious%0d%0aInjected-Header:%20val%3Cscript%3E')
+      .redirects(0);
+
+    expect(response.status).toBe(302);
+    const location = response.headers.location as string;
+    expect(location).toBeDefined();
+    expect(location).not.toContain('\r');
+    expect(location).not.toContain('\n');
+    expect(location).not.toContain('<script>');
+  });
+});

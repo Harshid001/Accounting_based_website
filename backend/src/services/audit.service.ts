@@ -79,13 +79,6 @@ export const recordAudit = async (input: AuditInput): Promise<void> => {
       userAgent: input.actor.userAgent?.slice(0, 400) ?? null,
       requestId: input.actor.requestId,
     });
-
-    // Keep only the latest 10 audit logs globally
-    const logsToKeep = await AuditLog.find().sort({ createdAt: -1 }).limit(10).select('_id').exec();
-    if (logsToKeep.length === 10) {
-      const idsToKeep = logsToKeep.map((log) => log._id);
-      await AuditLog.deleteMany({ _id: { $nin: idsToKeep } }).exec();
-    }
   } catch (error) {
     logger.error(
       { event: 'audit.write_failed', action: input.action, entityKind: input.entityKind, err: error },

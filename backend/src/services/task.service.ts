@@ -8,6 +8,7 @@ import type { PageRequest } from '../lib/pagination.js';
 import { parseSort, withTiebreak } from '../lib/pagination.js';
 import { containsId, sameId } from '../lib/scope.js';
 import { Client } from '../models/client.model.js';
+import { ComplianceItem } from '../models/complianceItem.model.js';
 import { DocumentModel } from '../models/document.model.js';
 import type { TaskAttributes } from '../models/task.model.js';
 import { Task } from '../models/task.model.js';
@@ -176,6 +177,40 @@ const assertAttachmentsBelong = async (
   }
 };
 
+const assertBlockersBelong = async (
+  clientId: Types.ObjectId | null,
+  blockedBy: readonly string[],
+): Promise<void> => {
+  if (blockedBy.length === 0) return;
+  const count = await Task.countDocuments({
+    _id: { $in: [...blockedBy] },
+    client: clientId,
+  }).exec();
+  if (count !== new Set(blockedBy).size) {
+    throw validationFailed('All blocker tasks must belong to the same client.', [
+      { field: 'blockedBy', message: 'A dependency belongs to another client or does not exist.' },
+    ]);
+  }
+};
+
+const assertComplianceItemBelongs = async (
+  clientId: Types.ObjectId | null,
+  complianceItemId: string | null | undefined,
+): Promise<void> => {
+  if (!complianceItemId) return;
+  if (clientId === null) {
+    throw validationFailed('Internal tasks cannot link to a compliance filing.', [
+      { field: 'complianceItemId', message: 'Choose a client before linking a filing.' },
+    ]);
+  }
+  const exists = await ComplianceItem.exists({ _id: complianceItemId, client: clientId });
+  if (!exists) {
+    throw validationFailed('The compliance filing must belong to this client.', [
+      { field: 'complianceItemId', message: 'This filing does not belong to the selected client.' },
+    ]);
+  }
+};
+
 export interface TaskWrite {
   title?: string;
   description?: string | null;
@@ -207,6 +242,8 @@ export const createTask = async (
   const clientId = payload.clientId ? new (await import('mongoose')).Types.ObjectId(payload.clientId) : null;
   await assertAssigneeAllowed(user, clientId, payload.assigneeId);
   await assertAttachmentsBelong(clientId, payload.attachments ?? []);
+  await assertBlockersBelong(clientId, payload.blockedBy ?? []);
+  await assertComplianceItemBelongs(clientId, payload.complianceItemId);
   await assertNoCycle(null, payload.blockedBy ?? []);
 
   const created = await Task.create({
@@ -290,8 +327,14 @@ export const updateTask = async (
   if (payload.clientId !== undefined) {
     throw conflict('A task cannot be moved to a different client. Create a new task instead.');
   }
-  if (payload.blockedBy) await assertNoCycle(doc._id, payload.blockedBy);
+  if (payload.blockedBy) {
+    await assertBlockersBelong(doc.client ?? null, payload.blockedBy);
+    await assertNoCycle(doc._id, payload.blockedBy);
+  }
   if (payload.attachments) await assertAttachmentsBelong(doc.client ?? null, payload.attachments);
+  if (payload.complianceItemId !== undefined) {
+    await assertComplianceItemBelongs(doc.client ?? null, payload.complianceItemId);
+  }
   if (payload.assigneeId !== undefined) {
     await assertAssigneeAllowed(user, doc.client ?? null, payload.assigneeId);
   }

@@ -213,6 +213,12 @@ export const finaliseUpload = async (
   user: AuthenticatedUser,
   actor: RequestActor,
 ): Promise<Lean<DocumentAttributes>> => {
+  const expectedPrefix = `clients/${input.clientId.toString()}/`;
+  if (!input.storageKey.startsWith(expectedPrefix)) {
+    throw validationFailed('The upload key does not belong to this client.', [
+      { field: 'storageKey', message: 'Storage key prefix does not match the client.' },
+    ]);
+  }
   const facts = await verifyStoredObject(input.storageKey, input.mimeType);
 
   const created = await DocumentModel.create({
@@ -266,6 +272,12 @@ export const addVersion = async (
     throw conflict(
       `This document already holds ${MAX_DOCUMENT_VERSIONS} versions. Create a new document instead.`,
     );
+  }
+  const expectedPrefix = `clients/${doc.client.toString()}/`;
+  if (!storageKey.startsWith(expectedPrefix)) {
+    throw validationFailed('The upload key does not belong to this client.', [
+      { field: 'storageKey', message: 'Storage key prefix does not match the client.' },
+    ]);
   }
   const facts = await verifyStoredObject(storageKey, mimeType);
   const nextVersion = doc.versions.length + 1;

@@ -2,11 +2,12 @@ import type { QueryFilter, Types } from 'mongoose';
 
 import { formatDisplayDate, todayIST } from '../lib/date.js';
 import type { DocumentRequestStatus, DocumentType } from '../lib/enums.js';
-import { conflict, notFound } from '../lib/errors.js';
+import { conflict, notFound, validationFailed } from '../lib/errors.js';
 import type { PageRequest } from '../lib/pagination.js';
 import { appLink, sendMail } from '../email/send.js';
 import { renderClientRequestReminder } from '../email/templates/clientRequestReminder.js';
 import { Client } from '../models/client.model.js';
+import { ComplianceItem } from '../models/complianceItem.model.js';
 import type { DocumentRequestAttributes } from '../models/documentRequest.model.js';
 import { DocumentRequest } from '../models/documentRequest.model.js';
 import { User } from '../models/user.model.js';
@@ -114,6 +115,22 @@ export const createDocumentRequests = async (
   user: AuthenticatedUser,
   actor: RequestActor,
 ): Promise<Lean<DocumentRequestAttributes>[]> => {
+  const complianceItemIds = items
+    .map((item) => item.complianceItemId)
+    .filter((id): id is string => typeof id === 'string' && id.length > 0);
+
+  if (complianceItemIds.length > 0) {
+    const count = await ComplianceItem.countDocuments({
+      _id: { $in: complianceItemIds },
+      client: clientId,
+    }).exec();
+    if (count !== new Set(complianceItemIds).size) {
+      throw validationFailed('All compliance filings must belong to this client.', [
+        { field: 'complianceItemId', message: 'One or more compliance filings belong to another client.' },
+      ]);
+    }
+  }
+
   const created = await DocumentRequest.insertMany(
     items.map((item) => ({
       client: clientId,
@@ -153,6 +170,17 @@ export const updateDocumentRequest = async (
   if (!doc) throw notFound('document request');
   if (doc.status !== 'open') {
     throw conflict('Only an open request can be edited.');
+  }
+  if (patch.complianceItemId) {
+    const exists = await ComplianceItem.exists({
+      _id: patch.complianceItemId,
+      client: doc.client,
+    });
+    if (!exists) {
+      throw validationFailed('The compliance filing must belong to this client.', [
+        { field: 'complianceItemId', message: 'This filing does not belong to this client.' },
+      ]);
+    }
   }
   if (patch.title !== undefined) doc.title = patch.title;
   if (patch.description !== undefined) doc.description = patch.description;

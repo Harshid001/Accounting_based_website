@@ -2,10 +2,18 @@ import { randomUUID } from 'node:crypto';
 
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
+import { isProduction } from '../config/env.js';
 import { logger } from '../config/logger.js';
 
-const clientIp = (req: Request): string | null =>
-  req.ip ?? req.socket.remoteAddress ?? null;
+const clientIp = (req: Request): string | null => {
+  if (isProduction) {
+    const cfIp = req.headers['cf-connecting-ip'];
+    if (typeof cfIp === 'string' && cfIp.trim().length > 0) {
+      return cfIp.trim();
+    }
+  }
+  return req.ip ?? req.socket.remoteAddress ?? null;
+};
 
 export const requestIp = clientIp;
 

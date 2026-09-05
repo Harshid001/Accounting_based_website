@@ -10,7 +10,6 @@ import { LandingNavbar } from './components/LandingNavbar';
 import { HeroSection } from './components/HeroSection';
 import { ServicesSection } from './components/ServicesSection';
 import { BentoFeaturesSection } from './components/BentoFeaturesSection';
-import { InteractiveProductShowcase } from './components/InteractiveProductShowcase';
 import { ComplianceRadarSection } from './components/ComplianceRadarSection';
 import { EntityRoadmapWidget } from './components/EntityRoadmapWidget';
 import { SecurityTrustSection } from './components/SecurityTrustSection';
@@ -56,7 +55,6 @@ export function Landing() {
         <HeroSection />
         <ServicesSection />
         <BentoFeaturesSection />
-        <InteractiveProductShowcase />
         <ComplianceRadarSection />
         <EntityRoadmapWidget />
         <SecurityTrustSection />

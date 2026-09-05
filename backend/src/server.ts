@@ -3,14 +3,13 @@ import type { Server } from 'node:http';
 import { createApp } from './app.js';
 import { initAuth } from './config/auth.js';
 import { connectDatabase, disconnectDatabase, mongoose } from './config/db.js';
-import { env, isProduction, isTest } from './config/env.js';
+import { env, isProduction } from './config/env.js';
 import { closeStorage } from './config/fileStorage.js';
 import { logger } from './config/logger.js';
 import { verifyMailTransport } from './config/mailer.js';
 import { startScheduler, stopScheduler } from './jobs/index.js';
 import { seedComplianceTypes } from './seed/complianceTypes.seed.js';
 import { bootstrapAdmin } from './seed/bootstrapAdmin.seed.js';
-import { User } from './models/user.model.js';
 
 const REQUIRED_INDEX_HINT =
   'Indexes are not built automatically in production. Run `npm run indexes` after deploying.';
@@ -39,26 +38,6 @@ const shutdown = async (signal: string): Promise<void> => {
 
 const start = async (): Promise<void> => {
   await connectDatabase();
-  await User.updateMany({ emailVerified: false }, { $set: { emailVerified: true } }).catch(() => undefined);
-  if (!isTest) {
-    const adminEmails = [
-      'xstream6797@gmail.com',
-      'harshidsoni01@gmail.com',
-      ...(env.BOOTSTRAP_ADMIN_EMAIL ? [env.BOOTSTRAP_ADMIN_EMAIL.toLowerCase().trim()] : []),
-    ];
-    await User.updateMany(
-      { email: { $in: adminEmails.map((e) => new RegExp(`^${e}$`, 'i')) } },
-      { $set: { role: 'admin', status: 'active', emailVerified: true } },
-    ).catch(() => undefined);
-
-    const hasAdmin = await User.exists({ role: 'admin' }).catch(() => null);
-    if (!hasAdmin) {
-      await User.updateOne(
-        {},
-        { $set: { role: 'admin', status: 'active', emailVerified: true } },
-      ).catch(() => undefined);
-    }
-  }
   initAuth();
 
   if (isProduction) {

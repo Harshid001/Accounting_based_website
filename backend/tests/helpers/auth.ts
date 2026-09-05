@@ -51,6 +51,7 @@ export const createAccount = async (
   const email = options.email ?? uniqueEmail(role);
   const name = options.name ?? `${role} tester`;
   const password = options.password ?? STRONG_PASSWORD;
+  const wantUnverified = options.emailVerified === false;
 
   const response = await getAuth().api.signUpEmail({
     body: { email, password, name },
@@ -60,13 +61,15 @@ export const createAccount = async (
     throw new Error(`sign-up failed for ${email}: ${response.status.toString()}`);
   }
 
+  // Always mark verified before sign-in so Better Auth (requireEmailVerification: true)
+  // will issue a session cookie. We revert emailVerified afterward if the test needs false.
   await User.updateOne(
     { email: email.toLowerCase() },
     {
       $set: {
         role,
         status: options.status ?? 'active',
-        emailVerified: options.emailVerified ?? true,
+        emailVerified: true,
         linkedClients: role === 'client' ? (options.linkedClients ?? []) : [],
       },
     },
@@ -86,6 +89,14 @@ export const createAccount = async (
     .map((part) => part.split(';')[0]?.trim() ?? '')
     .filter((part) => part.length > 0)
     .join('; ');
+
+  // If the test explicitly requested an unverified account, revert now that we have a session.
+  if (wantUnverified) {
+    await User.updateOne(
+      { email: email.toLowerCase() },
+      { $set: { emailVerified: false } },
+    ).exec();
+  }
 
   return { id: record._id, email, name, cookie, role };
 };

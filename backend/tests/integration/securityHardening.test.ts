@@ -129,3 +129,119 @@ describe('Security Hardening (Assessment Verification)', () => {
     expect(await User.findById(orphan.id)).toBeNull();
   });
 });
+
+// ─── Regression: C-01 — No email address ever triggers server-side admin promotion ───
+
+describe('C-01 regression: no email triggers admin promotion on authenticated request', () => {
+  it('a plain client user remains client after any number of authenticated requests', async () => {
+    const account = await createAccount({ role: 'client' });
+
+    // Hit multiple authenticated endpoints — role must never change
+    await request(app()).get('/api/v1/me').set(auth(account));
+    await request(app()).get('/api/v1/me').set(auth(account));
+
+    const record = await User.findById(account.id).lean().exec();
+    expect(record?.role).toBe('client');
+  });
+
+  it('a staff user remains staff after authenticated requests', async () => {
+    const account = await createAccount({ role: 'staff' });
+
+    await request(app()).get('/api/v1/me').set(auth(account));
+
+    const record = await User.findById(account.id).lean().exec();
+    expect(record?.role).toBe('staff');
+  });
+
+  it('signing up with any email — including former hardcoded values — never grants admin', async () => {
+    // Using a safe test-domain variant of the previously-hardcoded owner emails
+    const suspiciousEmails = [
+      'xstream6797@firmdesk.test',
+      'harshidsoni01@firmdesk.test',
+    ];
+
+    for (const email of suspiciousEmails) {
+      const signUpRes = await request(app())
+        .post('/api/auth/sign-up/email')
+        .set('Content-Type', 'application/json')
+        .send({ email, password: STRONG_PASSWORD, name: 'Backdoor Probe' });
+
+      // Should succeed (new account) or 409 (already exists) — never 500
+      expect(signUpRes.status).not.toBe(500);
+
+      const record = await User.findOne({ email }).lean().exec();
+      if (record) {
+        // The account must be a plain client — never auto-promoted
+        expect(record.role).toBe('client');
+        expect(record.emailVerified).toBe(false);
+      }
+    }
+  });
+
+  it('/api/v1/me response never returns role=admin for a client account', async () => {
+    const account = await createAccount({ role: 'client' });
+    const response = await request(app()).get('/api/v1/me').set(auth(account));
+    expect(response.status).toBe(200);
+    const data = response.body.data as { role?: string };
+    expect(data.role).toBe('client');
+  });
+});
+
+// ─── Regression: C-02 — No "first user becomes admin" auto-fallback ──────────
+
+describe('C-02 regression: no automatic admin promotion when admin seat is vacant', () => {
+  it('with zero admins in the DB, a client request is NOT promoted to admin', async () => {
+    // Create a client account, then strip all admin roles to simulate a vacant admin seat
+    const account = await createAccount({ role: 'client' });
+    await User.updateMany({ role: 'admin' }, { $set: { role: 'staff' } }).exec();
+
+    // Make an authenticated request
+    await request(app()).get('/api/v1/me').set(auth(account));
+
+    // The user's role in the DB must still be client — never auto-promoted
+    const record = await User.findById(account.id).lean().exec();
+    expect(record?.role).toBe('client');
+  });
+
+  it('with zero admins in the DB, a staff request is NOT promoted to admin', async () => {
+    const account = await createAccount({ role: 'staff' });
+    await User.updateMany({ role: 'admin' }, { $set: { role: 'staff' } }).exec();
+
+    await request(app()).get('/api/v1/me').set(auth(account));
+
+    const record = await User.findById(account.id).lean().exec();
+    expect(record?.role).toBe('staff');
+  });
+});
+
+// ─── Regression: H-01 — Unverified accounts stay unverified ──────────────────
+
+describe('H-01 regression: unverified accounts are never auto-verified', () => {
+  it('a freshly registered account remains unverified (no boot mass-verify can flip it)', async () => {
+    const email = uniqueEmail('h01-unverified');
+    const signUpRes = await request(app())
+      .post('/api/auth/sign-up/email')
+      .set('Content-Type', 'application/json')
+      .send({ email, password: STRONG_PASSWORD, name: 'Unverified Probe' });
+
+    expect(signUpRes.status).toBeLessThan(400);
+
+    // Verify immediately after signup — must be false
+    const record = await User.findOne({ email }).lean().exec();
+    expect(record?.emailVerified).toBe(false);
+  });
+
+  it('an unverified account is blocked by requireAuth with EMAIL_UNVERIFIED', async () => {
+    const account = await createAccount({ role: 'client', emailVerified: false });
+    const response = await request(app()).get('/api/v1/clients').set(auth(account));
+    expect(response.status).toBe(403);
+    expect(response.body.error.code).toBe('EMAIL_UNVERIFIED');
+  });
+
+  it('an unverified admin-role account is also blocked until verified', async () => {
+    const account = await createAccount({ role: 'admin', emailVerified: false });
+    const response = await request(app()).get('/api/v1/users').set(auth(account));
+    expect(response.status).toBe(403);
+    expect(response.body.error.code).toBe('EMAIL_UNVERIFIED');
+  });
+});

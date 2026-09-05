@@ -62,33 +62,39 @@ export function ClientList() {
         actions={
           <>
             {allows('client:export') ? (
-              <ExportButton
-                onExport={() => exportClientsCsv(params.query)}
-                disabled={rows.length === 0}
-                disabledReason="There is nothing in this view to export."
-              />
+              <div data-tour="client-export">
+                <ExportButton
+                  onExport={() => exportClientsCsv(params.query)}
+                  disabled={rows.length === 0}
+                  disabledReason="There is nothing in this view to export."
+                />
+              </div>
             ) : null}
             {allows('client:create') ? (
-              <Button asChild variant="primary" size="sm">
-                <Link to="/clients/new">
-                  <Plus size={14} aria-hidden="true" />
-                  Add client
-                </Link>
-              </Button>
+              <div data-tour="client-add">
+                <Button asChild variant="primary" size="sm">
+                  <Link to="/clients/new">
+                    <Plus size={14} aria-hidden="true" />
+                    Add client
+                  </Link>
+                </Button>
+              </div>
             ) : null}
           </>
         }
       />
 
-      <FilterBar
-        search={params.search}
-        onSearchChange={params.setSearch}
-        searchPlaceholder="Search by name, PAN or GSTIN"
-        values={params.filters}
-        onFilterChange={params.setFilter}
-        activeFilters={params.activeFilters}
-        onClear={params.clearFilters}
-        filters={[
+      <div data-tour="client-search">
+        <div data-tour="client-filter">
+          <FilterBar
+            search={params.search}
+            onSearchChange={params.setSearch}
+            searchPlaceholder="Search by name, PAN or GSTIN"
+            values={params.filters}
+            onFilterChange={params.setFilter}
+            activeFilters={params.activeFilters}
+            onClear={params.clearFilters}
+            filters={[
           {
             key: 'status',
             label: 'Status',
@@ -119,6 +125,8 @@ export function ClientList() {
           },
         ]}
       />
+        </div>
+      </div>
 
       {query.isError ? (
         <ErrorState
@@ -132,43 +140,45 @@ export function ClientList() {
         <>
           <ListToolbar total={query.data?.total ?? null} noun="client" />
 
-          <ClientTable
-            clients={rows}
-            loading={query.isPending}
-            sort={
-              params.sortField === null
-                ? null
-                : { field: params.sortField, direction: params.sortDirection }
-            }
-            onSortChange={params.toggleSort}
-            emptySlot={
-              params.hasFilters ? (
-                <FilteredEmptyState
-                  activeFilters={params.activeFilters.map(
-                    (filter) => `${filter.label}: ${filter.value}`,
-                  )}
-                  onClear={params.clearFilters}
-                />
-              ) : (
-                <EmptyState
-                  icon={<Building2 size={20} aria-hidden="true" />}
-                  title="No clients yet"
-                  description={
-                    allows('client:create')
-                      ? 'Add the first client record and the rest of FirmDesk starts filling in.'
-                      : 'Nothing has been assigned to you yet. An administrator can assign clients from the client record.'
-                  }
-                  action={
-                    allows('client:create') ? (
-                      <Button asChild variant="primary" size="sm">
-                        <Link to="/clients/new">Add client</Link>
-                      </Button>
-                    ) : undefined
-                  }
-                />
-              )
-            }
-          />
+          <div data-tour="client-table">
+            <ClientTable
+              clients={rows}
+              loading={query.isPending}
+              sort={
+                params.sortField === null
+                  ? null
+                  : { field: params.sortField, direction: params.sortDirection }
+              }
+              onSortChange={params.toggleSort}
+              emptySlot={
+                params.hasFilters ? (
+                  <FilteredEmptyState
+                    activeFilters={params.activeFilters.map(
+                      (filter) => `${filter.label}: ${filter.value}`,
+                    )}
+                    onClear={params.clearFilters}
+                  />
+                ) : (
+                  <EmptyState
+                    icon={<Building2 size={20} aria-hidden="true" />}
+                    title="No clients yet"
+                    description={
+                      allows('client:create')
+                        ? 'Add the first client record and the rest of FirmDesk starts filling in.'
+                        : 'Nothing has been assigned to you yet. An administrator can assign clients from the client record.'
+                    }
+                    action={
+                      allows('client:create') ? (
+                        <Button asChild variant="primary" size="sm">
+                          <Link to="/clients/new">Add client</Link>
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                )
+              }
+            />
+          </div>
 
           {query.data === undefined || query.data.total === 0 ? null : (
             <Pagination

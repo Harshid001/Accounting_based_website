@@ -1,0 +1,372 @@
+import * as RadixDialog from '@radix-ui/react-dialog';
+import {
+  BarChart,
+  Bell,
+  BookOpen,
+  Briefcase,
+  Building2,
+  Check,
+  CheckSquare,
+  FileText,
+  Globe,
+  Inbox,
+  LayoutDashboard,
+  Lightbulb,
+  MessageSquare,
+  Play,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from 'lucide-react';
+import type { ReactNode } from 'react';
+
+import { DropdownMenu } from '@/components/ui/dropdown-menu';
+import { useFeatureGuide } from '@/context/FeatureGuideContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { FEATURE_GUIDES } from '@/lib/featureGuides/featureGuideData';
+import { cn } from '@/lib/cn';
+
+const ICON_MAP: Record<string, ReactNode> = {
+  LayoutDashboard: <LayoutDashboard className="h-5 w-5" />,
+  Building2: <Building2 className="h-5 w-5" />,
+  CheckSquare: <CheckSquare className="h-5 w-5" />,
+  ShieldCheck: <ShieldCheck className="h-5 w-5" />,
+  FileText: <FileText className="h-5 w-5" />,
+  Inbox: <Inbox className="h-5 w-5" />,
+  MessageSquare: <MessageSquare className="h-5 w-5" />,
+  Briefcase: <Briefcase className="h-5 w-5" />,
+  BarChart: <BarChart className="h-5 w-5" />,
+  Bell: <Bell className="h-5 w-5" />,
+  Settings: <Settings className="h-5 w-5" />,
+  Globe: <Globe className="h-5 w-5" />,
+};
+
+const UI_TEXT = {
+  en: {
+    guideTitle: 'Feature Guide & Manual',
+    inSimpleTerms: 'In Simple Terms',
+    whyItMatters: 'Why This Matters',
+    howItWorks: 'How It Works / Workflow',
+    buttonsExplained: 'Buttons & Controls on this Screen',
+    proTipsTitle: 'CA Practice Pro Tips',
+    startTourBtn: 'Interactive Tutorial',
+    takeTourBadge: 'Live Walkthrough',
+    bannerTitle: 'Want a guided walkthrough of every button?',
+    bannerDesc: 'Experience an interactive step-by-step tour that spotlights and explains each button directly on your screen.',
+    close: 'Close',
+    clickToSpotlight: 'Spotlight this button',
+    allLanguages: 'Language',
+  },
+  hi: {
+    guideTitle: 'सुविधा गाइड व विवरण',
+    inSimpleTerms: 'सरल शब्दों में समझें',
+    whyItMatters: 'यह क्यों महत्वपूर्ण है',
+    howItWorks: 'कार्यप्रणाली (Workflow)',
+    buttonsExplained: 'इस स्क्रीन के मुख्य बटन्स और उनके कार्य',
+    proTipsTitle: 'सीए फर्म उपयोगी सुझाव',
+    startTourBtn: 'लाइव ट्यूटोरियल शुरू करें',
+    takeTourBadge: 'इंटरैक्टिव टूर',
+    bannerTitle: 'क्या आप हर बटन का लाइव ट्यूटोरियल देखना चाहते हैं?',
+    bannerDesc: 'यह इंटरैक्टिव टूर स्क्रीन के हर बटन को हाइलाइट करके उसके काम को विस्तार से समझाएगा।',
+    close: 'बंद करें',
+    clickToSpotlight: 'इस बटन को हाइलाइट करें',
+    allLanguages: 'भाषा बदलें',
+  },
+  gu: {
+    guideTitle: 'ફીચર માર્ગદર્શિકા',
+    inSimpleTerms: 'સરળ શબ્દોમાં સમજો',
+    whyItMatters: 'આ કેમ મહત્વપૂર્ણ છે',
+    howItWorks: 'કામ કરવાની પદ્ધતિ (Workflow)',
+    buttonsExplained: 'આ સ્ક્રીન પરના તમામ બટનો અને તેમની કામગીરી',
+    proTipsTitle: 'સીએ પ્રેક્ટિસ ઉપયોગી ટિપ્સ',
+    startTourBtn: 'લાઈવ ટ્યુટોરિયલ શરૂ કરો',
+    takeTourBadge: 'ઇન્ટરેક્ટિવ ટૂર',
+    bannerTitle: 'શું તમે દરેક બટનનું લાઈવ ટ્યુટોરિયલ જોવા માંગો છો?',
+    bannerDesc: 'આ ટૂર સ્ક્રીન પરના દરેક બટનને હાઇલાઇટ કરીને તેનું કાર્ય સરળ રીતે સમજાવશે.',
+    close: 'બંધ કરો',
+    clickToSpotlight: 'આ બટન હાઇલાઇટ કરો',
+    allLanguages: 'ભાષા બદલો',
+  },
+  mr: {
+    guideTitle: 'वैशिष्ट्ये व मार्गदर्शक',
+    inSimpleTerms: 'सोप्या भाषेत समजून घ्या',
+    whyItMatters: 'हे का महत्त्वाचे आहे',
+    howItWorks: 'कार्यपद्धती (Workflow)',
+    buttonsExplained: 'या स्क्रीनवरील सर्व बटने आणि त्यांची कार्ये',
+    proTipsTitle: 'सीए फर्म उपयुक्त टिप्स',
+    startTourBtn: 'थेट ट्युटोरियल सुरू करा',
+    takeTourBadge: 'इंटरॅक्टिव्ह टूर',
+    bannerTitle: 'आपल्याला प्रत्येक बटणाचे थेट ट्युटोरियल पहायचे आहे का?',
+    bannerDesc: 'हा परस्परसंवादी टूर स्क्रीनवरील प्रत्येक बटणावर प्रकाश टाकून त्याचे काम समजावून सांगेल.',
+    close: 'बंद करा',
+    clickToSpotlight: 'हे बटण दाखवा',
+    allLanguages: 'भाषा बदला',
+  },
+};
+
+export function FeatureGuideModal() {
+  const { isGuideOpen, closeGuide, activeGuideFeature, startTour } = useFeatureGuide();
+  const { language, setLanguage, languages } = useLanguage();
+
+  const currentGuide = FEATURE_GUIDES[activeGuideFeature] ?? FEATURE_GUIDES.dashboard;
+  const content = currentGuide.translations[language] ?? currentGuide.translations.en;
+  const ui = UI_TEXT[language] ?? UI_TEXT.en;
+
+  const languageActions = languages.map((lang) => ({
+    id: lang.code,
+    label: `${lang.name} (${lang.englishName})`,
+    icon: (
+      <span className="flex h-4 w-4 items-center justify-center">
+        {language === lang.code ? (
+          <Check className="h-3.5 w-3.5 text-[var(--fd-accent)]" />
+        ) : null}
+      </span>
+    ),
+    onSelect: () => {
+      setLanguage(lang.code);
+    },
+  }));
+
+  const activeLangMeta = languages.find((l) => l.code === language) ?? languages[0]!;
+
+  return (
+    <RadixDialog.Root open={isGuideOpen} onOpenChange={(open) => !open && closeGuide()}>
+      <RadixDialog.Portal>
+        <RadixDialog.Overlay className="fixed inset-0 z-50 bg-[var(--fd-overlay)] backdrop-blur-xs transition-opacity" />
+        <RadixDialog.Content
+          className={cn(
+            'fixed left-1/2 top-1/2 z-50 flex max-h-[90vh] w-full max-w-4xl -translate-x-1/2 -translate-y-1/2 flex-col',
+            'rounded-2xl border border-[var(--fd-border)] bg-[var(--fd-surface-1)] shadow-2xl overflow-hidden outline-none',
+          )}
+        >
+          {/* Header Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/80 px-6 py-4 backdrop-blur-md">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white shadow-md">
+                {ICON_MAP[currentGuide.iconName] ?? <BookOpen className="h-5 w-5" />}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <RadixDialog.Title className="text-lg font-semibold text-[var(--fd-text-primary)] truncate">
+                    {content.title}
+                  </RadixDialog.Title>
+                  <span className="hidden sm:inline-flex rounded-full bg-[var(--fd-accent-subtle-bg)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--fd-accent)] border border-[var(--fd-accent)]/20">
+                    {content.badge}
+                  </span>
+                </div>
+                <RadixDialog.Description className="text-xs text-[var(--fd-text-tertiary)] truncate">
+                  {content.subtitle}
+                </RadixDialog.Description>
+              </div>
+            </div>
+
+            {/* Language Switcher & Interactive Tutorial Button */}
+            <div className="flex items-center gap-2 shrink-0 ml-auto sm:ml-0">
+              {/* Language Switcher Dropdown */}
+              <DropdownMenu
+                ariaLabel="Select Explanation Language"
+                align="end"
+                actions={languageActions}
+                trigger={
+                  <button
+                    type="button"
+                    aria-label={`Current language: ${activeLangMeta.name}. Click to change language.`}
+                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--fd-border)] bg-[var(--fd-surface-1)] px-3 text-xs font-semibold text-[var(--fd-text-primary)] shadow-2xs transition-colors hover:bg-[var(--fd-surface-3)] focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)]"
+                  >
+                    <Globe className="h-3.5 w-3.5 text-[var(--fd-accent)]" aria-hidden="true" />
+                    <span>{activeLangMeta.name}</span>
+                  </button>
+                }
+              />
+
+              {/* Tutorial Button - Directly beside the language button as requested */}
+              <button
+                type="button"
+                onClick={() => startTour(activeGuideFeature)}
+                aria-label={ui.startTourBtn}
+                className={cn(
+                  'relative group inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-xs font-bold text-white shadow-sm transition-all',
+                  'bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500',
+                  'focus-visible:outline-2 focus-visible:outline-[var(--fd-focus-ring)] focus-visible:outline-offset-2',
+                )}
+              >
+                <Play className="h-3 w-3 fill-current" aria-hidden="true" />
+                <span>{ui.startTourBtn}</span>
+                <span className="hidden md:inline-block rounded bg-white/20 px-1 py-0.2 text-[9px] font-medium uppercase tracking-wider">
+                  Tour
+                </span>
+              </button>
+
+              {/* Close Button */}
+              <RadixDialog.Close asChild>
+                <button
+                  type="button"
+                  aria-label={ui.close}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fd-text-tertiary)] transition-colors hover:bg-[var(--fd-surface-3)] hover:text-[var(--fd-text-primary)]"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </RadixDialog.Close>
+            </div>
+          </div>
+
+          {/* Scrollable Body Content */}
+          <div className="min-h-0 flex-1 overflow-y-auto p-6 space-y-6">
+            {/* In Simple Words Banner */}
+            <section className="rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/60 p-5">
+              <div className="flex items-start gap-3.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--fd-accent-subtle-bg)] text-[var(--fd-accent)]">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--fd-accent)]">
+                    {ui.inSimpleTerms}
+                  </h3>
+                  <p className="text-base leading-relaxed text-[var(--fd-text-primary)]">
+                    {content.simpleExplanation}
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Why This Matters */}
+            <section className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:p-5">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-500 mb-1">
+                    {ui.whyItMatters}
+                  </h4>
+                  <p className="text-sm text-[var(--fd-text-secondary)] leading-relaxed">
+                    {content.whyItMatters}
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* How It Works - 3 Step Workflow */}
+            <section className="space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--fd-text-tertiary)]">
+                {ui.howItWorks}
+              </h3>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {content.howItWorks.map((step) => (
+                  <div
+                    key={step.stepNumber}
+                    className="flex flex-col justify-between rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-2)]/40 p-4 transition-all hover:border-[var(--fd-border-strong)]"
+                  >
+                    <div className="space-y-2">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--fd-accent)]/15 text-xs font-bold text-[var(--fd-accent)]">
+                        {step.stepNumber}
+                      </span>
+                      <h4 className="text-sm font-semibold text-[var(--fd-text-primary)]">
+                        {step.title}
+                      </h4>
+                      <p className="text-xs text-[var(--fd-text-secondary)] leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Buttons on this screen explained */}
+            <section className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--fd-text-tertiary)]">
+                  {ui.buttonsExplained}
+                </h3>
+                <span className="text-[11px] text-[var(--fd-text-tertiary)]">
+                  {content.buttons.length} controls on this screen
+                </span>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {content.buttons.map((btn, idx) => (
+                  <div
+                    key={btn.id}
+                    className="group flex flex-col justify-between rounded-xl border border-[var(--fd-border)] bg-[var(--fd-surface-2)]/50 p-4 transition-all hover:border-[var(--fd-accent)] hover:shadow-xs"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--fd-surface-3)] text-[var(--fd-accent)] font-semibold text-xs border border-[var(--fd-border)]">
+                            #{idx + 1}
+                          </span>
+                          <h4 className="text-sm font-semibold text-[var(--fd-text-primary)]">
+                            {btn.name}
+                          </h4>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            startTour(activeGuideFeature);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] font-medium text-[var(--fd-accent)] hover:underline flex items-center gap-1"
+                        >
+                          <Play className="h-2.5 w-2.5 fill-current" />
+                          <span>Tour</span>
+                        </button>
+                      </div>
+
+                      <p className="text-xs text-[var(--fd-text-secondary)] leading-relaxed mb-2">
+                        {btn.description}
+                      </p>
+                    </div>
+
+                    {btn.proTip && (
+                      <div className="mt-2 flex items-start gap-1.5 rounded-lg bg-[var(--fd-surface-3)]/60 px-2.5 py-1.5 text-[11px] text-[var(--fd-text-tertiary)] border border-[var(--fd-border-subtle)]">
+                        <Lightbulb className="h-3 w-3 text-amber-400 shrink-0 mt-0.5" />
+                        <span>{btn.proTip}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Pro Tips Section */}
+            {content.proTips && content.proTips.length > 0 && (
+              <section className="space-y-2 rounded-xl border border-[var(--fd-border-subtle)] bg-[var(--fd-surface-2)]/40 p-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--fd-accent)] flex items-center gap-1.5">
+                  <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
+                  {ui.proTipsTitle}
+                </h3>
+                <ul className="space-y-1.5 text-xs text-[var(--fd-text-secondary)]">
+                  {content.proTips.map((tip, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="text-[var(--fd-accent)] font-bold">&bull;</span>
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Bottom Call to Action Banner to Launch Tour */}
+            <div className="rounded-xl border border-indigo-500/30 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="space-y-1 text-center sm:text-left">
+                <h4 className="text-sm font-bold text-[var(--fd-text-primary)]">
+                  {ui.bannerTitle}
+                </h4>
+                <p className="text-xs text-[var(--fd-text-secondary)] max-w-xl">
+                  {ui.bannerDesc}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => startTour(activeGuideFeature)}
+                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-indigo-500 transition-all shrink-0"
+              >
+                <Play className="h-3.5 w-3.5 fill-current" />
+                <span>{ui.startTourBtn}</span>
+              </button>
+            </div>
+          </div>
+        </RadixDialog.Content>
+      </RadixDialog.Portal>
+    </RadixDialog.Root>
+  );
+}

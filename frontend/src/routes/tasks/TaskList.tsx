@@ -57,59 +57,65 @@ export function TaskList() {
         description="Every task in your scope, from filings prep to internal work."
         actions={
           allows('task:create') ? (
-            <Button
-              variant="primary"
-              size="sm"
-              iconLeft={<Plus size={14} aria-hidden="true" />}
-              onClick={() => {
-                setCreateOpen(true);
-              }}
-            >
-              Add task
-            </Button>
+            <div data-tour="task-add">
+              <Button
+                variant="primary"
+                size="sm"
+                iconLeft={<Plus size={14} aria-hidden="true" />}
+                onClick={() => {
+                  setCreateOpen(true);
+                }}
+              >
+                Add task
+              </Button>
+            </div>
           ) : undefined
         }
       />
 
-      <FilterBar
-        search={params.search}
-        onSearchChange={params.setSearch}
-        searchPlaceholder="Search task titles"
-        values={params.filters}
-        onFilterChange={params.setFilter}
-        activeFilters={params.activeFilters}
-        onClear={params.clearFilters}
-        filters={[
-          {
-            key: 'status',
-            label: 'Status',
-            options: TASK_STATUSES.map((status) => ({
-              value: status,
-              label: TASK_STATUS_LABELS[status],
-            })),
-          },
-          {
-            key: 'priority',
-            label: 'Priority',
-            options: TASK_PRIORITIES.map((priority) => ({
-              value: priority,
-              label: TASK_PRIORITY_LABELS[priority],
-            })),
-          },
-          {
-            key: 'assignee',
-            label: 'Owner',
-            allLabel: 'Anyone',
-            options: [{ value: user.id, label: 'Assigned to me' }],
-          },
-          {
-            key: 'overdue',
-            label: 'Overdue',
-            allLabel: 'All tasks',
-            options: [{ value: 'true', label: 'Overdue only' }],
-          },
-        ]}
-      />
+      <div data-tour="task-search">
+        <div data-tour="task-filter">
+          <FilterBar
+            search={params.search}
+            onSearchChange={params.setSearch}
+            searchPlaceholder="Search task titles"
+            values={params.filters}
+            onFilterChange={params.setFilter}
+            activeFilters={params.activeFilters}
+            onClear={params.clearFilters}
+            filters={[
+              {
+                key: 'status',
+                label: 'Status',
+                options: TASK_STATUSES.map((status) => ({
+                  value: status,
+                  label: TASK_STATUS_LABELS[status],
+                })),
+              },
+              {
+                key: 'priority',
+                label: 'Priority',
+                options: TASK_PRIORITIES.map((priority) => ({
+                  value: priority,
+                  label: TASK_PRIORITY_LABELS[priority],
+                })),
+              },
+              {
+                key: 'assignee',
+                label: 'Owner',
+                allLabel: 'Anyone',
+                options: [{ value: user.id, label: 'Assigned to me' }],
+              },
+              {
+                key: 'overdue',
+                label: 'Overdue',
+                allLabel: 'All tasks',
+                options: [{ value: 'true', label: 'Overdue only' }],
+              },
+            ]}
+          />
+        </div>
+      </div>
 
       {query.isError ? (
         <ErrorState
@@ -123,7 +129,8 @@ export function TaskList() {
         <>
           <ListToolbar total={query.data?.total ?? null} noun="task" />
 
-          <TaskTable
+          <div data-tour="task-table">
+            <TaskTable
             tasks={query.data?.items ?? []}
             loading={query.isPending}
             sort={
@@ -162,6 +169,7 @@ export function TaskList() {
               )
             }
           />
+          </div>
 
           {query.data === undefined || query.data.total === 0 ? null : (
             <Pagination

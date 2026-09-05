@@ -76,22 +76,25 @@ export function ComplianceList() {
               />
             ) : null}
             {allows('compliance:bulk') ? (
-              <Button asChild variant="primary" size="sm">
-                <Link to="/compliance/generate">
-                  <Sparkles size={14} aria-hidden="true" />
-                  Generate filings
-                </Link>
-              </Button>
+              <div data-tour="compliance-generate">
+                <Button asChild variant="primary" size="sm">
+                  <Link to="/compliance/generate">
+                    <Sparkles size={14} aria-hidden="true" />
+                    Generate filings
+                  </Link>
+                </Button>
+              </div>
             ) : null}
           </>
         }
       />
 
-      <FilterBar
-        showSearch={false}
-        search=""
-        onSearchChange={() => undefined}
-        values={params.filters}
+      <div data-tour="compliance-filter">
+        <FilterBar
+          showSearch={false}
+          search=""
+          onSearchChange={() => undefined}
+          values={params.filters}
         onFilterChange={params.setFilter}
         activeFilters={params.activeFilters}
         onClear={params.clearFilters}
@@ -128,6 +131,7 @@ export function ComplianceList() {
           },
         ]}
       />
+      </div>
 
       {query.isError ? (
         <ErrorState
@@ -141,39 +145,41 @@ export function ComplianceList() {
         <>
           <ListToolbar total={query.data?.total ?? null} noun="filing" />
 
-          <ComplianceTable
-            items={query.data?.items ?? []}
-            loading={query.isPending}
-            sort={
-              params.sortField === null
-                ? null
-                : { field: params.sortField, direction: params.sortDirection }
-            }
-            onSortChange={params.toggleSort}
-            emptySlot={
-              params.hasFilters ? (
-                <FilteredEmptyState
-                  activeFilters={params.activeFilters.map(
-                    (filter) => `${filter.label}: ${filter.value}`,
-                  )}
-                  onClear={params.clearFilters}
-                />
-              ) : (
-                <EmptyState
-                  icon={<CalendarClock size={20} aria-hidden="true" />}
-                  title="No filings yet"
-                  description="Filings are generated from client services. Add services to a client, or generate a period in bulk."
-                  action={
-                    allows('compliance:bulk') ? (
-                      <Button asChild variant="primary" size="sm">
-                        <Link to="/compliance/generate">Generate filings</Link>
-                      </Button>
-                    ) : undefined
-                  }
-                />
-              )
-            }
-          />
+          <div data-tour="compliance-radar">
+            <ComplianceTable
+              items={query.data?.items ?? []}
+              loading={query.isPending}
+              sort={
+                params.sortField === null
+                  ? null
+                  : { field: params.sortField, direction: params.sortDirection }
+              }
+              onSortChange={params.toggleSort}
+              emptySlot={
+                params.hasFilters ? (
+                  <FilteredEmptyState
+                    activeFilters={params.activeFilters.map(
+                      (filter) => `${filter.label}: ${filter.value}`,
+                    )}
+                    onClear={params.clearFilters}
+                  />
+                ) : (
+                  <EmptyState
+                    icon={<CalendarClock size={20} aria-hidden="true" />}
+                    title="No filings yet"
+                    description="Filings are generated from client services. Add services to a client, or generate a period in bulk."
+                    action={
+                      allows('compliance:bulk') ? (
+                        <Button asChild variant="primary" size="sm">
+                          <Link to="/compliance/generate">Generate filings</Link>
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                )
+              }
+            />
+          </div>
 
           {query.data === undefined || query.data.total === 0 ? null : (
             <Pagination

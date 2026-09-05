@@ -40,16 +40,20 @@ export function Dashboard() {
         }
         actions={
           <>
-            <Button asChild variant="secondary" size="sm">
-              <Link to="/my-work">{t('dashboard.openMyWork', 'Open my work')}</Link>
-            </Button>
-            {allows('client:create') ? (
-              <Button asChild variant="primary" size="sm">
-                <Link to="/clients/new">
-                  <Plus size={14} aria-hidden="true" />
-                  {t('dashboard.addClient', 'Add client')}
-                </Link>
+            <div data-tour="dashboard-mywork">
+              <Button asChild variant="secondary" size="sm">
+                <Link to="/my-work">{t('dashboard.openMyWork', 'Open my work')}</Link>
               </Button>
+            </div>
+            {allows('client:create') ? (
+              <div data-tour="dashboard-addclient">
+                <Button asChild variant="primary" size="sm">
+                  <Link to="/clients/new">
+                    <Plus size={14} aria-hidden="true" />
+                    {t('dashboard.addClient', 'Add client')}
+                  </Link>
+                </Button>
+              </div>
             ) : null}
           </>
         }
@@ -65,14 +69,20 @@ export function Dashboard() {
         />
       ) : (
         <div className="space-y-4">
-          <StatRow summary={query.data} loading={query.isPending} />
+          <div data-tour="dashboard-stats">
+            <StatRow summary={query.data} loading={query.isPending} />
+          </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <DeadlineBuckets summary={query.data} loading={query.isPending} />
+            <div data-tour="dashboard-buckets">
+              <DeadlineBuckets summary={query.data} loading={query.isPending} />
+            </div>
             <TaskBreakdown summary={query.data} loading={query.isPending} />
           </div>
 
-          <WorkloadPanel summary={query.data} loading={query.isPending} />
+          <div data-tour="dashboard-workload">
+            <WorkloadPanel summary={query.data} loading={query.isPending} />
+          </div>
         </div>
       )}
     </>

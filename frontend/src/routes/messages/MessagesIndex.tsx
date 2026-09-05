@@ -63,7 +63,8 @@ export function MessagesIndex() {
           />
         </Card>
       ) : (
-        <ul className="space-y-2">
+        <div data-tour="message-thread">
+          <ul className="space-y-2">
           {threads.map((thread) => (
             <li key={thread.clientId}>
               <Link
@@ -92,6 +93,7 @@ export function MessagesIndex() {
             </li>
           ))}
         </ul>
+        </div>
       )}
     </>
   );

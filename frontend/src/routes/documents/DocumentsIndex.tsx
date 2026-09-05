@@ -47,31 +47,35 @@ export function DocumentsIndex() {
         description="Every file across the clients in your scope. Uploads happen from a client record."
       />
 
-      <FilterBar
-        search={params.search}
-        onSearchChange={params.setSearch}
-        searchPlaceholder="Search document titles"
-        values={params.filters}
-        onFilterChange={params.setFilter}
-        activeFilters={params.activeFilters}
-        onClear={params.clearFilters}
-        filters={[
-          {
-            key: 'documentType',
-            label: 'Type',
-            options: DOCUMENT_TYPES.map((type) => ({
-              value: type,
-              label: DOCUMENT_TYPE_LABELS[type],
-            })),
-          },
-          {
-            key: 'archived',
-            label: 'Archived',
-            allLabel: 'Active only',
-            options: [{ value: 'true', label: 'Archived only' }],
-          },
-        ]}
-      />
+      <div data-tour="doc-search">
+        <div data-tour="doc-filter">
+          <FilterBar
+            search={params.search}
+            onSearchChange={params.setSearch}
+            searchPlaceholder="Search document titles"
+            values={params.filters}
+            onFilterChange={params.setFilter}
+            activeFilters={params.activeFilters}
+            onClear={params.clearFilters}
+            filters={[
+              {
+                key: 'documentType',
+                label: 'Type',
+                options: DOCUMENT_TYPES.map((type) => ({
+                  value: type,
+                  label: DOCUMENT_TYPE_LABELS[type],
+                })),
+              },
+              {
+                key: 'archived',
+                label: 'Archived',
+                allLabel: 'Active only',
+                options: [{ value: 'true', label: 'Archived only' }],
+              },
+            ]}
+          />
+        </div>
+      </div>
 
       {query.isError ? (
         <ErrorState
@@ -85,9 +89,10 @@ export function DocumentsIndex() {
         <>
           <ListToolbar total={query.data?.total ?? null} noun="document" />
 
-          <DocumentList
-            showClient
-            documents={query.data?.items ?? []}
+          <div data-tour="doc-table">
+            <DocumentList
+              showClient
+              documents={query.data?.items ?? []}
             loading={query.isPending}
             onOpenVersions={setVersionsFor}
             emptySlot={
@@ -107,6 +112,7 @@ export function DocumentsIndex() {
               )
             }
           />
+          </div>
 
           {query.data === undefined || query.data.total === 0 ? null : (
             <Pagination

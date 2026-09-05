@@ -10,6 +10,9 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { SessionProvider } from '@/context/SessionContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { ToastProvider, useToast } from '@/context/ToastContext';
+import { FeatureGuideProvider } from '@/context/FeatureGuideContext';
+import { FeatureGuideModal } from '@/components/domain/FeatureGuideModal';
+import { InteractiveTourOverlay } from '@/components/domain/InteractiveTourOverlay';
 import { PUBLIC_PATHS } from '@/lib/constants';
 import { normaliseError } from '@/lib/errors';
 import type { NormalisedError } from '@/lib/errors';
@@ -126,7 +129,13 @@ export function Providers({ children }: { children: ReactNode }) {
           <TooltipProvider>
             <QueryProvider>
               <SessionProvider>
-                <ActiveClientProvider>{children}</ActiveClientProvider>
+                <ActiveClientProvider>
+                  <FeatureGuideProvider>
+                    {children}
+                    <FeatureGuideModal />
+                    <InteractiveTourOverlay />
+                  </FeatureGuideProvider>
+                </ActiveClientProvider>
               </SessionProvider>
             </QueryProvider>
           </TooltipProvider>
@@ -135,3 +144,4 @@ export function Providers({ children }: { children: ReactNode }) {
     </ThemeProvider>
   );
 }
+

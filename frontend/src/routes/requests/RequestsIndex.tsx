@@ -39,31 +39,33 @@ export function RequestsIndex() {
         description="Everything the firm is waiting on from clients, across your scope."
       />
 
-      <FilterBar
-        showSearch={false}
-        search=""
-        onSearchChange={() => undefined}
-        values={params.filters}
-        onFilterChange={params.setFilter}
-        activeFilters={params.activeFilters}
-        onClear={params.clearFilters}
-        filters={[
-          {
-            key: 'status',
-            label: 'Status',
-            options: DOCUMENT_REQUEST_STATUSES.map((status) => ({
-              value: status,
-              label: REQUEST_STATUS_LABELS[status],
-            })),
-          },
-          {
-            key: 'overdue',
-            label: 'Overdue',
-            allLabel: 'All requests',
-            options: [{ value: 'true', label: 'Overdue only' }],
-          },
-        ]}
-      />
+      <div data-tour="request-filter">
+        <FilterBar
+          showSearch={false}
+          search=""
+          onSearchChange={() => undefined}
+          values={params.filters}
+          onFilterChange={params.setFilter}
+          activeFilters={params.activeFilters}
+          onClear={params.clearFilters}
+          filters={[
+            {
+              key: 'status',
+              label: 'Status',
+              options: DOCUMENT_REQUEST_STATUSES.map((status) => ({
+                value: status,
+                label: REQUEST_STATUS_LABELS[status],
+              })),
+            },
+            {
+              key: 'overdue',
+              label: 'Overdue',
+              allLabel: 'All requests',
+              options: [{ value: 'true', label: 'Overdue only' }],
+            },
+          ]}
+        />
+      </div>
 
       {query.isError ? (
         <ErrorState
@@ -77,9 +79,10 @@ export function RequestsIndex() {
         <>
           <ListToolbar total={query.data?.total ?? null} noun="request" />
 
-          <RequestList
-            showClient
-            requests={query.data?.items ?? []}
+          <div data-tour="request-table">
+            <RequestList
+              showClient
+              requests={query.data?.items ?? []}
             loading={query.isPending}
             emptySlot={
               params.hasFilters ? (
@@ -98,6 +101,7 @@ export function RequestsIndex() {
               )
             }
           />
+          </div>
 
           {query.data === undefined || query.data.total === 0 ? null : (
             <Pagination

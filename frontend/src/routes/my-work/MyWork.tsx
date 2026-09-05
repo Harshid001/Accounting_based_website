@@ -65,11 +65,13 @@ export function MyWork() {
         />
       ) : (
         <>
-          <ul className="space-y-2">
-            {rows.map((row) => (
-              <WorkRow key={`${row.kind}-${row.id}`} row={row} />
-            ))}
-          </ul>
+          <div data-tour="mywork-tabs">
+            <ul className="space-y-2">
+              {rows.map((row) => (
+                <WorkRow key={`${row.kind}-${row.id}`} row={row} />
+              ))}
+            </ul>
+          </div>
 
           <Pagination
             page={query.data.page}

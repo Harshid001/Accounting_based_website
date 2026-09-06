@@ -1,0 +1,29 @@
+[Unit]
+Description=FirmDesk Accounting API
+After=network.target mongod.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/firmdesk
+ExecStart=/usr/bin/node dist/src/server.js
+Restart=always
+RestartSec=3
+Environment=NODE_ENV=production
+Environment=PORT=4000
+StandardOutput=append:/var/log/firmdesk/out.log
+StandardError=append:/var/log/firmdesk/error.log
+LimitNOFILE=65536
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/var/log/firmdesk
+
+[Install]
+WantedBy=multi-user.target

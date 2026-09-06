@@ -1,6 +1,7 @@
 import type { QueryFilter, Types } from 'mongoose';
 
 import { env } from '../config/env.js';
+import { cache, createCacheKey } from '../lib/cache.js';
 import { conflict, forbidden, notFound, validationFailed } from '../lib/errors.js';
 import { decryptField, encryptField } from '../lib/crypto.js';
 import { escapeRegex, normaliseAadhaar } from '../lib/identifiers.js';
@@ -167,13 +168,22 @@ export const allClientsInScope = async (
   user: AuthenticatedUser,
   query: ClientListQuery,
   cap = 5000,
-): Promise<Lean<ClientAttributes>[]> =>
-  Client.find(buildListFilter(user, query))
+): Promise<Lean<ClientAttributes>[]> => {
+  const filter = buildListFilter(user, query);
+  const cacheKey = createCacheKey('clients', JSON.stringify(filter));
+  const cached = cache.get<Lean<ClientAttributes>[]>(cacheKey);
+  if (cached) return cached;
+
+  const result = await Client.find(filter)
     .sort({ displayName: 1 })
     .limit(cap)
     .populate('assignedStaff', 'name email role')
     .lean<Lean<ClientAttributes>[]>()
     .exec();
+
+  cache.set(cacheKey, result, 30_000);
+  return result;
+};
 
 export const getClientOrThrow = async (clientId: Types.ObjectId): Promise<ClientDocument> => {
   const record = await Client.findById(clientId).exec();
@@ -182,11 +192,17 @@ export const getClientOrThrow = async (clientId: Types.ObjectId): Promise<Client
 };
 
 export const getClientDetail = async (clientId: Types.ObjectId): Promise<Lean<ClientAttributes>> => {
+  const cacheKey = createCacheKey('client', clientId.toString());
+  const cached = cache.get<Lean<ClientAttributes>>(cacheKey);
+  if (cached) return cached;
+
   const record = await Client.findById(clientId)
     .populate('assignedStaff', 'name email role')
     .lean<Lean<ClientAttributes> | null>()
     .exec();
   if (!record) throw notFound('client');
+
+  cache.set(cacheKey, record, 30_000);
   return record;
 };
 
@@ -273,7 +289,9 @@ export const createClient = async (
     client: doc._id,
     summary: `Created client ${doc.displayName}`,
   });
-  return getClientDetail(doc._id);
+  const result = getClientDetail(doc._id);
+  invalidateClientCache(doc._id);
+  return result;
 };
 
 const AUDITABLE_FIELDS = [
@@ -340,7 +358,9 @@ export const updateClient = async (
       diff,
     });
   }
-  return getClientDetail(doc._id);
+  const result = getClientDetail(doc._id);
+  invalidateClientCache(doc._id);
+  return result;
 };
 
 export const setArchived = async (
@@ -362,7 +382,9 @@ export const setArchived = async (
     client: doc._id,
     summary: `${archived ? 'Archived' : 'Restored'} client ${doc.displayName}`,
   });
-  return getClientDetail(clientId);
+  const result = getClientDetail(clientId);
+  invalidateClientCache(doc._id);
+  return result;
 };
 
 export const permanentlyDeleteClient = async (
@@ -398,6 +420,8 @@ export const permanentlyDeleteClient = async (
     client: clientId,
     summary: `Permanently deleted client ${clientName} and all associated records`,
   });
+
+  invalidateClientCache(doc._id);
 };
 
 export const setAssignments = async (
@@ -431,7 +455,9 @@ export const setAssignments = async (
     summary: `Assigned ${staffIds.length} staff to ${doc.displayName}`,
     diff: buildDiff(before, { assignedStaff: staffIds }),
   });
-  return { client: await getClientDetail(clientId), orphanedOpenItems };
+  const result = { client: await getClientDetail(clientId), orphanedOpenItems };
+  invalidateClientCache(doc._id);
+  return result;
 };
 
 export const setPinned = async (
@@ -478,6 +504,10 @@ export const clientHasAadhaar = async (clientId: Types.ObjectId): Promise<boolea
 };
 
 export const nextDueDateFor = async (clientId: Types.ObjectId): Promise<Date | null> => {
+  const cacheKey = createCacheKey('next-due', clientId.toString());
+  const cached = cache.get<Date | null>(cacheKey);
+  if (cached !== undefined) return cached;
+
   const row = await ComplianceItem.findOne({
     client: clientId,
     status: { $nin: ['filed', 'acknowledged', 'not_applicable'] },
@@ -487,7 +517,10 @@ export const nextDueDateFor = async (clientId: Types.ObjectId): Promise<Date | n
     .select('dueDate')
     .lean()
     .exec();
-  return row?.dueDate ?? null;
+
+  const result = row?.dueDate ?? null;
+  cache.set(cacheKey, result, 30_000);
+  return result;
 };
 
 export interface ClientOnboardingPayload extends ClientWritePayload {
@@ -566,6 +599,14 @@ export const submitClientOnboarding = async (
   });
 
   const clientDetail = await getClientDetail(clientDoc._id);
+  invalidateClientCache(clientDoc._id);
   return { client: clientDetail, user: updatedUser };
 };
 
+export const invalidateClientCache = (clientId?: Types.ObjectId): void => {
+  if (clientId) {
+    cache.invalidatePrefix(`client:${clientId.toString()}`);
+    cache.invalidatePrefix(`next-due:${clientId.toString()}`);
+  }
+  cache.invalidatePrefix('clients:');
+};

@@ -10,7 +10,9 @@ export default tseslint.config(
     languageOptions: {
       globals: { ...globals.node },
       parserOptions: {
-        projectService: { allowDefaultProject: ['eslint.config.js'] },
+        projectService: {
+          allowDefaultProject: ['eslint.config.js', 'deploy/ecosystem.config.cjs'],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },

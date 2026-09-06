@@ -7,24 +7,26 @@
 #
 # Or wire it automatically via package.json "prepare" script with git config:
 #   git config core.hooksPath .githooks
+#
+# Only Added/Copied/Modified/Renamed staged files are checked (ACMR), so that
+# REMOVING a .env from the repository is always allowed — untracking secrets
+# is exactly what this hook wants to encourage.
 
-# Collect all staged files that look like .env files
-ENV_FILES=$(git diff --cached --name-only | grep -E '(^|/)\.env(\.[^/]*)?$')
+# Collect staged files that look like .env files (deletions excluded)
+ENV_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '(^|/)\.env(\.[^/]*)?$')
 
 if [ -n "$ENV_FILES" ]; then
   echo ""
-  echo "╔══════════════════════════════════════════════════════════════╗"
-  echo "║  COMMIT BLOCKED — .env file(s) detected in staged changes   ║"
-  echo "╠══════════════════════════════════════════════════════════════╣"
-  echo "║  The following secret files were about to be committed:     ║"
+  echo "  COMMIT BLOCKED - .env file(s) detected in staged changes"
+  echo ""
+  echo "  The following secret files were about to be committed:"
   for f in $ENV_FILES; do
-    echo "║    ✗  $f"
+    echo "    -  $f"
   done
-  echo "╠══════════════════════════════════════════════════════════════╣"
-  echo "║  To unstage:  git reset HEAD <file>                         ║"
-  echo "║  To ignore:   ensure the file is in .gitignore              ║"
-  echo "║  NEVER commit .env — use Render env vars or a secrets vault ║"
-  echo "╚══════════════════════════════════════════════════════════════╝"
+  echo ""
+  echo "  To unstage:  git reset HEAD <file>"
+  echo "  To ignore:   ensure the file is in .gitignore"
+  echo "  NEVER commit .env - use Render env vars or a secrets vault"
   echo ""
   exit 1
 fi

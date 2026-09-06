@@ -3,6 +3,7 @@ import type { z } from 'zod';
 
 import { addDays, todayIST } from '../lib/date.js';
 import { CLOSED_COMPLIANCE_STATUSES } from '../lib/enums.js';
+import { cache, createCacheKey } from '../lib/cache.js';
 import { forbidden, notFound } from '../lib/errors.js';
 import { sendData, sendList } from '../lib/http.js';
 import { buildPageMeta, toPageRequest } from '../lib/pagination.js';
@@ -32,6 +33,9 @@ type ComplianceQuery = z.infer<typeof portalComplianceQuery>;
 type ProfileBody = z.infer<typeof portalProfileBody>;
 type OnboardingBody = z.infer<typeof portalOnboardingBody>;
 
+export const invalidatePortalCache = (userId: string): void => {
+  cache.invalidatePrefix(createCacheKey('portal', userId));
+};
 
 export const listLinkedClients = async (_input: unknown, ctx: RouteContext): Promise<void> => {
   const clients = await Client.find({ _id: { $in: ctx.user.linkedClients } })
@@ -44,6 +48,14 @@ export const listLinkedClients = async (_input: unknown, ctx: RouteContext): Pro
 
 export const overview = async (_input: unknown, ctx: RouteContext): Promise<void> => {
   const clientId = ctx.clientId();
+  const cacheKey = createCacheKey('portal', ctx.user.id.toString(), clientId.toString());
+
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    sendData(ctx.res, cached);
+    return;
+  }
+
   const today = todayIST();
   const open = { client: clientId, status: { $nin: CLOSED_COMPLIANCE_STATUSES } };
 
@@ -69,14 +81,17 @@ export const overview = async (_input: unknown, ctx: RouteContext): Promise<void
         .exec(),
     ]);
 
-  sendData(ctx.res, {
+  const data = {
     dueSoon,
     overdue,
     awaitingYou,
     openRequests,
     unreadMessages,
     upcoming: upcoming.map(serialiseComplianceForPortal),
-  });
+  };
+
+  cache.set(cacheKey, data, 30_000);
+  sendData(ctx.res, data);
 };
 
 export const compliance = async (
@@ -164,6 +179,7 @@ export const updateProfile = async (
     },
     ctx.actor,
   );
+  invalidatePortalCache(ctx.user.id.toString());
   sendData(ctx.res, serialiseClientForPortal(record, await clientHasAadhaar(clientId)));
 };
 
@@ -199,9 +215,9 @@ export const submitOnboarding = async (
   ctx: RouteContext,
 ): Promise<void> => {
   const result = await submitClientOnboarding(input.body, ctx.user, ctx.actor);
+  invalidatePortalCache(ctx.user.id.toString());
   sendData(ctx.res, {
     client: serialiseClientForPortal(result.client, Boolean(input.body.aadhaar)),
     clientId: result.client._id.toString(),
   });
 };
-

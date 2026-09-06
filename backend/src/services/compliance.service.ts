@@ -1,5 +1,6 @@
 import type { QueryFilter, Types } from 'mongoose';
 
+import { cache, createCacheKey } from '../lib/cache.js';
 import { todayIST } from '../lib/date.js';
 import { CLOSED_COMPLIANCE_STATUSES, COMPLIANCE_TRANSITIONS } from '../lib/enums.js';
 import type { ComplianceCategory, ComplianceStatus, PeriodType } from '../lib/enums.js';
@@ -99,6 +100,10 @@ export const listCompliance = async (
   page: PageRequest,
 ): Promise<{ items: Lean<ComplianceItemAttributes>[]; total: number }> => {
   const filter = await buildComplianceFilter(user, query);
+  const cacheKey = createCacheKey('compliance-list', JSON.stringify({ filter, page }));
+  const cached = cache.get<{ items: Lean<ComplianceItemAttributes>[]; total: number }>(cacheKey);
+  if (cached) return cached;
+
   const sort = withTiebreak(
     parseSort<(typeof COMPLIANCE_SORT_FIELDS)[number]>(query.sort, COMPLIANCE_SORT_FIELDS, {
       dueDate: 1,
@@ -114,7 +119,9 @@ export const listCompliance = async (
       .exec(),
     ComplianceItem.countDocuments(filter).exec(),
   ]);
-  return { items, total };
+  const result = { items, total };
+  cache.set(cacheKey, result, 30_000);
+  return result;
 };
 
 export const allComplianceInScope = async (
@@ -229,6 +236,7 @@ export const createComplianceItem = async (
     client: input.clientId,
     summary: `Created ${type.name} for ${period.periodLabel}`,
   });
+  cache.invalidatePrefix('compliance-list');
   return getComplianceItem(created._id);
 };
 
@@ -281,6 +289,7 @@ export const updateComplianceItem = async (
       diff,
     });
   }
+  cache.invalidatePrefix('compliance-list');
   return getComplianceItem(id);
 };
 
@@ -350,6 +359,7 @@ export const changeComplianceStatus = async (
       dedupeKey: `awaiting:${doc._id.toString()}`,
     });
   }
+  cache.invalidatePrefix('compliance-list');
   return getComplianceItem(id);
 };
 
@@ -372,4 +382,5 @@ export const deleteComplianceItem = async (
     client: clientId,
     summary: 'Deleted a pending filing',
   });
+  cache.invalidatePrefix('compliance-list');
 };

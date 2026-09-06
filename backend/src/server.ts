@@ -59,6 +59,8 @@ const start = async (): Promise<void> => {
       'FirmDesk API is listening',
     );
   });
+  server.keepAliveTimeout = 65_000;
+  server.headersTimeout = 70_000;
 
   startScheduler();
 

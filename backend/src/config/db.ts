@@ -13,8 +13,10 @@ export const connectDatabase = async (uri: string = env.MONGODB_URI): Promise<vo
   if (connected) return;
   await mongoose.connect(uri, {
     serverSelectionTimeoutMS: 10_000,
-    maxPoolSize: 20,
-    autoIndex: !isProduction,
+    maxPoolSize: 10,
+    minPoolSize: 1,
+    maxIdleTimeMS: 30_000,
+    socketTimeoutMS: 60_000,
   });
   connected = true;
   try {

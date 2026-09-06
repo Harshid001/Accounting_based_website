@@ -1,4 +1,5 @@
 import { env } from '../config/env.js';
+import { cache, createCacheKey } from '../lib/cache.js';
 import type { AddressAttributes } from '../models/client.model.js';
 import type { FirmSettingsAttributes } from '../models/firmSettings.model.js';
 import { FIRM_SETTINGS_ID, FirmSettings } from '../models/firmSettings.model.js';
@@ -16,8 +17,15 @@ export interface FirmSettingsUpdate {
 }
 
 export const getFirmSettings = async (): Promise<FirmSettingsAttributes> => {
+  const cacheKey = createCacheKey('settings');
+  const cached = cache.get<FirmSettingsAttributes>(cacheKey);
+  if (cached) return cached;
+
   const existing = await FirmSettings.findById(FIRM_SETTINGS_ID).lean().exec();
-  if (existing) return existing;
+  if (existing) {
+    cache.set(cacheKey, existing, 60);
+    return existing;
+  }
   const created = await FirmSettings.create({
     _id: FIRM_SETTINGS_ID,
     firmName: 'JV Tax Consultancy',
@@ -32,7 +40,9 @@ export const getFirmSettings = async (): Promise<FirmSettingsAttributes> => {
     },
     complianceHorizonDays: env.COMPLIANCE_HORIZON_DAYS,
   });
-  return created.toObject();
+  const result = created.toObject();
+  cache.set(cacheKey, result, 60);
+  return result;
 };
 
 export const firmName = async (): Promise<string> => (await getFirmSettings()).firmName;
@@ -77,5 +87,6 @@ export const updateFirmSettings = async (
       diff,
     });
   }
+  cache.invalidate('settings');
   return after;
 };

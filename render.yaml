@@ -1,0 +1,60 @@
+# FirmDesk on Render (https://render.com/docs/blueprints)
+#
+# Repo layout: this file lives at the repository root, the app lives in
+# backend/. Render sets the working directory to `rootDir`, so the npm
+# commands below run inside backend/.
+#
+# One-time post-deploy step (see backend/deploy/README.md "Render Deploy
+# Runbook"): the job below builds DB indexes after every deploy. In production
+# Mongoose's autoIndex is disabled on purpose (backend/src/config/db.ts), so
+# without this every list query does a collection scan.
+#
+# All secrets (MONGODB_URI, BETTER_AUTH_SECRET, FIELD_ENCRYPTION_KEY, R2_*,
+# SMTP_*, APP_BASE_URL, CORS_ORIGINS, ...) are set in the Render dashboard,
+# never in this file.
+services:
+  - type: web
+    name: firmdesk-api
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      # The rest of the environment is set in the Render dashboard
+      # (Environment tab). The full required list is in backend/.env.example:
+      #   MONGODB_URI, APP_BASE_URL, BETTER_AUTH_URL, BETTER_AUTH_SECRET,
+      #   CORS_ORIGINS, SESSION_COOKIE_SAMESITE, FIELD_ENCRYPTION_KEY,
+      #   FIELD_ENCRYPTION_KEY_VERSION, SMTP_*, MAIL_FROM,
+      #   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME
+      #
+      # Free-plan note: the service sleeps after ~15 min of inactivity, which
+      # clears the in-memory LRU cache and rate-limit counters. First request
+      # after wake-up will be slow and rate limits start fresh — expected
+      # behaviour on this plan, not a bug.
+
+  # Builds/syncs Mongoose indexes against the production database after each
+  # successful deploy of the API. Idempotent (syncIndexes drops only indexes
+  # that disappeared from the model definitions). Runs as a manual or
+  # deploy-triggered job; connect MONGODB_URI to the same env group as the API.
+  - type: job
+    name: firmdesk-indexes
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm run indexes
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Needs MONGODB_URI (+ nothing else) from the same env group as the API.

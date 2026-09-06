@@ -1,5 +1,6 @@
 import type { QueryFilter, Types } from 'mongoose';
 
+import { cache, createCacheKey } from '../lib/cache.js';
 import { conflict, notFound } from '../lib/errors.js';
 import type { ComplianceCategory } from '../lib/enums.js';
 import { escapeRegex } from '../lib/identifiers.js';
@@ -29,20 +30,37 @@ export const listComplianceTypes = async (
     const pattern = new RegExp(escapeRegex(query.q.trim()), 'i');
     filter.$or = [{ name: pattern }, { code: pattern }];
   }
-  return ComplianceType.find(filter)
+  const cacheKey = createCacheKey('compliance-types', JSON.stringify(filter));
+  const cached = cache.get<Lean<ComplianceTypeAttributes>[]>(cacheKey);
+  if (cached) return cached;
+
+  const results = await ComplianceType.find(filter)
     .sort({ category: 1, name: 1 })
     .lean<Lean<ComplianceTypeAttributes>[]>()
     .exec();
+
+  cache.set(cacheKey, results, 60_000);
+  return results;
 };
 
 export const getComplianceType = async (
   id: Types.ObjectId,
 ): Promise<Lean<ComplianceTypeAttributes>> => {
+  const cacheKey = createCacheKey('compliance-type', id.toString());
+  const cached = cache.get<Lean<ComplianceTypeAttributes>>(cacheKey);
+  if (cached) return cached;
+
   const record = await ComplianceType.findById(id)
     .lean<Lean<ComplianceTypeAttributes> | null>()
     .exec();
   if (!record) throw notFound('compliance type');
+  cache.set(cacheKey, record, 60_000);
   return record;
+};
+
+export const invalidateComplianceTypeCache = (): void => {
+  cache.invalidatePrefix('compliance-type');
+  cache.invalidatePrefix('compliance-types');
 };
 
 export type ComplianceTypeWrite = Partial<
@@ -77,6 +95,7 @@ export const createComplianceType = async (
     entityId: created._id,
     summary: `Created catalogue entry ${created.name}`,
   });
+  invalidateComplianceTypeCache();
   return getComplianceType(created._id);
 };
 
@@ -126,6 +145,7 @@ export const updateComplianceType = async (
       diff,
     });
   }
+  invalidateComplianceTypeCache();
   return getComplianceType(id);
 };
 
@@ -156,7 +176,8 @@ export const deleteComplianceType = async (
     actor,
     action: 'hard_delete',
     entityKind: 'complianceType',
-    entityId: id,
+    entityId: doc._id,
     summary: `Deleted unused catalogue entry ${doc.name}`,
   });
+  invalidateComplianceTypeCache();
 };
